@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "존재하지 않은 유저입니다."),
     LESSON_NOT_FOUND(404, "강좌가 존재하지 않습니다."),
-    SHORTFORM_NOT_FOUND(404, "숏폼이 존재하지 않습니다.");
+    SHORTFORM_NOT_FOUND(404, "숏폼이 존재하지 않습니다."),
+    MEMBER_DUPLICATE(409, "중복되는 유저가 존재합니다. 다시 시도해주세요.");
     private final int status;
     private final String message;
 

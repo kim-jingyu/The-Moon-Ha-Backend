@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 회원 매퍼 XML
+ * @author 최유경
+ * @since 2024.08.25
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.25  	최유경        최초 생성
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.auth.mapper.AuthMapper">
+
+    <insert id="insertMember" parameterType="com.innerpeace.themoonha.global.entity.Member">
+        <![CDATA[
+            insert into member (member_id, username, password, name, member_role, fcm_token)
+            values (member_seq.nextval, #{username}, #{password}, #{name}, #{memberRole.num}, '123')
+        ]]>
+    </insert>
+
+
+    <resultMap id="MemberResultMap" type="com.innerpeace.themoonha.global.entity.Member" autoMapping="true">
+        <result property="memberRole" column="member_role" javaType="int"/>
+    </resultMap>
+
+    <select id="selectMemberByUsername" resultType="com.innerpeace.themoonha.global.entity.Member">
+        <![CDATA[
+            select
+                member_id,
+                username,
+                password,
+                name,
+                member_role,
+                created_at,
+                deleted_at
+            from
+                member
+            where
+                username=#{username}
+        ]]>
+    </select>
+</mapper>
