@@ -19,6 +19,7 @@ public class LessonServiceImpl implements LessonService {
     public LessonListResponse findLessonList(LessonListRequest lessonListRequest) {
         String memberName = "고객1"; // 임시값
         lessonListRequest.setLessonTime();
+        log.info("category = {}", lessonListRequest.getCategory());
         LessonListResponse lessonListResponse = lessonMapper.selectLessonList(lessonListRequest)
                 .orElseThrow(() -> new CustomException(ErrorCode.LESSON_NOT_FOUND));
         lessonListResponse.setMemberName(memberName);

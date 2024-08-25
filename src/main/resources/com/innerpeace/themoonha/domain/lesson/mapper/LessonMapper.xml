@@ -94,6 +94,20 @@
             <if test="endTime != null and endTime != ''">
                 and substr(l.end_time, 1, 2) = #{endTime}
             </if>
+
+            <if test="cnt != null">
+                <choose>
+                    <when test="cnt == 1">
+                        and l.cnt = 1
+                    </when>
+                    <when test="cnt == 2">
+                        and l.cnt between 2 and 4
+                    </when>
+                    <when test="cnt == 3">
+                        and l.cnt >= 5
+                    </when>
+                </choose>
+            </if>
         </where>
     </select>
 </mapper>

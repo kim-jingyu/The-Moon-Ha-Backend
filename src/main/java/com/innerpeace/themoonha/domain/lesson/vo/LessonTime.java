@@ -3,6 +3,8 @@ package com.innerpeace.themoonha.domain.lesson.vo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @AllArgsConstructor
 @Getter
 public enum LessonTime {
@@ -19,11 +21,9 @@ public enum LessonTime {
     private final String endTime;
 
     public static LessonTime findLessonTime(Integer value) {
-        for (LessonTime lessonTime : LessonTime.values()) {
-            if (lessonTime.value.equals(value)) {
-                return lessonTime;
-            }
-        }
-        return null;
+        return Arrays.stream(LessonTime.values())
+                .filter(lessonTime -> lessonTime.getValue().equals(value))
+                .findFirst()
+                .orElse(null);
     }
 }
