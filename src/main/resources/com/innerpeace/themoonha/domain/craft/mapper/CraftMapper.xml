@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 문화공방 매퍼 XML
+ * @author 손승완
+ * @since 2024.08.25
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.25  	손승완        최초 생성
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.craft.mapper.CraftMapper">
+
+
+    <select id="selectPrologueList" resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDTO">
+        select
+            p.prologue_id,
+            p.title,
+            p.thumbnail_url,
+            count(l.like_cnt_id) like_cnt
+        from
+            prologue p
+        left join
+            like_cnt l
+        on
+            p.prologue_id = l.prologue_id
+        where
+            p.deleted_at is null
+        group by
+            p.prologue_id, p.title, p.thumbnail_url, p.type
+        order by
+            p.type
+    </select>
+    <select id="selectWishLessonList" resultType="com.innerpeace.themoonha.domain.craft.dto.WishLessonDTO">
+        select
+            w.wish_lesson_id,
+            w.title,
+            count(v.vote_id) vote_cnt
+        from
+            wish_lesson w
+        left join
+            vote v
+        on
+            w.wish_lesson_id = v.wish_lesson_id
+        where
+            w.deleted_at is null
+        group by
+            w.wish_lesson_id, w.title, w.theme
+        order by
+            w.theme
+    </select>
+</mapper>
