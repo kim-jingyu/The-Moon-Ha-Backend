@@ -3,10 +3,111 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
 
-    <select id="getLesson" resultType="object">
+    <resultMap id="LessonListResponseMap" type="com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse">
+        <result property="branchName" column="branch_name"/>
+
+        <collection property="lessonList" ofType="com.innerpeace.themoonha.domain.lesson.dto.LessonDTO">
+            <id property="lessonId" column="lesson_id"/>
+            <result property="thumbnailUrl" column="lesson_thumbnail_url"/>
+            <result property="target" column="target"/>
+            <result property="title" column="title"/>
+            <result property="cnt" column="cnt"/>
+            <result property="cost" column="cost"/>
+            <result property="tutorName" column="tutor_name"/>
+            <result property="lessonTime" column="lesson_time"/>
+        </collection>
+
+        <collection property="shortFormList" ofType="com.innerpeace.themoonha.domain.lesson.dto.ShortFormDTO">
+            <id property="shortFormId" column="short_form_id"/>
+            <result property="name" column="short_form_name"/>
+            <result property="thumbnailUrl" column="short_form_thumbnail_url"/>
+            <result property="target" column="target" />
+        </collection>
+    </resultMap>
+
+    <select id="selectLessonList"
+            parameterType="com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest"
+            resultMap="LessonListResponseMap">
         select
-            *
+            b.name branch_name,
+            l.lesson_id,
+            l.thumbnail_url lesson_thumbnail_url,
+            l.target,
+            l.title,
+            l.cnt,
+            l.cost,
+            m.name tutor_name,
+            sf.short_form_id,
+            sf.name short_form_name,
+            sf.thumbnail_url short_form_thumbnail_url,
+            CASE
+            WHEN l.cnt = 1 THEN l.start_date || ' ' || l.start_time || '~' || l.end_time
+            ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
+            END AS  lesson_time
         from
-            dual
+            lesson l
+        join
+            branch b
+        on
+            l.branch_id = b.branch_id
+        join
+            member m
+        on
+            l.member_id = m.member_id
+        join
+            category c
+        on
+            l.category_id = c.category_id
+        join
+            short_form sf
+        on
+            l.lesson_id = sf.lesson_id
+        <where>
+            <if test="branchName != null and branchName != ''">
+                b.name = #{branchName}
+            </if>
+
+            <if test="lessonTitle != null and lessonTitle != ''">
+                and l.title like '%' || #{lessonTitle} || '%'
+            </if>
+
+            <if test="tutorName != null and tutorName != ''">
+                and m.name like '%' || #{tutorName} || '%'
+            </if>
+
+            <if test="day != null">
+                and l.day = #{day}
+            </if>
+
+            <if test="target != null">
+                and l.target = #{target}
+            </if>
+
+            <if test="category != null and category != ''">
+                and c.category = #{category}
+            </if>
+
+            <if test="startTime != null and startTime != ''">
+                and substr(l.start_time, 1, 2) = #{startTime}
+            </if>
+
+            <if test="endTime != null and endTime != ''">
+                and substr(l.end_time, 1, 2) = #{endTime}
+            </if>
+
+            <if test="cnt != null">
+                <choose>
+                    <when test="cnt == 1">
+                        and l.cnt = 1
+                    </when>
+                    <when test="cnt == 2">
+                        and l.cnt between 2 and 4
+                    </when>
+                    <when test="cnt == 3">
+                        and l.cnt >= 5
+                    </when>
+                </choose>
+            </if>
+        </where>
     </select>
 </mapper>
