@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 강좌 매퍼 XML
+ * @author 손승완
+ * @since 2024.08.24
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.24  	손승완        최초 생성
+ * 2024.08.25   손승완        강좌 상세 조회 쿼리 추가
+ * </pre>
+ -->
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
 
     <resultMap id="LessonListResponseMap" type="com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse">
@@ -109,5 +123,40 @@
                 </choose>
             </if>
         </where>
+    </select>
+
+    <select id="selectLessonDetail"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonDetailResponse">
+        select
+            l.lesson_id,
+            l.title,
+            b.name branch_name,
+            l.start_date || '~' || l.end_date period,
+            CASE
+                WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
+                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time END AS lesson_time,
+            l.cnt,
+            l.place,
+            m.name tutor_name,
+            l.cost,
+            l.summary,
+            l.curriculum,
+            l.supply,
+            l.thumbnail_url,
+            l.preview_video_url,
+            m.member_id tutor_id,
+            m.profile_img_url tutor_profile_img_url
+        from
+            lesson l
+        join
+            branch b
+        on
+            l.branch_id = b.branch_id
+        join
+            member m
+        on
+            l.member_id = m.member_id
+        where
+            l.lesson_id = #{lessonId}
     </select>
 </mapper>
