@@ -5,7 +5,7 @@ import com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest;
 import com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse;
 
 /**
- * 강좌 서비스 인터페이체
+ * 강좌 서비스 인터페이스
  * @author 손승완
  * @since 2024.08.24
  * @version 1.0
