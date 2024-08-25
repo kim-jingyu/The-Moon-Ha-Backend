@@ -2,8 +2,10 @@ package com.innerpeace.themoonha.domain.craft.service;
 
 import com.innerpeace.themoonha.domain.craft.dto.CraftMainResponse;
 import com.innerpeace.themoonha.domain.craft.dto.PrologueDTO;
+import com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO;
 import com.innerpeace.themoonha.domain.craft.dto.WishLessonDTO;
 import com.innerpeace.themoonha.domain.craft.mapper.CraftMapper;
+import com.innerpeace.themoonha.global.util.Criteria;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +31,7 @@ public class CraftServiceImpl implements CraftService {
 
     @Override
     @Transactional(readOnly = true)
-    public CraftMainResponse findCraftMain() {
+    public CraftMainResponse findCraftMain(Criteria criteria) {
         // 1. 프롤로그 목록 불러오기
         List<PrologueDTO> prologueList = craftMapper.selectPrologueList();
 
@@ -37,7 +39,8 @@ public class CraftServiceImpl implements CraftService {
         List<WishLessonDTO> wishLessonList = craftMapper.selectWishLessonList();
 
         // 3. 제안합니다 댓글 목록 불러오기
-//        craftMapper.selectSuggestionList();
+        List<SuggestionDTO> suggestionList = craftMapper.selectSuggestionList(criteria);
 
+        return CraftMainResponse.of(prologueList, wishLessonList, suggestionList);
     }
 }

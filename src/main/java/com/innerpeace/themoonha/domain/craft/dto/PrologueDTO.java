@@ -11,4 +11,5 @@ public class PrologueDTO {
     private String title;
     private String thumbnailUrl;
     private int likeCnt;
+    private int type;
 }

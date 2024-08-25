@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.craft.service;
 
 import com.innerpeace.themoonha.domain.craft.dto.CraftMainResponse;
+import com.innerpeace.themoonha.global.util.Criteria;
 
 /**
  * 문화공방 서비스 인터페이스
@@ -15,5 +16,5 @@ import com.innerpeace.themoonha.domain.craft.dto.CraftMainResponse;
  * </pre>
  */
 public interface CraftService {
-    CraftMainResponse findCraftMain();
+    CraftMainResponse findCraftMain(Criteria criteria);
 }

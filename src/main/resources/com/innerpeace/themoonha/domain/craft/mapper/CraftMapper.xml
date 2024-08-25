@@ -17,12 +17,14 @@
 <mapper namespace="com.innerpeace.themoonha.domain.craft.mapper.CraftMapper">
 
 
-    <select id="selectPrologueList" resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDTO">
+    <select id="selectPrologueList"
+            resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDTO">
         select
             p.prologue_id,
             p.title,
             p.thumbnail_url,
-            count(l.like_cnt_id) like_cnt
+            count(l.like_cnt_id) like_cnt,
+            p.type
         from
             prologue p
         left join
@@ -36,11 +38,14 @@
         order by
             p.type
     </select>
-    <select id="selectWishLessonList" resultType="com.innerpeace.themoonha.domain.craft.dto.WishLessonDTO">
+
+    <select id="selectWishLessonList"
+            resultType="com.innerpeace.themoonha.domain.craft.dto.WishLessonDTO">
         select
             w.wish_lesson_id,
             w.title,
-            count(v.vote_id) vote_cnt
+            count(v.vote_id) vote_cnt,
+            w.theme
         from
             wish_lesson w
         left join
@@ -53,5 +58,35 @@
             w.wish_lesson_id, w.title, w.theme
         order by
             w.theme
+    </select>
+
+    <select id="selectSuggestionList"
+            resultType="com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO">
+        <![CDATA[
+        select
+            member_name,
+            member_profile_img_url,
+            content,
+            created_at
+        from
+            (
+             select /*+INDEX_DESC(s pk_suggestion)*/
+                 rownum rn,
+                 m.name member_name,
+                 m.profile_img_url member_profile_img_url,
+                 s.content,
+                 s.created_at
+             from
+                 suggestion s
+             join
+                 member m
+             on
+                 s.member_id = m.member_id
+             where
+                 rownum <= #{pageNum} * #{size}
+            )
+        where
+            rn > (#{pageNum} - 1) * #{size}
+        ]]>
     </select>
 </mapper>

@@ -10,4 +10,5 @@ public class WishLessonDTO {
     private Long wishLessonId;
     private String title;
     private int voteCnt;
+    private String theme;
 }
