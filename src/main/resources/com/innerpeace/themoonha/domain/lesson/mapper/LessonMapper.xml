@@ -159,4 +159,26 @@
         where
             l.lesson_id = #{lessonId}
     </select>
+
+    <select id="selectShortFormDetail"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.ShortFormDetailResponse">
+        select
+            l.lesson_id,
+            m.name tutor_name,
+            s.name short_form_name,
+            l.title lesson_title,
+            s.video_url
+        from
+            short_form s
+        join
+            lesson l
+        on
+            s.lesson_id = l.lesson_id
+        join
+            member m
+        on
+            l.member_id = m.member_id
+        where
+            s.short_form_id = #{shortFormId}
+    </select>
 </mapper>

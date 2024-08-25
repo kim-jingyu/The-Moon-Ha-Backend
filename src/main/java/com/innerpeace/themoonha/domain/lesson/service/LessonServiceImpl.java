@@ -3,6 +3,7 @@ package com.innerpeace.themoonha.domain.lesson.service;
 import com.innerpeace.themoonha.domain.lesson.dto.LessonDetailResponse;
 import com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest;
 import com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse;
+import com.innerpeace.themoonha.domain.lesson.dto.ShortFormDetailResponse;
 import com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
  * ----------  --------    ---------------------------
  * 2024.08.24  	손승완       최초 생성
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
+ * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * </pre>
  */
 @Service
@@ -45,5 +47,11 @@ public class LessonServiceImpl implements LessonService {
     public LessonDetailResponse findLessonDetail(Long lessonId) {
         return lessonMapper.selectLessonDetail(lessonId)
                 .orElseThrow(() -> new CustomException(ErrorCode.LESSON_NOT_FOUND));
+    }
+
+    @Override
+    public ShortFormDetailResponse findShortFormDetail(Long shortFormId) {
+        return lessonMapper.selectShortFormDetail(shortFormId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SHORTFORM_NOT_FOUND));
     }
 }
