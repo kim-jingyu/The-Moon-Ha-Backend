@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
-    MEMBER_NOT_FOUND(404, "존재하지 않은 유저입니다.");
+    MEMBER_NOT_FOUND(404, "존재하지 않은 유저입니다."),
+    LESSON_NOT_FOUND(404, "강좌가 존재하지 않습니다.");
     private final int status;
     private final String message;
 

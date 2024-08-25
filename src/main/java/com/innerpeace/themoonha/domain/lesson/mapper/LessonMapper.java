@@ -1,10 +1,10 @@
 package com.innerpeace.themoonha.domain.lesson.mapper;
 
-import com.innerpeace.themoonha.domain.lesson.dto.LessonDTO;
 import com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest;
+import com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface LessonMapper {
-    List<LessonDTO> selectLessonList(LessonListRequest lessonListRequest);
+    Optional<LessonListResponse> selectLessonList(LessonListRequest lessonListRequest);
 }

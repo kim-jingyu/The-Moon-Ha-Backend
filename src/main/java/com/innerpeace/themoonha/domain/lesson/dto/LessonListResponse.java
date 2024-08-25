@@ -5,6 +5,7 @@ import lombok.*;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,17 +14,4 @@ public class LessonListResponse {
     private List<ShortFormDTO> shortFormList;
     private String memberName;
     private List<LessonDTO> lessonList;
-
-    public static LessonListResponse of(List<LessonDTO> lessonList,
-                                        List<ShortFormDTO> shortFormList,
-                                        String memberName,
-                                        String branchName) {
-
-        return LessonListResponse.builder()
-                .lessonList(lessonList)
-                .shortFormList(shortFormList)
-                .memberName(memberName)
-                .branchName(branchName)
-                .build();
-    }
 }
