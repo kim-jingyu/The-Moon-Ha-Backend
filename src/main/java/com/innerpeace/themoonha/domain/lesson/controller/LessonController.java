@@ -1,9 +1,6 @@
 package com.innerpeace.themoonha.domain.lesson.controller;
 
-import com.innerpeace.themoonha.domain.lesson.dto.LessonDetailResponse;
-import com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest;
-import com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse;
-import com.innerpeace.themoonha.domain.lesson.dto.ShortFormDetailResponse;
+import com.innerpeace.themoonha.domain.lesson.dto.*;
 import com.innerpeace.themoonha.domain.lesson.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 2024.08.24  	손승완       최초 생성
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
+ * 2024.08.26   손승완       강사 상세보기 기능 추가
  * </pre>
  */
 @RestController
@@ -65,5 +63,10 @@ public class LessonController {
     @GetMapping("/shortform/{shortFormId}")
     public ResponseEntity<ShortFormDetailResponse> shortFormDetail(@PathVariable Long shortFormId) {
         return ResponseEntity.ok(lessonService.findShortFormDetail(shortFormId));
+    }
+
+    @GetMapping("/tutor/{tutorId}")
+    public ResponseEntity<TutorDetailResponse> tutorDetail(@PathVariable Long tutorId) {
+        return ResponseEntity.ok(lessonService.findTutorDetail(tutorId));
     }
 }

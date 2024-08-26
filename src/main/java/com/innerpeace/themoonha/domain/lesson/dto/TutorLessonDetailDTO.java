@@ -2,34 +2,30 @@ package com.innerpeace.themoonha.domain.lesson.dto;
 
 import lombok.*;
 
-
 /**
- * 강좌 목록 내부 강좌 정보 DTO
+ * 강사 상세정보 진행중인 강좌 정보 DTO
  * @author 손승완
- * @since 2024.08.24
+ * @since 2024.08.26
  * @version 1.0
  *
  * <pre>
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.08.24  	손승완       최초 생성
- * 2024.08.26   손승완       강좌 종료 날짜 필드 추가
+ * 2024.08.26  	손승완       최초 생성
  * </pre>
  */
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class LessonDTO {
+public class TutorLessonDetailDTO {
+    private String name;
+    private String profileImgUrl;
     private Long lessonId;
-    private String thumbnailUrl;
-    private String target;
     private String title;
+    private String thumbnailUrl;
     private int cnt;
-    private int cost;
-    private String tutorName;
-    private String lessonTime;
     private String endDate;
+    private String lessonTime;
 }
