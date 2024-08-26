@@ -1,11 +1,12 @@
 package com.innerpeace.themoonha.domain.lounge.controller;
 
-import com.innerpeace.themoonha.domain.lounge.dto.LoungeListResponse;
+import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.domain.lounge.service.LoungeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       loungeList 메서드 추가
+ * 2024.08.26  	조희정       loungeHome 메서드 추가
  * </pre>
  */
 @RestController
@@ -40,5 +42,17 @@ public class LoungeController {
     public ResponseEntity<List<LoungeListResponse>> loungeList() {
         Long memberId = 1L; // 임시 memberId
         return ResponseEntity.ok(loungeService.findLoungeList(memberId));
+    }
+
+    /**
+     * 라운지 홈 조회
+     * @param loungeId
+     * @return
+     */
+    @GetMapping("/{loungeId}/home")
+    public ResponseEntity<LoungeHomeResponse> loungeHome(@PathVariable Long loungeId) {
+        Long memberId = 1L; // 임시 memberId
+        String role = "ROLE_TUTOR"; // 임시 role
+        return ResponseEntity.ok(loungeService.findLoungeHome(loungeId, memberId, role));
     }
 }

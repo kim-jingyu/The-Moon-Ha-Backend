@@ -1,10 +1,13 @@
 package com.innerpeace.themoonha.domain.lounge.service;
 
-import com.innerpeace.themoonha.domain.lounge.dto.LoungeListResponse;
+import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper;
+import com.innerpeace.themoonha.global.exception.CustomException;
+import com.innerpeace.themoonha.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,10 +22,12 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       findLoungeList 메서드 추가
+ * 2024.08.25  	조희정       findLoungeHome 메서드 추가
  * </pre>
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class LoungeServiceImpl implements LoungeService {
 
@@ -36,5 +41,28 @@ public class LoungeServiceImpl implements LoungeService {
     @Override
     public List<LoungeListResponse> findLoungeList(Long memberId) {
         return loungeMapper.selectLoungeList(memberId);
+    }
+
+    /**
+     * 라운지 홈 조회
+     * @param loungeId
+     * @param memberId
+     * @param role
+     * @return
+     */
+    @Override
+    public LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role) {
+        LoungeInfoDTO loungeInfo = loungeMapper.selectLoungeInfo(loungeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_NOT_FOUND));
+        List<LoungePostDTO> loungePostList = loungeMapper.selectLoungePostList(loungeId);
+        List<AttendanceDTO> attendanceList = loungeMapper.selectAttendanceList(loungeId, memberId, role);
+        List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeId);
+
+        return LoungeHomeResponse.of(
+                loungeInfo,
+                loungePostList,
+                attendanceList,
+                loungeMemberList
+        );
     }
 }

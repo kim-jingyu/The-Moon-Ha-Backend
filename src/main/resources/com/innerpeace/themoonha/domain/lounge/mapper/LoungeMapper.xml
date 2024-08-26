@@ -13,13 +13,34 @@
  * ==========  =========    =========
  * 2024.08.25  	조희정        최초 생성
  * 2024.08.25  	조희정        selectLoungeList 쿼리 추가
+ * 2024.08.26  	조희정        selectLoungeInfo, selectLoungePostList, selectAttendanceList, selectLoungeMemberList 쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper">
+    <!--라운지 홈 포스트 정보-->
+    <resultMap id="LoungePostResultMap" type="com.innerpeace.themoonha.domain.lounge.dto.LoungePostDTO">
+        <!-- 게시글 정보 -->
+        <id column="lounge_post_id" property="loungePostId"/>
+        <result column="content" property="content"/>
+        <result column="notice_yn" property="noticeYn"/>
+        <result column="created_at" property="createdAt"/>
+
+        <!-- 작성자 정보 -->
+        <association property="loungeMember" javaType="com.innerpeace.themoonha.domain.lounge.dto.LoungeMemberDTO">
+            <id column="member_id" property="memberId"/>
+            <result column="name" property="name"/>
+            <result column="profile_img_url" property="profileImgUrl"/>
+        </association>
+
+        <!-- 이미지 URL 리스트 -->
+        <collection property="loungePostImgList" ofType="string">
+            <result column="post_img_url"/>
+        </collection>
+    </resultMap>
 
     <select id="selectLoungeList"
             resultType="com.innerpeace.themoonha.domain.lounge.dto.LoungeListResponse">
-        SELECT
+        SELECT /*+ INDEX_DESC(lp PK_LOUNGE_POST) */
             lo.lounge_id,
             le.title,
             lo.lounge_img_url,
@@ -41,5 +62,88 @@
           AND s.online_yn = 0
           AND s.lounge_yn = 1
     </select>
+
+    <select id="selectLoungeInfo"
+            resultType="com.innerpeace.themoonha.domain.lounge.dto.LoungeInfoDTO">
+        SELECT
+            le.lesson_id,
+            le.title,
+            lo.lounge_img_url,
+            m.member_id AS tutor_id,
+            m.name AS tutor_name,
+            le.summary
+        FROM
+            lesson le
+                JOIN member m ON le.member_id = m.member_id
+                JOIN lounge lo ON le.lesson_id = lo.lesson_id
+        WHERE
+            lo.lounge_id = #{loungeId}
+    </select>
+
+    <select id="selectLoungePostList"
+            resultMap="LoungePostResultMap">
+        SELECT /*+ INDEX_ASC(lp PK_LOUNGE_POST) ORDERED */
+            lp.lounge_post_id,
+            lp.content,
+            lp.notice_yn,
+            lp.created_at,
+            lm.member_id,
+            lm.name,
+            lm.profile_img_url,
+            lpi.post_img_url
+        FROM
+            lounge_post lp
+                LEFT JOIN member lm ON lp.member_id = lm.member_id
+                LEFT JOIN lounge_post_img lpi ON lp.lounge_post_id = lpi.lounge_post_id
+        WHERE
+            lp.lounge_id = #{loungeId}
+        ORDER BY
+            lp.lounge_post_id DESC,
+            lpi.lounge_post_id ASC
+    </select>
+
+    <select id="selectAttendanceList"
+            resultType="com.innerpeace.themoonha.domain.lounge.dto.AttendanceDTO">
+        SELECT /*+ INDEX_ASC(a PK_ATTENDANCE) INDEX_ASC(sm PK_MEMBER) */
+            a.attendance_date,
+            a.attendance_yn,
+            sm.member_id,
+            sm.name
+        FROM
+            attendance a
+                JOIN sugang s ON a.sugang_id = s.sugang_id
+                LEFT JOIN member sm ON s.member_id = sm.member_id
+        WHERE
+            s.lesson_id = (
+                SELECT lesson_id
+                FROM lounge
+                WHERE lounge_id = #{loungeId}
+                )
+            <if test="role == 'ROLE_MEMBER'">
+                AND s.member_id = #{memberId}
+            </if>
+        ORDER BY
+            a.attendance_date ASC,
+            sm.member_id ASC
+    </select>
+
+    <select id="selectLoungeMemberList"
+            resultType="com.innerpeace.themoonha.domain.lounge.dto.LoungeMemberDTO">
+        SELECT /*+ INDEX_ASC(m PK_MEMBER) */
+            m.member_id,
+            m.name,
+            m.profile_img_url
+        FROM
+            sugang su
+                JOIN member m ON su.member_id = m.member_id
+        WHERE
+            su.lesson_id = #{lessonId}
+          AND su.online_yn = 0
+          AND su.lounge_yn = 1
+        ORDER BY
+            m.member_id ASC
+    </select>
+
+
 
 </mapper>
