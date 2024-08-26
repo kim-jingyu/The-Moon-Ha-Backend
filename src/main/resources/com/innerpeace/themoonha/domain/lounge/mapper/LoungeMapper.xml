@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 라운지 매퍼 XML
+ * @author 조희정
+ * @since 2024.08.25
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.25  	조희정        최초 생성
+ * 2024.08.25  	조희정        selectLoungeList 쿼리 추가
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper">
+
+    <select id="selectLoungeList"
+            resultType="com.innerpeace.themoonha.domain.lounge.dto.LoungeListResponse">
+        SELECT
+            lo.lounge_id,
+            le.title,
+            lo.lounge_img_url,
+            max(lp.created_at) AS latest_post_time
+        FROM
+            sugang s
+                JOIN
+            member m
+            ON m.member_id = s.member_id
+                JOIN
+            lounge lo
+            ON lo.lesson_id = s.lesson_id
+                JOIN
+            lesson le
+            on s.lesson_id = le.lesson_id
+                LEFT JOIN
+            lounge_post lp
+            ON lo.lounge_id = lp.lounge_id
+        WHERE
+            m.member_id = #{memberId}
+          AND s.online_yn = 0
+          AND s.lounge_yn = 1
+        GROUP BY
+            lo.lounge_id,
+            le.title,
+            lo.lounge_img_url
+        ORDER BY
+            MAX(lp.created_at) DESC
+    </select>
+
+</mapper>
