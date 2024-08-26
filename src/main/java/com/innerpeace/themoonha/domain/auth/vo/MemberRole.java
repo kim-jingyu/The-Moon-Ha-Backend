@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MemberRole {
-    ADMIN(0,"ADMIN"),
-    MEMBER(1,"MEMBER"),
-    TUTOR(2,"TUTOR");
+    ADMIN(0,"ROLE_ADMIN"),
+    MEMBER(1,"ROLE_MEMBER"),
+    TUTOR(2,"ROLE_TUTOR");
 
     private final int num;
     private final String role;
@@ -31,6 +31,6 @@ public enum MemberRole {
                 return role;
             }
         }
-        throw new IllegalArgumentException("Invalid MemberRole number: " + num);
+        throw new IllegalArgumentException("존재하지 않은 번호입니다. : " + num);
     }
 }
