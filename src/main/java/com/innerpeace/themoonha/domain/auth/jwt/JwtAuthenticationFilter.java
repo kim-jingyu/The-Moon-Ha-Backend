@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     /**
      * JWT 인증 필터
      *
-     * @apiNote 요청 시 거치는 필터 로직이다.
+     * @apiNote 요청 시 거치는 필터 로직
      * @param request ServletRequest
      * @param response ServletResponse
      * @param filterChain FilterChain

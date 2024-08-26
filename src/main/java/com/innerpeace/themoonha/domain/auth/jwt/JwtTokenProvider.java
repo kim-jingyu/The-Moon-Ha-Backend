@@ -58,14 +58,21 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    // JWT 비밀 키를 초기화하는 메서드
+    /**
+     *  JWT 비밀 키를 초기화하는 메서드
+     */
     @PostConstruct
     public void init() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // JWT 생성
+    /**
+     * JWT 생성
+     *
+     * @param member 토큰 발행 시 필요한 Member
+     * @return JwtDTO
+     */
     public JwtDTO generateToken(Member member){
         long now = (new Date()).getTime();
 
@@ -73,7 +80,7 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .claim("memberId", member.getMemberId())
                 .claim("username", member.getUsername())
-                .claim("role", member.getMemberRole().getRole())
+                .claim("auth", member.getMemberRole().getRole())
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -82,7 +89,7 @@ public class JwtTokenProvider {
         String refreshToken = Jwts.builder()
                 .claim("memberId", member.getMemberId())
                 .claim("username", member.getUsername())
-                .claim("role", member.getMemberRole().getRole())
+                .claim("auth", member.getMemberRole().getRole())
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -90,7 +97,12 @@ public class JwtTokenProvider {
         return JwtDTO.of(accessToken,refreshToken);
     }
 
-    // JWT 복호화
+    /**
+     * JWT 복호화
+     *
+     * @param accessToken
+     * @return Authentication
+     */
     public Authentication getAuthentication(String accessToken){
         Claims claims = parseClaims(accessToken);
         if (claims.get("auth") == null) {
@@ -106,10 +118,14 @@ public class JwtTokenProvider {
         UserDetails principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
-//
 
-    // JWT 클레임 추출
-    // JWT 토큰 안의 Claim 정보를 추출
+    /**
+     * JWT Claim 추출
+     *
+     * @apiNote JWT 토큰 안의 Claim 정보를 추출
+     * @param accessToken
+     * @return
+     */
     private Claims parseClaims(String accessToken){
         try{
             return Jwts.parserBuilder()
@@ -122,7 +138,12 @@ public class JwtTokenProvider {
         }
     }
 
-    // JWT 검증
+    /**
+     * JWT 검증
+     *
+     * @param token accessToken
+     * @return boolean
+     */
     public boolean validateToken(String token){
         try{
             Jwts.parserBuilder().setSigningKey(key)
@@ -141,8 +162,12 @@ public class JwtTokenProvider {
         return false;
     }
 
-    // 요청에서 토큰 추출
-    // Request Header 로부터 JWT 토큰을 추출
+    /**
+     * Request Header 로부터 JWT 토큰을 추출
+     *
+     * @param request
+     * @return token
+     */
     public String resolveToken(HttpServletRequest request){
         String bearerToken = request.getHeader("Authorization");
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer"))
