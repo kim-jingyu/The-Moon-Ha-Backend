@@ -22,7 +22,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       findLoungeList 메서드 추가
- * 2024.08.25  	조희정       findLoungeHome 메서드 추가
+ * 2024.08.25  	조희정       findLoungeHome, findLoungePostDetail 메서드 추가
  * </pre>
  */
 @Service
@@ -64,5 +64,16 @@ public class LoungeServiceImpl implements LoungeService {
                 attendanceList,
                 loungeMemberList
         );
+    }
+
+    /**
+     * 라운지 게시글 상세 조회
+     * @param loungePostId
+     * @return
+     */
+    @Override
+    public LoungePostDetailDTO findLoungePostDetail(Long loungePostId) {
+        return loungeMapper.selectLoungePostDetail(loungePostId)
+                .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_POST_NOT_FOUND));
     }
 }

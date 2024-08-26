@@ -15,7 +15,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       findLoungeList 메서드 추가
- * 2024.08.26  	조희정       findLoungeHome 메서드 추가
+ * 2024.08.26  	조희정       findLoungeHome, findLoungePostDetail 메서드 추가
  * </pre>
  */
 public interface LoungeService {
@@ -34,4 +34,11 @@ public interface LoungeService {
      * @return
      */
     LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role);
+
+    /**
+     * 라운지 게시글 상세 조회
+     * @param loungePostId
+     * @return
+     */
+    LoungePostDetailDTO findLoungePostDetail(Long loungePostId);
 }

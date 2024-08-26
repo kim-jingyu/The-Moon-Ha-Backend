@@ -17,7 +17,7 @@ import java.util.Optional;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       selectLoungeList 메서드 생성
- * 2024.08.26  	조희정       selectLoungeInfo, selectLoungePostList, selectAttendanceList, selectLoungeMemberList 메서드 생성
+ * 2024.08.26  	조희정       selectLoungeInfo, selectLoungePostList, selectAttendanceList, selectLoungeMemberList, selectLoungePostDetail 메서드 생성
  * </pre>
  */
 public interface LoungeMapper {
@@ -59,4 +59,11 @@ public interface LoungeMapper {
      * @return
      */
     List<LoungeMemberDTO> selectLoungeMemberList(Long loungeId);
+
+    /**
+     * 라운지 게시글 상세 조회
+     * @param loungePostId
+     * @return
+     */
+    Optional<LoungePostDetailDTO> selectLoungePostDetail(Long loungePostId);
 }
