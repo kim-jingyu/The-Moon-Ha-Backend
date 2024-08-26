@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  * </pre>
  */
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

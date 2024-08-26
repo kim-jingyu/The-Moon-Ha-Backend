@@ -40,7 +40,7 @@
 
     <select id="selectLoungeList"
             resultType="com.innerpeace.themoonha.domain.lounge.dto.LoungeListResponse">
-        SELECT
+        SELECT /*+ INDEX_DESC(lp PK_LOUNGE_POST) */
             lo.lounge_id,
             le.title,
             lo.lounge_img_url,
@@ -82,7 +82,7 @@
 
     <select id="selectLoungePostList"
             resultMap="LoungePostResultMap">
-        SELECT
+        SELECT /*+ INDEX_ASC(lp PK_LOUNGE_POST) ORDERED */
             lp.lounge_post_id,
             lp.content,
             lp.notice_yn,
@@ -95,14 +95,16 @@
             lounge_post lp
                 LEFT JOIN member lm ON lp.member_id = lm.member_id
                 LEFT JOIN lounge_post_img lpi ON lp.lounge_post_id = lpi.lounge_post_id
-
         WHERE
             lp.lounge_id = #{loungeId}
+        ORDER BY
+            lp.lounge_post_id DESC,
+            lpi.lounge_post_id ASC
     </select>
 
     <select id="selectAttendanceList"
             resultType="com.innerpeace.themoonha.domain.lounge.dto.AttendanceDTO">
-        SELECT
+        SELECT /*+ INDEX_ASC(a PK_ATTENDANCE) INDEX_ASC(sm PK_MEMBER) */
             a.attendance_date,
             a.attendance_yn,
             sm.member_id,
@@ -120,11 +122,14 @@
             <if test="role == 'ROLE_MEMBER'">
                 AND s.member_id = #{memberId}
             </if>
+        ORDER BY
+            a.attendance_date ASC,
+            sm.member_id ASC
     </select>
 
     <select id="selectLoungeMemberList"
             resultType="com.innerpeace.themoonha.domain.lounge.dto.LoungeMemberDTO">
-        SELECT
+        SELECT /*+ INDEX_ASC(m PK_MEMBER) */
             m.member_id,
             m.name,
             m.profile_img_url
@@ -135,6 +140,8 @@
             su.lesson_id = #{lessonId}
           AND su.online_yn = 0
           AND su.lounge_yn = 1
+        ORDER BY
+            m.member_id ASC
     </select>
 
 

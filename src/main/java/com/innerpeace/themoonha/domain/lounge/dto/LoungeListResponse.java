@@ -17,7 +17,6 @@ import lombok.*;
  * </pre>
  */
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
