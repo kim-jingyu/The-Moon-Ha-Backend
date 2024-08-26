@@ -14,6 +14,7 @@ import java.util.List;
  * 강좌 컨트롤러
  *
  * @author 손승완
+ * @since 2024.08.24
  * @version 1.0
  *
  * <pre>
@@ -25,7 +26,6 @@ import java.util.List;
  * 2024.08.26   손승완       강사 상세보기 기능 추가
  * 2024.08.26   손승완       장바구니 기능 추가
  * </pre>
- * @since 2024.08.24
  */
 @RestController
 @RequiredArgsConstructor
