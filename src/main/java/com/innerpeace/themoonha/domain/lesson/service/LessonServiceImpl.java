@@ -1,9 +1,6 @@
 package com.innerpeace.themoonha.domain.lesson.service;
 
-import com.innerpeace.themoonha.domain.lesson.dto.LessonDetailResponse;
-import com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest;
-import com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse;
-import com.innerpeace.themoonha.domain.lesson.dto.ShortFormDetailResponse;
+import com.innerpeace.themoonha.domain.lesson.dto.*;
 import com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
@@ -11,10 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * 강좌 서비스 구현체
+ *
  * @author 손승완
- * @since 2024.08.24
  * @version 1.0
  *
  * <pre>
@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
  * 2024.08.24  	손승완       최초 생성
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
+ * 2024.08.26   손승완       강사 상세보기 기능 추가
  * </pre>
+ * @since 2024.08.24
  */
 @Service
 @RequiredArgsConstructor
@@ -54,4 +56,15 @@ public class LessonServiceImpl implements LessonService {
         return lessonMapper.selectShortFormDetail(shortFormId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SHORTFORM_NOT_FOUND));
     }
+
+    @Override
+    public TutorDetailResponse findTutorDetail(Long tutorId) {
+        List<TutorLessonDetailDTO> tutorDetailList = Optional
+                .ofNullable(lessonMapper.findTutorDetail(tutorId))
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new CustomException(ErrorCode.TUTOR_NOT_FOUND));
+
+        return TutorDetailResponse.from(tutorDetailList);
+    }
+
 }

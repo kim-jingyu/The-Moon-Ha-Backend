@@ -13,6 +13,7 @@
  * ==========  =========    =========
  * 2024.08.24  	손승완        최초 생성
  * 2024.08.25   손승완        강좌 상세 조회 쿼리 추가
+ * 2024.08.26   손승완        강사 상세 조회 쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
@@ -180,5 +181,29 @@
             l.member_id = m.member_id
         where
             s.short_form_id = #{shortFormId}
+    </select>
+
+    <select id="findTutorDetail"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.TutorLessonDetailDTO">
+
+        select
+            m.name,
+            m.profile_img_url,
+            l.lesson_id,
+            l.title,
+            l.thumbnail_url,
+            l.cnt,
+            l.end_date,
+            CASE
+                WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
+                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time END AS lesson_time
+        from
+            member m
+        join
+            lesson l
+        on
+            m.member_id = l.member_id
+        where
+            m.member_id = #{tutorId}
     </select>
 </mapper>
