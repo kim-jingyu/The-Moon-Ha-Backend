@@ -5,6 +5,7 @@ import com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -79,7 +80,7 @@ public class LessonServiceImpl implements LessonService {
     @Transactional
     public CommonResponse addCart(CartRequest cartRequest) {
         if (lessonMapper.insertCart(cartRequest) == 1) {
-            return new CommonResponse(true, "강좌가 성공적으로 장바구니에 담겼습니다.");
+            return CommonResponse.of(true, SuccessCode.CART_LESSON_ADDED_SUCCESS.getMessage());
         }
 
         throw new CustomException(ErrorCode.CART_LESSON_ALREADY_EXISTS);
