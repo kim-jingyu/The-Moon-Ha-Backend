@@ -14,6 +14,7 @@
  * 2024.08.24  	손승완        최초 생성
  * 2024.08.25   손승완        강좌 상세 조회 쿼리 추가
  * 2024.08.26   손승완        강사 상세 조회 쿼리 추가
+ * 2024.08.26   손승완        장바구니 쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
@@ -164,6 +165,7 @@
     <select id="selectShortFormDetail"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.ShortFormDetailResponse">
         select
+
             l.lesson_id,
             m.name tutor_name,
             s.name short_form_name,
@@ -181,9 +183,11 @@
             l.member_id = m.member_id
         where
             s.short_form_id = #{shortFormId}
+        order by
+            b.branch_id
     </select>
 
-    <select id="findTutorDetail"
+    <select id="selectTutorDetail"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.TutorLessonDetailDTO">
 
         select
@@ -206,4 +210,52 @@
         where
             m.member_id = #{tutorId}
     </select>
+    <select id="selectCartList"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.CartResponse">
+        select
+            b.name branch_name,
+            c.cart_id,
+            l.title lesson_title,
+            l.start_date || '~' || l.end_date period,
+            case
+                when l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
+                else '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time end as lesson_time,
+            m.name tutor_name,
+            l.target,
+            l.cost,
+            l.online_cost,
+            online_yn
+        from
+            member m
+        join
+            cart c
+        on
+            m.member_id = c.member_id
+        join
+            lesson l
+        on
+            c.lesson_id = l.lesson_id
+        join
+            branch b
+        on
+            l.branch_id = b.branch_id
+        where
+            m.member_id = 1
+    </select>
+
+    <insert id="insertCart">
+        insert into
+            cart (cart_id, member_id, lesson_id, online_yn)
+        select
+            cart_seq.nextval, #{memberId}, #{lessonId}, #{onlineYn}
+        from
+            dual
+        where
+            not exists (
+                    select 1
+                    from cart
+                    where lesson_id = #{lessonId}
+                      and member_id = #{memberId}
+            )
+    </insert>
 </mapper>
