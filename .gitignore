@@ -40,3 +40,4 @@ build/
 **/.DS_Store
 .DS_Storeroot-context.xml
 root-context.xml
+security-context.xml
