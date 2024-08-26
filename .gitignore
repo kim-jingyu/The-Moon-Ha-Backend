@@ -41,3 +41,4 @@ build/
 .DS_Storeroot-context.xml
 root-context.xml
 security-context.xml
+src/main/resources/application.properties
