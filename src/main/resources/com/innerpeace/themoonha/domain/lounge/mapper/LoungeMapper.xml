@@ -23,31 +23,23 @@
             lo.lounge_id,
             le.title,
             lo.lounge_img_url,
-            max(lp.created_at) AS latest_post_time
+            lp.created_at AS latest_post_time
         FROM
             sugang s
-                JOIN
-            member m
-            ON m.member_id = s.member_id
-                JOIN
-            lounge lo
-            ON lo.lesson_id = s.lesson_id
-                JOIN
-            lesson le
-            on s.lesson_id = le.lesson_id
-                LEFT JOIN
-            lounge_post lp
-            ON lo.lounge_id = lp.lounge_id
+                JOIN member m ON m.member_id = s.member_id
+                JOIN lounge lo ON lo.lesson_id = s.lesson_id
+                JOIN lesson le ON s.lesson_id = le.lesson_id
+                LEFT JOIN lounge_post lp ON lo.lounge_id = lp.lounge_id
+                AND lp.created_at = (
+                    SELECT /*+ INDEX_DESC(lp PK_LOUNGE_POST) */
+                        MAX(created_at)
+                    FROM lounge_post
+                    WHERE lounge_id = lo.lounge_id
+                )
         WHERE
             m.member_id = #{memberId}
           AND s.online_yn = 0
           AND s.lounge_yn = 1
-        GROUP BY
-            lo.lounge_id,
-            le.title,
-            lo.lounge_img_url
-        ORDER BY
-            MAX(lp.created_at) DESC
     </select>
 
 </mapper>
