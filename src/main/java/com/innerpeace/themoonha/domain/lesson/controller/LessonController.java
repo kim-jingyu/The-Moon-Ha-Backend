@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 강좌 컨트롤러
+ *
  * @author 손승완
- * @since 2024.08.24
  * @version 1.0
  *
  * <pre>
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
+ * 2024.08.26   손승완       장바구니 조회 기능 추가
  * </pre>
+ * @since 2024.08.24
  */
 @RestController
 @RequiredArgsConstructor
@@ -69,4 +73,11 @@ public class LessonController {
     public ResponseEntity<TutorDetailResponse> tutorDetail(@PathVariable Long tutorId) {
         return ResponseEntity.ok(lessonService.findTutorDetail(tutorId));
     }
+
+    @GetMapping("/cart")
+    public ResponseEntity<List<CartResponse>> cartList() {
+        Long memberId = 1L;
+        return ResponseEntity.ok(lessonService.findCartList(memberId));
+    }
+
 }

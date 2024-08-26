@@ -24,6 +24,7 @@ import java.util.Optional;
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
+ * 2024.08.26   손승완       장바구니 조회 기능 추가
  * </pre>
  * @since 2024.08.24
  */
@@ -60,11 +61,16 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public TutorDetailResponse findTutorDetail(Long tutorId) {
         List<TutorLessonDetailDTO> tutorDetailList = Optional
-                .ofNullable(lessonMapper.findTutorDetail(tutorId))
+                .ofNullable(lessonMapper.selectTutorDetail(tutorId))
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> new CustomException(ErrorCode.TUTOR_NOT_FOUND));
 
         return TutorDetailResponse.from(tutorDetailList);
+    }
+
+    @Override
+    public List<CartResponse> findCartList(Long memberId) {
+        return lessonMapper.selectCartList(memberId);
     }
 
 }
