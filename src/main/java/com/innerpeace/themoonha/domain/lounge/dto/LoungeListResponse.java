@@ -6,7 +6,7 @@ import lombok.*;
 /**
  * 라운지 목록 응답 DTO
  * @author 조희정
- * @since 2024.08.24
+ * @since 2024.08.25
  * @version 1.0
  *
  * <pre>
