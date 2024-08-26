@@ -14,7 +14,7 @@
  * 2024.08.24  	손승완        최초 생성
  * 2024.08.25   손승완        강좌 상세 조회 쿼리 추가
  * 2024.08.26   손승완        강사 상세 조회 쿼리 추가
- * 2024.08.26   손승완        장바구니 조회 쿼리 추가
+ * 2024.08.26   손승완        장바구니 쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
@@ -241,4 +241,20 @@
         where
             m.member_id = 1
     </select>
+
+    <insert id="insertCart">
+        insert into
+            cart (cart_id, member_id, lesson_id, online_yn)
+        select
+            cart_seq.nextval, #{memberId}, #{lessonId}, #{onlineYn}
+        from
+            dual
+        where
+            not exists (
+                    select 1
+                    from cart
+                    where lesson_id = #{lessonId}
+                      and member_id = #{memberId}
+            )
+    </insert>
 </mapper>

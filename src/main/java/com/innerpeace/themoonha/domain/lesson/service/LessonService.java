@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.lesson.service;
 
 import com.innerpeace.themoonha.domain.lesson.dto.*;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
- * 2024.08.26   손승완       장바구니 조회 기능 추가
+ * 2024.08.26   손승완       장바구니 기능 추가
  * </pre>
  */
 public interface LessonService {
@@ -30,4 +31,6 @@ public interface LessonService {
     TutorDetailResponse findTutorDetail(Long tutorId);
 
     List<CartResponse> findCartList(Long memberId);
+
+    CommonResponse addCart(CartRequest cartRequest);
 }

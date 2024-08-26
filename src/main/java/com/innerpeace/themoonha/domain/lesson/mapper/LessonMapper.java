@@ -17,7 +17,7 @@ import java.util.Optional;
  * 2024.08.24  	손승완       최초 생성
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
- * 2024.08.26   손승완       장바구니 조회 기능 추가
+ * 2024.08.26   손승완       장바구니 기능 추가
  * </pre>
  */
 public interface LessonMapper {
@@ -25,6 +25,7 @@ public interface LessonMapper {
     Optional<LessonDetailResponse> selectLessonDetail(Long lessonId);
     Optional<ShortFormDetailResponse> selectShortFormDetail(Long shortFormId);
     List<TutorLessonDetailDTO> selectTutorDetail(Long tutorId);
-
     List<CartResponse> selectCartList(Long memberId);
+    int insertCart(CartRequest cartRequest);
+
 }

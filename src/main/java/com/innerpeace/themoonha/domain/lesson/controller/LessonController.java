@@ -2,13 +2,11 @@ package com.innerpeace.themoonha.domain.lesson.controller;
 
 import com.innerpeace.themoonha.domain.lesson.dto.*;
 import com.innerpeace.themoonha.domain.lesson.service.LessonService;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +23,7 @@ import java.util.List;
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
- * 2024.08.26   손승완       장바구니 조회 기능 추가
+ * 2024.08.26   손승완       장바구니 기능 추가
  * </pre>
  * @since 2024.08.24
  */
@@ -78,6 +76,13 @@ public class LessonController {
     public ResponseEntity<List<CartResponse>> cartList() {
         Long memberId = 1L;
         return ResponseEntity.ok(lessonService.findCartList(memberId));
+    }
+
+    @PostMapping("/cart")
+    public ResponseEntity<CommonResponse> cartSave(@RequestBody CartRequest cartRequest) {
+        Long memberId = 1L;
+        cartRequest.setMemberId(memberId);
+        return ResponseEntity.ok(lessonService.addCart(cartRequest));
     }
 
 }
