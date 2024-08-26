@@ -258,28 +258,4 @@
                       and member_id = #{memberId}
             )
     </insert>
-
-    <select id="findTutorDetail"
-            resultType="com.innerpeace.themoonha.domain.lesson.dto.TutorLessonDetailDTO">
-
-        select
-            m.name,
-            m.profile_img_url,
-            l.lesson_id,
-            l.title,
-            l.thumbnail_url,
-            l.cnt,
-            l.end_date,
-            CASE
-                WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
-                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time END AS lesson_time
-        from
-            member m
-        join
-            lesson l
-        on
-            m.member_id = l.member_id
-        where
-            m.member_id = #{tutorId}
-    </select>
 </mapper>
