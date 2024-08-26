@@ -18,6 +18,7 @@ import java.util.Optional;
  * 강좌 서비스 구현체
  *
  * @author 손승완
+ * @since 2024.08.24
  * @version 1.0
  *
  * <pre>
@@ -29,7 +30,6 @@ import java.util.Optional;
  * 2024.08.26   손승완       강사 상세보기 기능 추가
  * 2024.08.26   손승완       장바구니 기능 추가
  * </pre>
- * @since 2024.08.24
  */
 @Service
 @RequiredArgsConstructor
