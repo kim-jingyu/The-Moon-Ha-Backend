@@ -2,6 +2,8 @@ package com.innerpeace.themoonha.domain.craft.service;
 
 import com.innerpeace.themoonha.domain.craft.dto.CraftMainResponse;
 import com.innerpeace.themoonha.domain.craft.dto.PrologueDetailResponse;
+import com.innerpeace.themoonha.domain.craft.dto.SuggestionRequest;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.util.Criteria;
 
 /**
@@ -14,10 +16,14 @@ import com.innerpeace.themoonha.global.util.Criteria;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.25  	손승완       최초 생성
+ * 2024.08.26   손승완       프롤로그 상세 조회 구현
+ * 2024.08.27   손승완       제안합니다 댓글 작성 기능 추가
  * </pre>
  */
 public interface CraftService {
     CraftMainResponse findCraftMain(Criteria criteria);
 
     PrologueDetailResponse findPrologueDetail(Long prologueId);
+
+    CommonResponse addSuggestion(SuggestionRequest suggestionRequest, Long memberId);
 }
