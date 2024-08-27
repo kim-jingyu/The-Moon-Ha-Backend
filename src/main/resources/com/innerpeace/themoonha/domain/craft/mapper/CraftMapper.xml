@@ -113,4 +113,19 @@
         VALUES
             (suggestion_seq.nextval, #{memberId}, #{suggestionRequest.content})
     </insert>
+
+    <insert id="insertPrologueLike">
+        INSERT INTO
+            like_cnt (like_cnt_id, member_id, prologue_id)
+        SELECT
+            like_cnt_seq.nextval, #{memberId}, #{prologueId}
+        FROM
+            dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM like_cnt
+            WHERE member_id = #{memberId}
+              AND prologue_id = #{prologueId}
+        )
+    </insert>
 </mapper>

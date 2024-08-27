@@ -65,4 +65,14 @@ public class CraftServiceImpl implements CraftService {
         }
         return CommonResponse.from(SuccessCode.SUGGESTION_WRITE_SUCCESS.getMessage());
     }
+
+    @Override
+    @Transactional
+    public CommonResponse addPrologueLike(Long prologueId, Long memberId) {
+        if (craftMapper.insertPrologueLike(prologueId, memberId) != 1) {
+            throw new CustomException(ErrorCode.PROLOGUE_LIKE_ALREADY_EXISTS);
+        }
+
+        return CommonResponse.from(SuccessCode.PROLOGUE_LIKE_SUCCESS.getMessage());
+    }
 }
