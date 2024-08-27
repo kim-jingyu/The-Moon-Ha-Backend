@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 비포애프터 매퍼 XML
+ * @author 김진규
+ * @since 2024.08.27
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.27  김진규         최초 생성
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.bite.mapper.BeforeAfterMapper">
+    <resultMap id="BeforeAfterListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse">
+        <result property="beforeUrl" column="beforeUrl" />
+        <result property="beforeIsImage" column="beforeIsImage" />
+        <result property="afterUrl" column="afterUrl" />
+        <result property="afterIsImage" column="afterIsImage" />
+        <result property="title" column="title" />
+        <result property="profileImageUrl" column="profileImageUrl" />
+        <result property="memberName" column="memberName" />
+        <collection property="hashtags" ofType="string">
+            <result column="hashtag" />
+        </collection>
+    </resultMap>
+    <resultMap id="BeforeAfterSearchResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse">
+        <result property="baId" column="baId" />
+        <result property="title" column="title" />
+    </resultMap>
+    <select id="findBeforeAfterList" resultMap="BeforeAfterListResponseMap">
+        SELECT
+            ba.before_content_url AS beforeUrl,
+            CASE
+                WHEN ba.before_content_url LIKE '%/image/%' THEN 1
+                ELSE 0
+            END as beforeIsImage,
+            ba.after_content_url AS afterUrl,
+            CASE
+                WHEN ba.after_content_url LIKE '%/image/%' THEN 1
+                ELSE 0
+            END as afterIsImage,
+            ba.title as title,
+            m.profile_img_url AS profileImageUrl,
+            m.name AS memberName,
+            h.name as hashTag
+        FROM
+            before_after ba
+        JOIN
+            member m
+            ON ba.member_id = m.member_id
+        LEFT JOIN
+            hashtag h
+            ON ba.ba_id = h.ba_id
+    </select>
+    <insert id="makeBeforeAfter" parameterType="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterDTO" useGeneratedKeys="true" keyProperty="baId">
+        INSERT INTO before_after (
+            ba_id,
+            member_id,
+            lesson_id,
+            title,
+            before_content_url,
+            after_content_url,
+            created_at
+        ) VALUES (
+            before_after_seq.nextval,
+            #{memberId},
+            #{lessonId},
+            #{title},
+            #{beforeContentUrl},
+            #{afterContentUrl},
+            SYSDATE
+        );
+
+        <foreach collection="hashtags" item="hashtag">
+            INSERT INTO hashtag (
+                hashtag_id,
+                ba_id,
+                name
+            ) VALUES (
+                hashtag_seq.nextval,
+                #{baId},
+                #{hashtag}
+            );
+        </foreach>
+    </insert>
+    <select id="findBeforeAfterListByTitle" resultMap="BeforeAfterTitleSearchResponseMap">
+        SELECT
+            ba_id AS baId,
+            title
+        FROM
+            before_after
+        WHERE
+            title LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+</mapper>
