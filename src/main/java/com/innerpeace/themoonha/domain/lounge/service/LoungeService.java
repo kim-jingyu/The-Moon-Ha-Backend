@@ -1,6 +1,6 @@
 package com.innerpeace.themoonha.domain.lounge.service;
 
-import com.innerpeace.themoonha.domain.lounge.dto.LoungeListResponse;
+import com.innerpeace.themoonha.domain.lounge.dto.*;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       findLoungeList 메서드 추가
+ * 2024.08.26  	조희정       findLoungeHome 메서드 추가
  * </pre>
  */
 public interface LoungeService {
@@ -24,4 +25,13 @@ public interface LoungeService {
      * @return
      */
     List<LoungeListResponse> findLoungeList(Long memberId);
+
+    /**
+     * 라운지 홈 조회
+     * @param loungeId
+     * @param memberId
+     * @param role
+     * @return
+     */
+    LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role);
 }
