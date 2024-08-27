@@ -67,6 +67,7 @@ public class CraftServiceImpl implements CraftService {
     }
 
     @Override
+    @Transactional
     public CommonResponse addPrologueLike(Long prologueId, Long memberId) {
         if (craftMapper.insertPrologueLike(prologueId, memberId) != 1) {
             throw new CustomException(ErrorCode.PROLOGUE_LIKE_ALREADY_EXISTS);
