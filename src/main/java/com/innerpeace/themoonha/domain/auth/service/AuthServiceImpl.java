@@ -61,7 +61,8 @@ public class AuthServiceImpl implements AuthService{
                 .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 2. 비밀번호 일치 여부 확인하기
-        if(encoder.matches(member.getPassword(),request.getPassword()))
+        log.info("login : {}, {}", request.getPassword(), member.getPassword());
+        if(!encoder.matches(request.getPassword(), member.getPassword()))
             throw new CustomException(ErrorCode.MEMBER_INCORRECT_AUTH);
 
         // 3. 토큰 발급하기

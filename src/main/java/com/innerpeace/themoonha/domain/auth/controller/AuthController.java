@@ -61,5 +61,4 @@ public class AuthController {
                 .headers(headers)
                 .body(CommonResponse.from("로그인에 성공하였습니다!"));
     }
-
 }
