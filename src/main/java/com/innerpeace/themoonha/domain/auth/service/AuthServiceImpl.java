@@ -38,17 +38,19 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public int signUp(SignUpRequest request) {
+        // 사용 가능한 username 여부 확인
         if(!checkAvailableUsername(request.getUsername()))
             throw new CustomException(ErrorCode.MEMBER_DUPLICATE);
 
-        // 비밀번호 암호화
+        // 비밀번호 암호화 처리
         String encodedPassword = encoder.encode(request.getPassword());
-
         Member member = Member.of(request,encodedPassword);
 
         int result = authMapper.insertMember(member);
+        if(result == 1)
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
-        return result;
+        return authMapper.insertMember(member);
     }
 
     @Override

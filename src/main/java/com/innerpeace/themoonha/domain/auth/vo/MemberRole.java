@@ -31,6 +31,6 @@ public enum MemberRole {
                 return role;
             }
         }
-        throw new IllegalArgumentException("존재하지 않은 번호입니다. : " + num);
+        throw new IllegalArgumentException("존재하지 않은 숫자입니다. : " + num);
     }
 }

@@ -2,6 +2,8 @@ package com.innerpeace.themoonha.domain.auth.jwt;
 
 import com.innerpeace.themoonha.domain.auth.dto.JwtDTO;
 import com.innerpeace.themoonha.global.entity.Member;
+import com.innerpeace.themoonha.global.exception.CustomException;
+import com.innerpeace.themoonha.global.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -128,7 +130,6 @@ public class JwtTokenProvider {
         if (claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
-        log.info("getAuthentication : {}", claims.get("auth"));
 
         // 클레임에서 권한 정보 가져옴
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
@@ -185,7 +186,8 @@ public class JwtTokenProvider {
         } catch (IllegalArgumentException e) {
             log.info("JWT Claim 문자열이 비어있습니다. ", e);
         } catch (Exception e){
-            log.info("오류염 ", e);
+            log.info("예상치 못한 오류가 발생했습니다. ", e);
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
         return false;
     }
@@ -202,7 +204,6 @@ public class JwtTokenProvider {
 
         // AccessToken 추출
         String bearerToken = request.getHeader("Authorization");
-        log.info("resolveToken : {}", bearerToken);
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer"))
              accessToken = bearerToken.substring(7);
 

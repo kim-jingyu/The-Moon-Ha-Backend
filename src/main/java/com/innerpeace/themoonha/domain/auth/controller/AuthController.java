@@ -6,6 +6,7 @@ import com.innerpeace.themoonha.domain.auth.dto.SignUpRequest;
 import com.innerpeace.themoonha.domain.auth.service.AuthService;
 import com.innerpeace.themoonha.domain.auth.util.AuthUtil;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.vo.SuccessCode;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,8 @@ public class AuthController {
 
     @PostMapping(value="/signup")
     public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest dto) {
-        return authService.signUp(dto) == 1 ?
-                ResponseEntity.ok(CommonResponse.from("회원가입 성공하였습니다.")) :
-                ResponseEntity.ok(CommonResponse.of(false, "회원가입 실패히였습니다."));
+        authService.signUp(dto);
+        return ResponseEntity.ok(CommonResponse.from(SuccessCode.AUTH_SIGNUP_SUCCESS.getMessage()));
     }
 
     @PostMapping(value="/login")
@@ -60,6 +60,6 @@ public class AuthController {
         return ResponseEntity
                 .ok()
                 .headers(headers)
-                .body(CommonResponse.from("로그인에 성공하였습니다!"));
+                .body(CommonResponse.from(SuccessCode.AUTH_LOGIN_SUCCESS.getMessage()));
     }
 }
