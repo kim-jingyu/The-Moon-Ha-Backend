@@ -86,8 +86,8 @@ public class LessonController {
     }
 
     @PostMapping("/pay")
-    public ResponseEntity<CommonResponse> lessonPayment(@RequestBody List<Long> cartIdList) {
+    public ResponseEntity<CommonResponse> lessonPayment(@RequestBody SugangRequest sugangRequest) {
         Long memberId = 1L;
-        return ResponseEntity.ok(lessonService.payLesson(cartIdList, memberId));
+        return ResponseEntity.ok(lessonService.payLesson(sugangRequest.getCartIdList(), memberId));
     }
 }

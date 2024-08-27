@@ -285,6 +285,7 @@
             deleted_at = current_date
         where
             member_id = #{memberId} and
+            deleted_at is null and
             cart_id in
             <foreach item="cartId" collection="cartIdList" open="(" separator="," close=")">
                 #{cartId}
