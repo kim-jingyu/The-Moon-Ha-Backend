@@ -28,7 +28,7 @@ public class LoungePostDetailDTO {
     private LoungePostDTO loungePost;
     private List<LoungeCommentDTO> loungeCommentList;
 
-    public static LoungePostDetailDTO from(LoungePostDTO loungePost, List<LoungeCommentDTO> loungeCommentList) {
+    public static LoungePostDetailDTO of(LoungePostDTO loungePost, List<LoungeCommentDTO> loungeCommentList) {
         return LoungePostDetailDTO.builder()
                 .loungePost(loungePost)
                 .loungeCommentList(loungeCommentList)

@@ -59,7 +59,7 @@ public class LoungeServiceImpl implements LoungeService {
                 .stream()
                 .map(loungePost -> {
                     List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePost.getLoungePostId());
-                    return LoungePostDTO.from(loungePost, postImgUrl);
+                    return LoungePostDTO.of(loungePost, postImgUrl);
                 })
                 .collect(Collectors.toList());
         List<AttendanceDTO> attendanceList = loungeMapper.selectAttendanceList(loungeId, memberId, role);
@@ -84,11 +84,11 @@ public class LoungeServiceImpl implements LoungeService {
         LoungePostDTO loungePost = loungeMapper.selectLoungePostDetail(loungePostId)
                 .map(loungePostDTO -> {
                     List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePostDTO.getLoungePostId());
-                    return LoungePostDTO.from(loungePostDTO, postImgUrl);
+                    return LoungePostDTO.of(loungePostDTO, postImgUrl);
                 })
                 .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_POST_NOT_FOUND));
         List<LoungeCommentDTO> loungeCommentList = loungeMapper.selectLoungeCommentList(loungePostId);
-        return LoungePostDetailDTO.from(
+        return LoungePostDetailDTO.of(
                 loungePost,
                 loungeCommentList
         );

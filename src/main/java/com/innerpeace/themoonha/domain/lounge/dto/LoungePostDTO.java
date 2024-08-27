@@ -35,7 +35,7 @@ public class LoungePostDTO {
     private LoungeMemberDTO loungeMember;
 
 
-    public static LoungePostDTO from(LoungePostDTO loungePostDTO, List<String> loungePostImgList) {
+    public static LoungePostDTO of(LoungePostDTO loungePostDTO, List<String> loungePostImgList) {
         return LoungePostDTO.builder()
                 .loungePostId(loungePostDTO.getLoungePostId())
                 .content(loungePostDTO.getContent())
