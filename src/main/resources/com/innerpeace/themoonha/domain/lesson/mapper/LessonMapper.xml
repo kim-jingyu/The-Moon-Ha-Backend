@@ -14,7 +14,7 @@
  * 2024.08.24  	손승완        최초 생성
  * 2024.08.25   손승완        강좌 상세 조회 쿼리 추가
  * 2024.08.26   손승완        강사 상세 조회 쿼리 추가
- * 2024.08.26   손승완        장바구니 쿼리 추가
+ * 2024.08.26   손승완        장바구니 및 수강신청 쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
@@ -165,7 +165,6 @@
     <select id="selectShortFormDetail"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.ShortFormDetailResponse">
         select
-
             l.lesson_id,
             m.name tutor_name,
             s.name short_form_name,
@@ -189,7 +188,6 @@
 
     <select id="selectTutorDetail"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.TutorLessonDetailDTO">
-
         select
             m.name,
             m.profile_img_url,
@@ -240,7 +238,9 @@
         on
             l.branch_id = b.branch_id
         where
-            m.member_id = 1
+            m.member_id = #{memberId} and c.deleted_at is null
+        order by
+            b.branch_id
     </select>
 
     <insert id="insertCart">
@@ -258,4 +258,36 @@
                       and member_id = #{memberId}
             )
     </insert>
+
+    <insert id="insertSugang" parameterType="java.util.List">
+        insert into
+            sugang(sugang_id, lesson_id, member_id, online_yn, lounge_yn)
+        select
+            sugang_seq.nextval,
+            lesson_id,
+            member_id,
+            online_yn,
+            case when online_yn = 1 then 0 else 1 end as lounge_yn
+        from
+            cart
+        where
+            member_id = #{memberId} and
+            cart_id in
+            <foreach item="cartId" collection="cartIdList" open="(" separator="," close=")">
+                #{cartId}
+            </foreach>
+    </insert>
+
+    <update id="deleteCart">
+        update
+            cart
+        set
+            deleted_at = current_date
+        where
+            member_id = #{memberId} and
+            cart_id in
+            <foreach item="cartId" collection="cartIdList" open="(" separator="," close=")">
+                #{cartId}
+            </foreach>
+    </update>
 </mapper>
