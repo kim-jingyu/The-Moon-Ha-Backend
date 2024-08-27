@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 라운지 서비스 구현체
@@ -22,7 +23,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       findLoungeList 메서드 추가
- * 2024.08.25  	조희정       findLoungeHome 메서드 추가
+ * 2024.08.25  	조희정       findLoungeHome, findLoungePostDetail 메서드 추가
  * </pre>
  */
 @Service
@@ -54,7 +55,13 @@ public class LoungeServiceImpl implements LoungeService {
     public LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role) {
         LoungeInfoDTO loungeInfo = loungeMapper.selectLoungeInfo(loungeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_NOT_FOUND));
-        List<LoungePostDTO> loungePostList = loungeMapper.selectLoungePostList(loungeId);
+        List<LoungePostDTO> loungePostList = loungeMapper.selectLoungePostList(loungeId)
+                .stream()
+                .map(loungePost -> {
+                    List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePost.getLoungePostId());
+                    return LoungePostDTO.of(loungePost, postImgUrl);
+                })
+                .collect(Collectors.toList());
         List<AttendanceDTO> attendanceList = loungeMapper.selectAttendanceList(loungeId, memberId, role);
         List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeId);
 
@@ -63,6 +70,27 @@ public class LoungeServiceImpl implements LoungeService {
                 loungePostList,
                 attendanceList,
                 loungeMemberList
+        );
+    }
+
+    /**
+     * 라운지 게시글 상세 조회
+     * @param loungePostId
+     * @return
+     */
+    @Override
+    public LoungePostDetailDTO findLoungePostDetail(Long loungePostId) {
+
+        LoungePostDTO loungePost = loungeMapper.selectLoungePostDetail(loungePostId)
+                .map(loungePostDTO -> {
+                    List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePostDTO.getLoungePostId());
+                    return LoungePostDTO.of(loungePostDTO, postImgUrl);
+                })
+                .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_POST_NOT_FOUND));
+        List<LoungeCommentDTO> loungeCommentList = loungeMapper.selectLoungeCommentList(loungePostId);
+        return LoungePostDetailDTO.of(
+                loungePost,
+                loungeCommentList
         );
     }
 }
