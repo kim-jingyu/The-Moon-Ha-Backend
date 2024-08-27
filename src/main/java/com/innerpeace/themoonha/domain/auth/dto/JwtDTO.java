@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * JWT accessToken, refreshToken 담는 DTO
+ * JWT accessToken, refreshToken 담는 dto
  * @author 최유경
  * @since 2024.08.26
  * @version 1.0

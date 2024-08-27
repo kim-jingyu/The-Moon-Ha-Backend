@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
  * ----------  --------    ---------------------------
  * 2024.08.25  	최유경       최초 생성
  * 2024.08.26  	최유경       로그인 메서드 생성
+ * 2024.08.27   최유경       토큰 만료 재발급 로직
  * </pre>
  */
 @Service
@@ -62,7 +63,6 @@ public class AuthServiceImpl implements AuthService{
                 .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 2. 비밀번호 일치 여부 확인하기
-        log.info("login : {}, {}", request.getPassword(), member.getPassword());
         if(!encoder.matches(request.getPassword(), member.getPassword()))
             throw new CustomException(ErrorCode.MEMBER_INCORRECT_AUTH);
 

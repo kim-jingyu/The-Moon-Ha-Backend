@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.26  	최유경       최초 생성
- * 2024.08.27  	최유경       getSigningKey refactor, 토큰 재발급 로직 추가
+ * 2024.08.27  	최유경       getSigningKey refactor, 토큰 재발급 로직
  * </pre>
  */
 @Slf4j
