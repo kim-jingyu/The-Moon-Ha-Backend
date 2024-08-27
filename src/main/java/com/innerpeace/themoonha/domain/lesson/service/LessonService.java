@@ -18,19 +18,15 @@ import java.util.List;
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
- * 2024.08.26   손승완       장바구니 기능 추가
+ * 2024.08.26   손승완       장바구니 및 신청 기능 추가
  * </pre>
  */
 public interface LessonService {
     LessonListResponse findLessonList(LessonListRequest lessonListRequest);
-
     LessonDetailResponse findLessonDetail(Long lessonId);
-
     ShortFormDetailResponse findShortFormDetail(Long shortFormId);
-
     TutorDetailResponse findTutorDetail(Long tutorId);
-
     List<CartResponse> findCartList(Long memberId);
-
     CommonResponse addCart(CartRequest cartRequest);
+    CommonResponse payLesson(List<Long> cartIdList, Long memberId);
 }

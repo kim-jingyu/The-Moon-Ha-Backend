@@ -24,7 +24,7 @@ import java.util.List;
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
- * 2024.08.26   손승완       장바구니 기능 추가
+ * 2024.08.26   손승완       장바구니 및 신청 기능 추가
  * </pre>
  */
 @RestController
@@ -85,4 +85,9 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.addCart(cartRequest));
     }
 
+    @PostMapping("/pay")
+    public ResponseEntity<CommonResponse> lessonPayment(@RequestBody SugangRequest sugangRequest) {
+        Long memberId = 1L;
+        return ResponseEntity.ok(lessonService.payLesson(sugangRequest.getCartIdList(), memberId));
+    }
 }

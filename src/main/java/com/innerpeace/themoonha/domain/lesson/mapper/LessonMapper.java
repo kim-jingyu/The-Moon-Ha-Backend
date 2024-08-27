@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.lesson.mapper;
 
 import com.innerpeace.themoonha.domain.lesson.dto.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import java.util.Optional;
  * 2024.08.24  	손승완       최초 생성
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
- * 2024.08.26   손승완       장바구니 기능 추가
+ * 2024.08.26   손승완       장바구니 및 신청 기능 추가
  * </pre>
  */
 public interface LessonMapper {
@@ -27,5 +28,8 @@ public interface LessonMapper {
     List<TutorLessonDetailDTO> selectTutorDetail(Long tutorId);
     List<CartResponse> selectCartList(Long memberId);
     int insertCart(CartRequest cartRequest);
-
+    int deleteCart(@Param("cartIdList") List<Long> cartIdList,
+                   @Param("memberId") Long memberId);
+    int insertSugang(@Param("cartIdList") List<Long> cartIdList,
+                     @Param("memberId") Long memberId);
 }
