@@ -14,7 +14,7 @@
  * 2024.08.25  	조희정        최초 생성
  * 2024.08.25  	조희정        selectLoungeList 쿼리 추가
  * 2024.08.26  	조희정        selectLoungeInfo, selectLoungePostList, selectAttendanceList, selectLoungeMemberList, selectLoungePostDetail 쿼리 추가
- * 2024.08.26  	조희정       selectLoungePostImgList, selectLoungeCommentList 쿼리 추가
+ * 2024.08.27  	조희정        selectLoungePostImgList, selectLoungeCommentList 쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper">
@@ -207,5 +207,26 @@
                 ORDER BY
                     lc.lounge_comment_id ASC
     </select>
+
+    <!-- 라운지 게시물 등록 -->
+    <insert id="insertLoungePost" keyProperty="loungePostRequest.loungePostId">
+        <selectKey keyProperty="loungePostRequest.loungePostId" resultType="long" order="BEFORE">
+            SELECT lounge_post_seq.nextval from dual
+        </selectKey>
+        INSERT INTO lounge_post (lounge_post_id, member_id, lounge_id, content, notice_yn)
+        VALUES (#{loungePostRequest.loungePostId}, #{memberId}, #{loungePostRequest.loungeId}, #{loungePostRequest.content}, #{loungePostRequest.noticeYn})
+    </insert>
+
+    <!-- 라운지 게시물 이미지 등록 -->
+    <insert id="insertLoungePostImgUrls">
+        INSERT INTO lounge_post_img (lounge_post_img_id, lounge_post_id, post_img_url)
+        VALUES (lounge_post_img_seq.nextval, #{loungePostId}, #{postImgUrl})
+    </insert>
+
+    <!-- 라운지 댓글 등록 -->
+    <insert id="insertLoungeComment">
+        INSERT INTO lounge_comment(lounge_comment_id, member_id, lounge_post_id, content)
+        VALUES (lounge_comment_seq.nextval, #{memberId}, #{loungeComment.loungePostId}, #{loungeComment.content})
+    </insert>
 
 </mapper>

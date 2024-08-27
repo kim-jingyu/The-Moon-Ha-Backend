@@ -18,7 +18,7 @@ import java.util.Optional;
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       selectLoungeList 메서드 생성
  * 2024.08.26  	조희정       selectLoungeInfo, selectLoungePostList, selectAttendanceList, selectLoungeMemberList, selectLoungePostDetail 메서드 생성
- * 2024.08.26  	조희정       selectLoungePostImgList, selectLoungeCommentList 메서드 생성
+ * 2024.08.27  	조희정       selectLoungePostImgList, selectLoungeCommentList, insertLoungePost, insertLoungePostImgUrls, insertLoungeComment 메서드 생성
  * </pre>
  */
 public interface LoungeMapper {
@@ -81,4 +81,27 @@ public interface LoungeMapper {
      * @return
      */
     List<LoungeCommentDTO> selectLoungeCommentList(Long loungePostId);
+
+    /**
+     * 라운지 게시물 등록
+     * @param loungePostRequest
+     * @return
+     */
+    int insertLoungePost(@Param("loungePostRequest") LoungePostRequest loungePostRequest, @Param("memberId") Long memberId);
+
+    /**
+     * 라운지 게시물 이미지 등록
+     * @param loungePostId
+     * @param postImgUrl
+     * @return
+     */
+    int insertLoungePostImgUrls(@Param("loungePostId") Long loungePostId, @Param("postImgUrl") String postImgUrl);
+
+    /**
+     * 라운지 댓글 등록
+     * @param loungeCommentRequest
+     * @param memberId
+     * @return
+     */
+    int insertLoungeComment(@Param("loungeComment") LoungeCommentRequest loungeCommentRequest, @Param("memberId") Long memberId);
 }

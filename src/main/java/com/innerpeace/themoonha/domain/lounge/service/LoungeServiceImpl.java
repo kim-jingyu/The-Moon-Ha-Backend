@@ -2,8 +2,10 @@ package com.innerpeace.themoonha.domain.lounge.service;
 
 import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,8 @@ import java.util.stream.Collectors;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       findLoungeList 메서드 추가
- * 2024.08.25  	조희정       findLoungeHome, findLoungePostDetail 메서드 추가
+ * 2024.08.26  	조희정       findLoungeHome, findLoungePostDetail 메서드 추가
+ * 2024.08.27  	조희정       addLoungePost, addLoungeComment 메서드 추가
  * </pre>
  */
 @Service
@@ -92,5 +95,44 @@ public class LoungeServiceImpl implements LoungeService {
                 loungePost,
                 loungeCommentList
         );
+    }
+
+    /**
+     * 라운지 게시물 등록
+     * @param loungePostRequest
+     * @param memberId
+     * @return
+     */
+    @Override
+    public CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId) {
+        // 게시물 저장
+        if(loungeMapper.insertLoungePost(loungePostRequest, memberId) != 1) {
+            throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
+        };
+
+        // 이미지 저장
+        if (loungePostRequest.getLoungePostImgList() != null && !loungePostRequest.getLoungePostImgList().isEmpty()) {
+            for (String postImgUrl : loungePostRequest.getLoungePostImgList()) {
+                if (loungeMapper.insertLoungePostImgUrls(loungePostRequest.getLoungePostId(), postImgUrl) != 1) {
+                    throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
+                }
+            }
+        }
+
+        return CommonResponse.of(true, SuccessCode.LOUNGE_POST_ADD_SUCCESS.getMessage());
+    }
+
+    /**
+     * 라운지 게시물에 댓글 등록
+     * @param loungeCommentRequest
+     * @param memberId
+     * @return
+     */
+    @Override
+    public CommonResponse addLoungeComment(LoungeCommentRequest loungeCommentRequest, Long memberId) {
+        if(loungeMapper.insertLoungeComment(loungeCommentRequest, memberId) != 1) {
+            throw new CustomException(ErrorCode.LOUNGE_COMMENT_FAILED);
+        }
+        return CommonResponse.of(true, SuccessCode.LOUNGE_COMMENT_ADD_SUCCESS.getMessage());
     }
 }
