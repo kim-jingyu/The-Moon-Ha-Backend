@@ -1,9 +1,6 @@
 package com.innerpeace.themoonha.domain.craft.mapper;
 
-import com.innerpeace.themoonha.domain.craft.dto.PrologueDTO;
-import com.innerpeace.themoonha.domain.craft.dto.PrologueDetailResponse;
-import com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO;
-import com.innerpeace.themoonha.domain.craft.dto.WishLessonDTO;
+import com.innerpeace.themoonha.domain.craft.dto.*;
 import com.innerpeace.themoonha.global.util.Criteria;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +17,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	손승완       최초 생성
  * 2024.08.26  	손승완       프롤로그 상세 조회 메서드 추가
+ * 2024.08.27  	손승완       제안합니다 댓글 작성 메서드 추가
  * </pre>
  */
 public interface CraftMapper {
@@ -31,4 +29,6 @@ public interface CraftMapper {
     PrologueDetailResponse selectPrologueDetail(@Param("prologueId") Long prologueId,
                                                 @Param("memberId") Long memberId);
 
+    int insertSuggestion(@Param("suggestionRequest") SuggestionRequest suggestionRequest,
+                         @Param("memberId") Long memberId);
 }

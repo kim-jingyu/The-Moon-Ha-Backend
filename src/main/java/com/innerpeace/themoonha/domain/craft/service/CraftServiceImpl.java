@@ -2,7 +2,11 @@ package com.innerpeace.themoonha.domain.craft.service;
 
 import com.innerpeace.themoonha.domain.craft.dto.*;
 import com.innerpeace.themoonha.domain.craft.mapper.CraftMapper;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.exception.CustomException;
+import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.util.Criteria;
+import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	손승완       최초 생성
  * 2024.08.26   손승완       프롤로그 상세 조회 구현
+ * 2024.08.27   손승완       제안합니다 댓글 작성 기능 추가
  * </pre>
  */
 @Service
@@ -50,5 +55,14 @@ public class CraftServiceImpl implements CraftService {
         PrologueDetailResponse prologueDetailResponse = craftMapper.selectPrologueDetail(prologueId, memberId);
         log.info("response = {}", prologueDetailResponse);
         return prologueDetailResponse;
+    }
+
+    @Override
+    @Transactional
+    public CommonResponse addSuggestion(SuggestionRequest suggestionRequest, Long memberId) {
+        if (craftMapper.insertSuggestion(suggestionRequest, memberId) != 1) {
+            throw new CustomException(ErrorCode.SUGGESTION_FAILED);
+        }
+        return CommonResponse.from(SuccessCode.SUGGESTION_WRITE_SUCCESS.getMessage());
     }
 }
