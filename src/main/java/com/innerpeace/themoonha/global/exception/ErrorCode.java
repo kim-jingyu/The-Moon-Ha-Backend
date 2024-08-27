@@ -13,7 +13,8 @@ public enum ErrorCode {
     TUTOR_NOT_FOUND(404, "강사가 존재하지 않습니다"),
     CART_LESSON_ALREADY_EXISTS(409, "강좌가 이미 장바구니에 담겨있습니다."),
     SUGANG_FAILED(400, "수강신청에 실패했습니다."),
-    LOUNGE_NOT_FOUND(404, "라운지 정보가 존재하지 않습니다.");
+    LOUNGE_NOT_FOUND(404, "라운지 정보가 존재하지 않습니다."),
+    LOUNGE_POST_NOT_FOUND(404, "라운지 게시글 정보가 존재하지 않습니다.");
     private final int status;
     private final String message;
 

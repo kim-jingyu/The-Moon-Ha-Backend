@@ -23,7 +23,7 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       loungeList 메서드 추가
- * 2024.08.26  	조희정       loungeHome 메서드 추가
+ * 2024.08.26  	조희정       loungeHome, loungePostDetail 메서드 추가
  * </pre>
  */
 @RestController
@@ -54,5 +54,16 @@ public class LoungeController {
         Long memberId = 1L; // 임시 memberId
         String role = "ROLE_TUTOR"; // 임시 role
         return ResponseEntity.ok(loungeService.findLoungeHome(loungeId, memberId, role));
+    }
+
+    /**
+     * 라운지 게시글 상세 조회
+     * @param loungeId
+     * @param loungePostId
+     * @return
+     */
+    @GetMapping("/{loungeId}/post/{loungePostId}")
+    public ResponseEntity<LoungePostDetailDTO> loungePostDetail(@PathVariable Long loungeId, @PathVariable Long loungePostId) {
+        return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId));
     }
 }
