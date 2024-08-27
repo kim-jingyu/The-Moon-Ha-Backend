@@ -2,13 +2,11 @@ package com.innerpeace.themoonha.domain.lounge.controller;
 
 import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.domain.lounge.service.LoungeService;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +22,7 @@ import java.util.List;
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       loungeList 메서드 추가
  * 2024.08.26  	조희정       loungeHome, loungePostDetail 메서드 추가
+ * 2024.08.27  	조희정       loungePostRegister, loungeCommentRegister 메서드 추가
  * </pre>
  */
 @RestController
@@ -65,5 +64,27 @@ public class LoungeController {
     @GetMapping("/{loungeId}/post/{loungePostId}")
     public ResponseEntity<LoungePostDetailDTO> loungePostDetail(@PathVariable Long loungeId, @PathVariable Long loungePostId) {
         return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId));
+    }
+
+    /**
+     * 라운지 게시글 등록
+     * @param loungePostRequest
+     * @return
+     */
+    @PostMapping("/post/register")
+    public ResponseEntity<CommonResponse> loungePostRegister(@RequestBody LoungePostRequest loungePostRequest) {
+        Long memberId = 1L;
+        return ResponseEntity.ok(loungeService.addLoungePost(loungePostRequest, memberId));
+    }
+
+    /**
+     * 라운지 댓글 등록
+     * @param loungeCommentRequest
+     * @return
+     */
+    @PostMapping("/comment/register")
+    public ResponseEntity<CommonResponse> loungeCommentRegister(@RequestBody LoungeCommentRequest loungeCommentRequest) {
+        Long memberId = 1L;
+        return ResponseEntity.ok(loungeService.addLoungeComment(loungeCommentRequest, memberId));
     }
 }
