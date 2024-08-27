@@ -26,4 +26,6 @@ public interface CraftService {
     PrologueDetailResponse findPrologueDetail(Long prologueId);
 
     CommonResponse addSuggestion(SuggestionRequest suggestionRequest, Long memberId);
+
+    CommonResponse addPrologueLike(Long prologueId, Long memberId);
 }
