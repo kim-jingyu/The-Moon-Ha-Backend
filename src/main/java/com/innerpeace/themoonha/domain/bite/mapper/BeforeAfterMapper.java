@@ -21,6 +21,7 @@ import java.util.List;
  */
 public interface BeforeAfterMapper {
     List<BeforeAfterResponse> findBeforeAfterList();
-    Long makeBeforeAfter(BeforeAfterDTO beforeAfterDTO);
+    void insertBeforeAfter(BeforeAfterDTO beforeAfterDTO);
     List<BeforeAfterSearchResponse> findBeforeAfterListByTitle(String keyword);
+    List<BeforeAfterSearchResponse> findBeforeAfterListByHashtag();
 }

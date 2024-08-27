@@ -3,6 +3,7 @@ package com.innerpeace.themoonha.domain.bite.service;
 import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterRequest;
 import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse;
 import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public interface BeforeAfterService {
     List<BeforeAfterResponse> getBeforeAfterList();
-    Long makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeContent, MultipartFile afterContent) throws IOException;
+    CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeContent, MultipartFile afterContent) throws IOException;
     List<BeforeAfterSearchResponse> findBeforeAfterByTitle(String keyword);
     List<BeforeAfterSearchResponse> findBeforeAfterByHashTags(List<String> hashtags);
 }

@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterRequest;
 import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse;
 import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse;
 import com.innerpeace.themoonha.domain.bite.service.BeforeAfterService;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ import java.util.List;
  * </pre>
  * @since 2024.08.27
  */
-@RequestMapping("/beforeafter")
+@RequestMapping("/before-after")
 @RestController
 @RequiredArgsConstructor
 public class BeforeAfterController {
@@ -38,20 +39,19 @@ public class BeforeAfterController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Long> makeBeforeAfter(@RequestPart Long memberId,
-                                                @RequestPart BeforeAfterRequest beforeAfterRequest,
-                                                @RequestPart MultipartFile beforeContent,
-                                                @RequestPart MultipartFile afterContent) throws IOException {
+    public ResponseEntity<CommonResponse> makeBeforeAfter(@RequestPart BeforeAfterRequest beforeAfterRequest,
+                                                        @RequestPart MultipartFile beforeContent,
+                                                        @RequestPart MultipartFile afterContent) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(beforeAfterService.makeBeforeAfter(memberId, beforeAfterRequest, beforeContent, afterContent));
+            .body(beforeAfterService.makeBeforeAfter(1L, beforeAfterRequest, beforeContent, afterContent));
     }
 
-    @GetMapping("/bytitle")
+    @GetMapping("/search/title")
     public ResponseEntity<List<BeforeAfterSearchResponse>> searchBeforeAfterByTitle(@RequestParam String keyword) {
         return ResponseEntity.ok(beforeAfterService.findBeforeAfterByTitle(keyword));
     }
 
-    @GetMapping("/byhashtag")
+    @GetMapping("/search/hashtag")
     public ResponseEntity<List<BeforeAfterSearchResponse>> searchBeforeAfterByHashtag(@RequestParam(value = "tag") List<String> hashtags) {
         return ResponseEntity.ok(beforeAfterService.findBeforeAfterByHashTags(hashtags));
     }

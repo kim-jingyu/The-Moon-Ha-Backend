@@ -1,10 +1,8 @@
 package com.innerpeace.themoonha.domain.bite.service;
 
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterDTO;
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterRequest;
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse;
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse;
+import com.innerpeace.themoonha.domain.bite.dto.*;
 import com.innerpeace.themoonha.domain.bite.mapper.BeforeAfterMapper;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,12 +39,19 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
 
     @Override
     @Transactional
-    public Long makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeContent, MultipartFile afterContent) throws IOException {
-        return beforeAfterMapper.makeBeforeAfter(BeforeAfterDTO.of(memberId, beforeAfterRequest, s3Service.saveFile(beforeContent), s3Service.saveFile(afterContent)));
+    public CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeContent, MultipartFile afterContent) throws IOException {
+        BeforeAfterDTO beforeAfterDTO = BeforeAfterDTO.of(memberId, beforeAfterRequest, s3Service.saveFile(beforeContent), s3Service.saveFile(afterContent));
+        beforeAfterMapper.insertBeforeAfter(beforeAfterDTO);
+        return CommonResponse.from(String.valueOf(beforeAfterDTO.getBaId()));
     }
 
     @Override
     public List<BeforeAfterSearchResponse> findBeforeAfterByTitle(String keyword) {
         return beforeAfterMapper.findBeforeAfterListByTitle(keyword);
+    }
+
+    @Override
+    public List<BeforeAfterSearchResponse> findBeforeAfterByHashTags(List<String> hashtags) {
+        return null;
     }
 }

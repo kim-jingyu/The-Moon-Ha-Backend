@@ -15,11 +15,12 @@ public enum ErrorCode {
     SUGANG_FAILED(400, "수강신청에 실패했습니다."),
     LOUNGE_NOT_FOUND(404, "라운지 정보가 존재하지 않습니다."),
     LOUNGE_POST_FAILED(400, "라운지 게시글 작성에 실패했습니다."),
-    LOUNGE_COMMENT_FAILED(400, "라운지 댓글 작성에 실패했습니다.");
+    LOUNGE_COMMENT_FAILED(400, "라운지 댓글 작성에 실패했습니다."),
     SUGGESTION_FAILED(400, "제안합니다 댓글 작성에 실패했습니다"),
     LOUNGE_POST_NOT_FOUND(404, "라운지 게시글 정보가 존재하지 않습니다."),
-    S3_FAILED(400, "S3 처리중 오류가 발생했습니다.");
-  
+    S3_FAILED(400, "S3 처리중 오류가 발생했습니다."),
+    JSON_TYPE_CONVERT_FAILED(400, "JSON 타입 컨버팅에 실패했습니다.");
+
     private final int status;
     private final String message;
 

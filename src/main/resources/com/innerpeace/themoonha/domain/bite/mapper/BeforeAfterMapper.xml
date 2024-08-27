@@ -21,14 +21,14 @@
         <result property="title" column="title" />
         <result property="profileImageUrl" column="profileImageUrl" />
         <result property="memberName" column="memberName" />
-        <collection property="hashtags" ofType="string">
-            <result column="hashtag" />
-        </collection>
+        <result property="hashtags" column="hashtags" />
     </resultMap>
+
     <resultMap id="BeforeAfterSearchResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse">
         <result property="baId" column="baId" />
         <result property="title" column="title" />
     </resultMap>
+
     <select id="findBeforeAfterList" resultMap="BeforeAfterListResponseMap">
         SELECT
             ba.before_content_url AS beforeUrl,
@@ -44,17 +44,19 @@
             ba.title as title,
             m.profile_img_url AS profileImageUrl,
             m.name AS memberName,
-            h.name as hashTag
+            ba.hashtags as hashtags
         FROM
             before_after ba
         JOIN
             member m
             ON ba.member_id = m.member_id
-        LEFT JOIN
-            hashtag h
-            ON ba.ba_id = h.ba_id
     </select>
-    <insert id="makeBeforeAfter" parameterType="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterDTO" useGeneratedKeys="true" keyProperty="baId">
+
+    <insert id="insertBeforeAfter" parameterType="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterDTO">
+        <selectKey keyProperty="baId" resultType="java.lang.Long" order="BEFORE">
+            SELECT before_after_seq.NEXTVAL FROM DUAL
+        </selectKey>
+
         INSERT INTO before_after (
             ba_id,
             member_id,
@@ -62,36 +64,29 @@
             title,
             before_content_url,
             after_content_url,
-            created_at
+            created_at,
+            deleted_at,
+            hashtags
         ) VALUES (
-            before_after_seq.nextval,
+            #{baId},
             #{memberId},
             #{lessonId},
             #{title},
             #{beforeContentUrl},
             #{afterContentUrl},
-            SYSDATE
-        );
-
-        <foreach collection="hashtags" item="hashtag">
-            INSERT INTO hashtag (
-                hashtag_id,
-                ba_id,
-                name
-            ) VALUES (
-                hashtag_seq.nextval,
-                #{baId},
-                #{hashtag}
-            );
-        </foreach>
+            sysdate,
+            null,
+            #{hashtags, jdbcType=CLOB}
+        )
     </insert>
-    <select id="findBeforeAfterListByTitle" resultMap="BeforeAfterTitleSearchResponseMap">
+
+    <select id="findBeforeAfterListByTitle" resultMap="BeforeAfterSearchResponseMap">
         SELECT
             ba_id AS baId,
             title
         FROM
             before_after
         WHERE
-            title LIKE CONCAT('%', #{keyword}, '%')
+            title LIKE '%'|| #{keyword} || '%'
     </select>
 </mapper>
