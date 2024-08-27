@@ -100,6 +100,7 @@ public class LoungeServiceImpl implements LoungeService {
     /**
      * 라운지 게시물 등록
      * @param loungePostRequest
+     * @param memberId
      * @return
      */
     @Override
@@ -109,6 +110,7 @@ public class LoungeServiceImpl implements LoungeService {
             throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
         };
 
+        // 이미지 저장
         if (loungePostRequest.getLoungePostImgList() != null && !loungePostRequest.getLoungePostImgList().isEmpty()) {
             for (String postImgUrl : loungePostRequest.getLoungePostImgList()) {
                 if (loungeMapper.insertLoungePostImgUrls(loungePostRequest.getLoungePostId(), postImgUrl) != 1) {
