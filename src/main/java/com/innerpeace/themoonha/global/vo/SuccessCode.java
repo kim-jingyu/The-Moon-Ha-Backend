@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.global.vo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.reflect.DeclareErrorOrWarning;
 
 @Getter
 @RequiredArgsConstructor
