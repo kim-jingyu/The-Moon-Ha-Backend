@@ -15,7 +15,7 @@ public enum ErrorCode {
     SUGANG_FAILED(400, "수강신청에 실패했습니다."),
     LOUNGE_NOT_FOUND(404, "라운지 정보가 존재하지 않습니다."),
     LOUNGE_POST_FAILED(400, "라운지 게시글 작성에 실패했습니다."),
-    LOUNGE_COMMENT_FAILED(400, "라운지 댓글 작성에 실패했습니다.");
+    LOUNGE_COMMENT_FAILED(400, "라운지 댓글 작성에 실패했습니다."),
     SUGGESTION_FAILED(400, "제안합니다 댓글 작성에 실패했습니다"),
     LOUNGE_POST_NOT_FOUND(404, "라운지 게시글 정보가 존재하지 않습니다."),
     PROLOGUE_LIKE_ALREADY_EXISTS(400, "해당 프롤로그에 대해 이미 좋아요를 눌렀습니다.");
