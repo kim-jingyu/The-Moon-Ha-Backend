@@ -20,6 +20,7 @@ import java.util.Optional;
  * @author 손승완
  * @since 2024.08.24
  * @version 1.0
+ * @since 2024.08.24
  *
  * <pre>
  * 수정일        수정자        수정내용
@@ -28,9 +29,8 @@ import java.util.Optional;
  * 2024.08.25   손승완       강좌 상세보기 기능 추가
  * 2024.08.25   손승완       숏폼 상세보기 기능 추가
  * 2024.08.26   손승완       강사 상세보기 기능 추가
- * 2024.08.26   손승완       장바구니 기능 추가
+ * 2024.08.26   손승완       장바구니 및 신청 기능 추가
  * </pre>
- * @since 2024.08.24
  */
 @Service
 @RequiredArgsConstructor
@@ -86,4 +86,19 @@ public class LessonServiceImpl implements LessonService {
 
         throw new CustomException(ErrorCode.CART_LESSON_ALREADY_EXISTS);
     }
+
+    @Override
+    @Transactional
+    public CommonResponse payLesson(List<Long> cartIdList, Long memberId) {
+        if (lessonMapper.insertSugang(cartIdList, memberId) != cartIdList.size()) {
+            throw new CustomException(ErrorCode.SUGANG_FAILED);
+        }
+
+        if (lessonMapper.deleteCart(cartIdList, memberId) != cartIdList.size()) {
+            throw new CustomException(ErrorCode.SUGANG_FAILED);
+        }
+
+        return CommonResponse.of(true, SuccessCode.SUGANG_APPLICATION_SUCCESS.getMessage());
+    }
+
 }
