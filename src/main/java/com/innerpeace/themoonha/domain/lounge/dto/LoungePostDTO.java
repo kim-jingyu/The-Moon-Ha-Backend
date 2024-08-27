@@ -3,6 +3,7 @@ package com.innerpeace.themoonha.domain.lounge.dto;
 import com.innerpeace.themoonha.global.util.DateTimeUtil;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,8 +34,17 @@ public class LoungePostDTO {
     // 작성자 정보
     private LoungeMemberDTO loungeMember;
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = DateTimeUtil.timeAgo(createdAt);
+
+    public static LoungePostDTO from(LoungePostDTO loungePostDTO, List<String> loungePostImgList) {
+        return LoungePostDTO.builder()
+                .loungePostId(loungePostDTO.getLoungePostId())
+                .content(loungePostDTO.getContent())
+                .noticeYn(loungePostDTO.isNoticeYn())
+                .loungePostImgList(loungePostImgList != null ? loungePostImgList : new ArrayList<>())
+                .createdAt(DateTimeUtil.timeAgo(loungePostDTO.getCreatedAt()))
+                .loungeMember(loungePostDTO.getLoungeMember())
+                .build();
     }
+
 
 }

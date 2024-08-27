@@ -4,6 +4,7 @@ package com.innerpeace.themoonha.domain.lounge.dto;
 import com.innerpeace.themoonha.global.util.DateTimeUtil;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,20 +24,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoungePostDetailDTO {
-    // 게시글 정보
-    private Long loungePostId;
-    private String content;
-    private boolean noticeYn;
-    private List<String> loungePostImgList;
-    private String createdAt;
 
-    // 작성자 정보
-    private LoungeMemberDTO loungeMember;
-
-    // 댓글 정보
+    private LoungePostDTO loungePost;
     private List<LoungeCommentDTO> loungeCommentList;
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = DateTimeUtil.timeAgo(createdAt);
+    public static LoungePostDetailDTO from(LoungePostDTO loungePost, List<LoungeCommentDTO> loungeCommentList) {
+        return LoungePostDetailDTO.builder()
+                .loungePost(loungePost)
+                .loungeCommentList(loungeCommentList)
+                .build();
     }
 }

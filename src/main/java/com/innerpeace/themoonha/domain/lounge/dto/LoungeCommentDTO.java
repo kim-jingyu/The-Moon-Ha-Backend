@@ -23,7 +23,7 @@ public class LoungeCommentDTO {
     private Long loungeCommentId;
     private String content;
     private String createdAt;
-    private LoungeMemberDTO loungeCommentMember;
+    private LoungeMemberDTO loungeMember;
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = DateTimeUtil.timeAgo(createdAt);
