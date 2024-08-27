@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,7 @@ import org.springframework.util.StringUtils;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.26  	최유경       최초 생성
- * 2024.08.27  	최유경       getSigningKey refactor
+ * 2024.08.27  	최유경       getSigningKey refactor, 토큰 재발급 로직 추가
  * </pre>
  */
 @Slf4j
@@ -94,6 +95,28 @@ public class JwtTokenProvider {
         return JwtDTO.of(accessToken,refreshToken);
     }
 
+
+    public JwtDTO regenerateAccessToken(String refreshToken){
+        Claims claims = parseClaims(refreshToken);
+        if (claims.get("auth") == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
+        long now = (new Date()).getTime();
+
+        // AccessToken 생성
+        String accessToken = Jwts.builder()
+                .setSubject(claims.getSubject())
+                .claim("memberId", claims.get("memberId"))
+                .claim("username", claims.get("username"))
+                .claim("auth", claims.get("auth"))
+                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(this.getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        return JwtDTO.of(accessToken,refreshToken);
+    }
+
     /**
      * JWT 복호화
      *
@@ -126,7 +149,7 @@ public class JwtTokenProvider {
      * @param token
      * @return
      */
-    private Claims parseClaims(String token){
+    public Claims parseClaims(String token){
         try{
             return Jwts.parserBuilder()
                     .setSigningKey(this.getSigningKey())
@@ -156,6 +179,7 @@ public class JwtTokenProvider {
             log.info("유효하지 않은 JWT 토큰입니다. ", e);
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.", e);
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.info("제공되지 않은 JWT 토큰입니다. ", e);
         } catch (IllegalArgumentException e) {
@@ -172,12 +196,24 @@ public class JwtTokenProvider {
      * @param request
      * @return token
      */
-    public String resolveToken(HttpServletRequest request){
+    public JwtDTO resolveToken(HttpServletRequest request){
+        String accessToken = null;
+        String refreshToken = null;
+
+        // AccessToken 추출
         String bearerToken = request.getHeader("Authorization");
         log.info("resolveToken : {}", bearerToken);
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer"))
-            return bearerToken.substring(7);
-        return null;
+             accessToken = bearerToken.substring(7);
+
+        // RefreshToken 추출
+        for(Cookie cookie : request.getCookies()){
+            if ("refreshToken".equals(cookie.getName())) {
+                refreshToken = cookie.getValue();
+            }
+        }
+
+        return JwtDTO.of(accessToken,refreshToken);
     }
 
 }

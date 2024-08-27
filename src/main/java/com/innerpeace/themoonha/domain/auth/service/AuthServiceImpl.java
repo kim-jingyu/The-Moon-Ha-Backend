@@ -8,6 +8,7 @@ import com.innerpeace.themoonha.domain.auth.mapper.AuthMapper;
 import com.innerpeace.themoonha.global.entity.Member;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,6 +68,25 @@ public class AuthServiceImpl implements AuthService{
 
         // 3. 토큰 발급하기
         JwtDTO jwtDTO = jwtTokenProvider.generateToken(member);
+        if(jwtDTO==null)
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+
+        return jwtDTO;
+    }
+
+
+    @Override
+    public JwtDTO regenerateToken(String refreshToken) {
+        // 1. 회원인지 확인하기
+        Claims claims = jwtTokenProvider.parseClaims(refreshToken);
+        String memberId = claims.getSubject();
+
+        Member member =  authMapper.findByMemberId(Long.valueOf(memberId))
+                .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 2. AccessToken 재발급하기
+        JwtDTO jwtDTO = jwtTokenProvider.generateToken(member);
+
         if(jwtDTO==null)
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 

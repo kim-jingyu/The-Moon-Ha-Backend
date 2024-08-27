@@ -20,4 +20,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface AuthMapper {
     int insertMember(Member member);
     Optional<Member> findByUsername(String userName);
+    Optional<Member> findByMemberId(Long memberId);
 }

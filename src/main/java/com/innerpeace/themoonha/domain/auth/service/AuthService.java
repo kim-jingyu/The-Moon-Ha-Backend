@@ -20,4 +20,5 @@ public interface AuthService {
     int signUp(SignUpRequest request);
     boolean checkAvailableUsername(String userName);
     JwtDTO login(LoginRequest loginRequest);
+    JwtDTO regenerateToken(String refreshToken);
 }

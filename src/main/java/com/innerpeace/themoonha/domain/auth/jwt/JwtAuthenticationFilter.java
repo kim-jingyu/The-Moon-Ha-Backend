@@ -1,13 +1,20 @@
 package com.innerpeace.themoonha.domain.auth.jwt;
 
+import com.innerpeace.themoonha.domain.auth.dto.JwtDTO;
+import com.innerpeace.themoonha.domain.auth.service.AuthService;
+import com.innerpeace.themoonha.domain.auth.util.AuthUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -30,6 +37,7 @@ import org.springframework.web.filter.GenericFilterBean;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
     /**
      * JWT 인증 필터
@@ -45,17 +53,41 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         // 1. Request Header 에서 JWT 토큰 추출
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        JwtDTO jwtDTO = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        String accessToken = jwtDTO.getAccessToken();
 
-        // 2. validateToken 으로 토큰 유효성 검사
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 Security Context 에 저장
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        try{
+            // 2. validateToken 으로 토큰 유효성 검사
+            if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
+                // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 Security Context 에 저장
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
-            log.info("JwtAuthenticationFilter : {}", authentication.getAuthorities());
-            // 해당 요청에 대한 인증 성공 / 실패 및 사용자 정보를 포함한 인증 정보가 컨텍스트에 저장
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("JwtAuthenticationFilter : {}", authentication.getAuthorities());
+                // 해당 요청에 대한 인증 성공 / 실패 및 사용자 정보를 포함한 인증 정보를 컨텍스트에 저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            filterChain.doFilter(request,response);
+        } catch (ExpiredJwtException e){ // accessToken, refreshToken 재발급
+            String refreshToken = jwtDTO.getRefreshToken();
+            if(refreshToken != null && jwtTokenProvider.validateToken(refreshToken)){
+                JwtDTO reDTO = authService.regenerateToken(refreshToken);
+
+                // 새로운 AccessToken 을 헤더에 추가
+                ((HttpServletResponse) response).setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + reDTO.getAccessToken());
+
+                // RefreshToken Cookie 추가
+                Cookie refreshTokenCookie = AuthUtil.createJwtTokenCookie("refreshToken", reDTO.getRefreshToken());
+                ((HttpServletResponse) response).addCookie(refreshTokenCookie);
+
+                // Security Context 에 저장
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+
+                log.info("JwtAuthenticationFilter : {}", authentication.getAuthorities());
+                // 인증 정보를 컨텍스트에 저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                filterChain.doFilter(request,response);
+            }
         }
-        filterChain.doFilter(request,response);
     }
 }
