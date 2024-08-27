@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.lounge.service;
 
 import com.innerpeace.themoonha.domain.lounge.dto.*;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       findLoungeList 메서드 추가
  * 2024.08.26  	조희정       findLoungeHome, findLoungePostDetail 메서드 추가
+ * 2024.08.27  	조희정       addLoungePost, addLoungeComment 메서드 추가
  * </pre>
  */
 public interface LoungeService {
@@ -41,4 +43,19 @@ public interface LoungeService {
      * @return
      */
     LoungePostDetailDTO findLoungePostDetail(Long loungePostId);
+
+    /**
+     * 라운지 게시글 등록
+     * @param loungePostRequest
+     * @return
+     */
+    CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId);
+
+    /**
+     * 라운지 게시물에 댓글 등록
+     * @param loungeCommentRequest
+     * @param memberId
+     * @return
+     */
+    CommonResponse addLoungeComment(LoungeCommentRequest loungeCommentRequest, Long memberId);
 }
