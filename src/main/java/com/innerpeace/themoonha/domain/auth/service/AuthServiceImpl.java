@@ -1,6 +1,9 @@
 package com.innerpeace.themoonha.domain.auth.service;
 
+import com.innerpeace.themoonha.domain.auth.dto.JwtDTO;
+import com.innerpeace.themoonha.domain.auth.dto.LoginRequest;
 import com.innerpeace.themoonha.domain.auth.dto.SignUpRequest;
+import com.innerpeace.themoonha.domain.auth.jwt.JwtTokenProvider;
 import com.innerpeace.themoonha.domain.auth.mapper.AuthMapper;
 import com.innerpeace.themoonha.global.entity.Member;
 import com.innerpeace.themoonha.global.exception.CustomException;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.25  	최유경       최초 생성
+ * 2024.08.26  	최유경       로그인 메서드 생성
  * </pre>
  */
 @Service
@@ -28,6 +32,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService{
     private final AuthMapper authMapper;
     private final PasswordEncoder encoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public int signUp(SignUpRequest request) {
@@ -46,6 +51,24 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public boolean checkAvailableUsername(String userName) {
-        return !authMapper.selectMemberByUsername(userName).isPresent();
+        return !authMapper.findByUsername(userName).isPresent();
+    }
+
+    @Override
+    public JwtDTO login(LoginRequest request) {
+        // 1. 회원인지 확인하기
+        Member member =  authMapper.findByUsername(request.getUsername())
+                .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 2. 비밀번호 일치 여부 확인하기
+        if(encoder.matches(member.getPassword(),request.getPassword()))
+            throw new CustomException(ErrorCode.MEMBER_INCORRECT_AUTH);
+
+        // 3. 토큰 발급하기
+        JwtDTO jwtDTO = jwtTokenProvider.generateToken(member);
+        if(jwtDTO==null)
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+
+        return jwtDTO;
     }
 }
