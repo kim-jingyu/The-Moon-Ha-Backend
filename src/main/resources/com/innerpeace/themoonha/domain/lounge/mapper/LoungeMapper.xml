@@ -236,11 +236,6 @@
         ) A
     </insert>
 
-<!--        <insert id="insertLoungePostImgUrls" parameterType="map">-->
-<!--            INSERT INTO lounge_post_img (lounge_post_img_id, lounge_post_id, post_img_url)-->
-<!--            VALUES lounge_post_img_seq.nextval, #{loungePostId}, #{postImgUrl}-->
-<!--        </insert>-->
-
     <!-- 라운지 댓글 등록 -->
     <insert id="insertLoungeComment">
         INSERT INTO lounge_comment(lounge_comment_id, member_id, lounge_post_id, content)

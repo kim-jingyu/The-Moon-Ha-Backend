@@ -43,7 +43,7 @@ public class LoungeServiceImpl implements LoungeService {
 
     private final LoungeMapper loungeMapper;
     private final S3Service s3Service;
-    private String S3Path = "lounge";
+    private final String S3Path = "lounge";
 
     /**
      * 라운지 목록 조회
