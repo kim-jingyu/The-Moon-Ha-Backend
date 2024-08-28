@@ -1,14 +1,15 @@
 package com.innerpeace.themoonha.domain.admin.dto;
 
+import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 어드민 강좌 등록 요청 dto
+ * 어드민 강좌 조회 응답 dto
  * @author 최유경
  * @since 2024.08.28
  * @version 1.0
@@ -20,26 +21,29 @@ import lombok.ToString;
  * </pre>
  */
 @Getter
-@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class LessonRegisterRequest {
+public class AdminLessonResponse {
+    private Long lessonId;
     private Long branchId;
+    private String branchName;
     private Long categoryId;
+    private String category;
     private Long memberId;
+    private String tutorName;
     private String title;
-    private String startDate;
-    private String endDate;
-    private String startTime;
-    private String endTime;
-    private String summary;
     private int cnt;
     private int cost;
-    private String curriculum;
-    private String supply;
-    private String place;
+    private String previewVideoUrl;
+    private String thumbnailUrl;
+    private String startDate;
+    private String endDate;
+    private String lessonTime;
     private String day;
+    private String place;
     private int target;
     private int onlineCost;
+    private Date createdAt;
 }

@@ -1,6 +1,9 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
+import com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse;
+import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
 import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -13,9 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.28  	최유경       최초 생성
+ * 2024.08.28   최유경       강좌 조희 기능
  * </pre>
  */
 public interface AdminLessonService {
 
     void addLesson(LessonRegisterRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile);
+    List<AdminLessonResponse> findLessonList(AdminLessonListRequest lessonListRequest);
 }
