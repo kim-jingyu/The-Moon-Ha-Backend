@@ -37,35 +37,35 @@ public class AuthServiceImpl implements AuthService{
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public int signUp(SignUpRequest request) {
+    public int signUp(SignUpRequest signUpRequest) {
         // 사용 가능한 username 여부 확인
-        if(!checkAvailableUsername(request.getUsername()))
+        if(!checkAvailableUsername(signUpRequest.getUsername()))
             throw new CustomException(ErrorCode.MEMBER_DUPLICATE);
 
         // 비밀번호 암호화 처리
-        String encodedPassword = encoder.encode(request.getPassword());
-        Member member = Member.of(request,encodedPassword);
+        String encodedPassword = encoder.encode(signUpRequest.getPassword());
+        Member member = Member.of(signUpRequest,encodedPassword);
 
         int result = authMapper.insertMember(member);
-        if(result == 1)
+        if(result != 1)
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
-        return authMapper.insertMember(member);
+        return result;
     }
 
     @Override
-    public boolean checkAvailableUsername(String userName) {
-        return !authMapper.findByUsername(userName).isPresent();
+    public boolean checkAvailableUsername(String username) {
+        return !authMapper.selectByUsername(username).isPresent();
     }
 
     @Override
-    public JwtDTO login(LoginRequest request) {
+    public JwtDTO login(LoginRequest loginRequest) {
         // 1. 회원인지 확인하기
-        Member member =  authMapper.findByUsername(request.getUsername())
+        Member member =  authMapper.selectByUsername(loginRequest.getUsername())
                 .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 2. 비밀번호 일치 여부 확인하기
-        if(!encoder.matches(request.getPassword(), member.getPassword()))
+        if(!encoder.matches(loginRequest.getPassword(), member.getPassword()))
             throw new CustomException(ErrorCode.MEMBER_INCORRECT_AUTH);
 
         // 3. 토큰 발급하기
@@ -83,7 +83,7 @@ public class AuthServiceImpl implements AuthService{
         Claims claims = jwtTokenProvider.parseClaims(refreshToken);
         String memberId = claims.getSubject();
 
-        Member member =  authMapper.findByMemberId(Long.valueOf(memberId))
+        Member member =  authMapper.selectByMemberId(Long.valueOf(memberId))
                 .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 2. AccessToken 재발급하기

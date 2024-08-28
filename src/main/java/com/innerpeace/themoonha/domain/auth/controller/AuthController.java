@@ -39,15 +39,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(value="/signup")
-    public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest dto) {
-        authService.signUp(dto);
+    public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+        authService.signUp(signUpRequest);
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.AUTH_SIGNUP_SUCCESS.getMessage()));
     }
 
     @PostMapping(value="/login")
-    public ResponseEntity<CommonResponse> login(@RequestBody LoginRequest dto, HttpServletResponse response){
+    public ResponseEntity<CommonResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response){
         // 1. 회원 여부 확인
-        JwtDTO jwtDTO = authService.login(dto);
+        JwtDTO jwtDTO = authService.login(loginRequest);
 
         // 2. AccessToken Header 추가
         HttpHeaders headers = new HttpHeaders();

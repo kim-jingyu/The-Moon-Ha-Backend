@@ -19,8 +19,8 @@ import com.innerpeace.themoonha.domain.auth.dto.SignUpRequest;
  * </pre>
  */
 public interface AuthService {
-    int signUp(SignUpRequest request);
-    boolean checkAvailableUsername(String userName);
+    int signUp(SignUpRequest signUpRequest);
+    boolean checkAvailableUsername(String username);
     JwtDTO login(LoginRequest loginRequest);
     JwtDTO regenerateToken(String refreshToken);
 }
