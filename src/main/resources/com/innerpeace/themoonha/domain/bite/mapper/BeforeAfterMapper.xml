@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 비포애프터 매퍼 XML
+ * @author 김진규
+ * @since 2024.08.27
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.27  김진규       최초 생성
+ * 2024.08.27  김진규       findBeforeAfterList, insertBeforeAfter, findBeforeAfterListByTitle 쿼리 추가
+ * 2024.08.28  김진규       insertHashtag, insertBeforeAfterHashtag, findBeforeAfterListByHashtags, findHashtag 쿼리 추가
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.bite.mapper.BeforeAfterMapper">
+    <!-- 비포애프터 응답 정보 -->
+    <resultMap id="BeforeAfterListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse">
+        <result property="beforeUrl" column="beforeUrl" />
+        <result property="beforeIsImage" column="beforeIsImage" />
+        <result property="afterUrl" column="afterUrl" />
+        <result property="afterIsImage" column="afterIsImage" />
+        <result property="title" column="title" />
+        <result property="profileImageUrl" column="profileImageUrl" />
+        <result property="memberName" column="memberName" />
+        <result property="hashtags" column="hashtags" typeHandler="com.innerpeace.themoonha.global.handler.CommaSeparatedStringToListTypeHandler" />
+    </resultMap>
+
+    <!-- 비포애프터 검색 응답 정보 -->
+    <resultMap id="BeforeAfterSearchResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse">
+        <result property="beforeAfterId" column="beforeAfterId" />
+        <result property="title" column="title" />
+    </resultMap>
+
+    <!-- 해시태그 정보 -->
+    <resultMap id="HashtagMap" type="com.innerpeace.themoonha.domain.bite.dto.Hashtag">
+        <result property="hashtagId" column="hashtagId" />
+        <result property="name" column="name" />
+    </resultMap>
+
+    <!-- 비포애프터 콘텐츠 등록 -->
+    <insert id="insertBeforeAfter" parameterType="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterDTO">
+        <selectKey keyProperty="beforeAfterId" resultType="java.lang.Long" order="BEFORE">
+            SELECT before_after_seq.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO before_after (
+            before_after_id,
+            member_id,
+            lesson_id,
+            title,
+            before_content_url,
+            after_content_url,
+            created_at,
+            deleted_at
+        ) VALUES (
+            #{beforeAfterId},
+            #{memberId},
+            #{lessonId},
+            #{title},
+            #{beforeContentUrl},
+            #{afterContentUrl},
+            sysdate,
+            null
+        )
+    </insert>
+
+    <!-- 해시태그 등록 -->
+    <insert id="insertHashtag" parameterType="map" keyProperty="hashtagId" useGeneratedKeys="true">
+        <selectKey keyProperty="hashtagId" resultType="java.lang.Long" order="BEFORE">
+            SELECT hashtag_seq.nextval FROM DUAL
+        </selectKey>
+
+        INSERT /*+ NO_PARALLEL */ INTO hashtag (hashtag_id, name)
+        SELECT #{hashtagId}, #{name}
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1 FROM hashtag WHERE name = #{name}
+        )
+    </insert>
+
+    <!-- 비포애프터 해시태그 등록 -->
+    <insert id="insertBeforeAfterHashtag">
+        INSERT /*+ NO_PARALLEL */ INTO before_after_hashtag (before_after_hashtag_id, hashtag_id, before_after_id)
+        VALUES (before_after_hashtag_seq.nextval, #{hashtagId}, #{beforeAfterId})
+    </insert>
+
+    <!-- 비포애프터 전체 콘텐츠 목록 조회 -->
+    <select id="findBeforeAfterList" resultMap="BeforeAfterListResponseMap">
+        SELECT
+        ba.before_content_url AS beforeUrl,
+        CASE
+        WHEN ba.before_content_url LIKE '%/image/%' THEN 1
+        ELSE 0
+        END as beforeIsImage,
+        ba.after_content_url AS afterUrl,
+        CASE
+        WHEN ba.after_content_url LIKE '%/image/%' THEN 1
+        ELSE 0
+        END as afterIsImage,
+        ba.title as title,
+        m.profile_img_url AS profileImageUrl,
+        m.name AS memberName,
+        LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
+        FROM
+        before_after ba
+        JOIN
+        member m ON ba.member_id = m.member_id
+        LEFT JOIN
+        before_after_hashtag bah ON ba.before_after_id = bah.before_after_id
+        LEFT JOIN
+        hashtag h ON bah.hashtag_id = h.hashtag_id
+        GROUP BY
+        ba.before_content_url,
+        ba.after_content_url,
+        ba.title,
+        m.profile_img_url,
+        m.name
+    </select>
+
+    <!-- 해시태그 조회 -->
+    <select id="findHashtag" resultMap="HashtagMap">
+        SELECT hashtag_id as hashtagId, name
+        FROM hashtag
+        WHERE name = #{name}
+    </select>
+
+    <!-- 비포애프터 해시태그 기반 목록 검색 -->
+    <select id="findBeforeAfterListByHashtags" resultMap="BeforeAfterSearchResponseMap">
+        SELECT
+            ba.before_after_id AS beforeAfterId,
+            ba.title
+        FROM before_after ba
+        JOIN before_after_hashtag bah ON ba.before_after_id = bah.before_after_id
+        JOIN hashtag h ON bah.hashtag_id = h.hashtag_id
+        WHERE h.name IN
+        <foreach collection="hashtags" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+
+    <!-- 비포애프터 타이틀 기반 목록 검색 -->
+    <select id="findBeforeAfterListByTitle" resultMap="BeforeAfterSearchResponseMap">
+        SELECT
+            before_after_id AS beforeAfterId,
+            title
+        FROM
+            before_after
+        WHERE
+            title LIKE '%'|| #{keyword} || '%'
+    </select>
+</mapper>

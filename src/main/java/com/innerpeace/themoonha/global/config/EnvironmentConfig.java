@@ -6,8 +6,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-
 /**
  * application.properties 설정
  * @author 최유경
@@ -26,11 +24,11 @@ public class EnvironmentConfig {
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
         configurer.setLocations(
-                new ClassPathResource("application.properties"),
-                new ClassPathResource("application-s3.properties")
+                new ClassPathResource("application.properties")
         );
         return configurer;
     }
+
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
