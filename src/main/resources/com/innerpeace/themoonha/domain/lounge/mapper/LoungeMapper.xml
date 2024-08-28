@@ -14,7 +14,7 @@
  * 2024.08.25  	조희정        최초 생성
  * 2024.08.25  	조희정        selectLoungeList 쿼리 추가
  * 2024.08.26  	조희정        selectLoungeInfo, selectLoungePostList, selectAttendanceList, selectLoungeMemberList, selectLoungePostDetail 쿼리 추가
- * 2024.08.27  	조희정        selectLoungePostImgList, selectLoungeCommentList 쿼리 추가
+ * 2024.08.27  	조희정        selectLoungePostImgList, selectLoungeCommentList, insertLoungePost, insertLoungePostImgUrls, insertLoungeComment, deleteLoungePostImgUrls, updateLoungePost  쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper">
@@ -73,6 +73,7 @@
             m.member_id = #{memberId}
           AND s.online_yn = 0
           AND s.lounge_yn = 1
+          AND lo.deleted_at IS NULL
     </select>
 
     <!-- 라운지 기본 정보 조회 -->
@@ -109,10 +110,10 @@
                 LEFT JOIN member lm ON lp.member_id = lm.member_id
         WHERE
             lp.lounge_id = #{loungeId}
+            AND lp.deleted_at IS NULL
         ORDER BY
             lp.lounge_post_id DESC
     </select>
-
 
     <!-- 라운지 게시글 당 이미지 조회 -->
     <select id="selectLoungePostImgList"
@@ -123,6 +124,7 @@
             lounge_post_img lpi
         WHERE
             lpi.lounge_post_id = #{loungePostId}
+            AND lpi.deleted_at IS NULL
         ORDER BY
             lpi.lounge_post_img_id ASC
     </select>
@@ -145,6 +147,7 @@
                 FROM lounge
                 WHERE lounge_id = #{loungeId}
                 )
+            AND s.deleted_at IS NULL
             <if test="role == 'ROLE_MEMBER'">
                 AND s.member_id = #{memberId}
             </if>
@@ -165,6 +168,7 @@
                 JOIN member m ON su.member_id = m.member_id
         WHERE
             su.lesson_id = #{lessonId}
+          AND su.deleted_at IS NULL
           AND su.online_yn = 0
           AND su.lounge_yn = 1
         ORDER BY
@@ -187,25 +191,27 @@
                 LEFT JOIN member lm ON lp.member_id = lm.member_id
         WHERE
             lp.lounge_post_id = #{loungePostId}
+            AND lp.deleted_at IS NULL
     </select>
 
     <!-- 라운지 게시글 댓글 조회 -->
     <select id="selectLoungeCommentList"
             resultMap="LoungeCommentMap">
-                SELECT /*+ INDEX_ASC(lp PK_LOUNGE_COMMENT) ORDERED */
-                    lc.lounge_comment_id,
-                    lc.content,
-                    lc.created_at,
-                    lcm.member_id,
-                    lcm.name,
-                    lcm.profile_img_url
-                FROM
-                    lounge_comment lc
-                        LEFT JOIN member lcm ON lc.member_id = lcm.member_id
-                WHERE
-                    lc.lounge_post_id = #{loungePostId}
-                ORDER BY
-                    lc.lounge_comment_id ASC
+        SELECT /*+ INDEX_ASC(lp PK_LOUNGE_COMMENT) ORDERED */
+            lc.lounge_comment_id,
+            lc.content,
+            lc.created_at,
+            lcm.member_id,
+            lcm.name,
+            lcm.profile_img_url
+        FROM
+            lounge_comment lc
+                LEFT JOIN member lcm ON lc.member_id = lcm.member_id
+        WHERE
+            lc.lounge_post_id = #{loungePostId}
+            AND lc.deleted_at IS NULL
+        ORDER BY
+            lc.lounge_comment_id ASC
     </select>
 
     <!-- 라운지 게시물 등록 -->
@@ -218,9 +224,15 @@
     </insert>
 
     <!-- 라운지 게시물 이미지 등록 -->
-    <insert id="insertLoungePostImgUrls">
-        INSERT INTO lounge_post_img (lounge_post_img_id, lounge_post_id, post_img_url)
-        VALUES (lounge_post_img_seq.nextval, #{loungePostId}, #{postImgUrl})
+    <insert id="insertLoungePostImgUrls" parameterType="map">
+        INSERT INTO lounge_post_img
+        (lounge_post_img_id, lounge_post_id, post_img_url)
+        SELECT lounge_post_img_seq.nextval, #{loungePostId}, A.post_img_url FROM (
+        <foreach collection="postImgUrls" item="postImgUrl" separator="UNION ALL">
+            SELECT #{postImgUrl} as post_img_url
+            FROM DUAL
+        </foreach>
+        ) A
     </insert>
 
     <!-- 라운지 댓글 등록 -->
@@ -228,5 +240,42 @@
         INSERT INTO lounge_comment(lounge_comment_id, member_id, lounge_post_id, content)
         VALUES (lounge_comment_seq.nextval, #{memberId}, #{loungeComment.loungePostId}, #{loungeComment.content})
     </insert>
+
+    <!-- 라운지 게시물 이미지 삭제 -->
+    <update id="deleteLoungePostImgUrls">
+        UPDATE lounge_post_img
+        SET deleted_at = SYSDATE
+        WHERE lounge_post_id = #{loungePostId}
+        <choose>
+            <when test="postImgUrls != null and !postImgUrls.isEmpty()">
+                AND post_img_url IN
+                <foreach item="postImgUrl" collection="postImgUrls" open="(" separator="," close=")">
+                    #{postImgUrl}
+                </foreach>
+            </when>
+        </choose>
+    </update>
+
+    <!-- 라운지 게시물 내용 수정 -->
+    <update id="updateLoungePost">
+        UPDATE lounge_post
+        SET content = #{content},
+            notice_yn = #{noticeYn}
+        WHERE lounge_post_id = #{loungePostId}
+    </update>
+
+    <!-- 라운지 게시물 삭제 -->
+    <update id="deleteLoungePost">
+        UPDATE lounge_post
+        SET deleted_at = SYSDATE
+        WHERE lounge_post_id = #{loungePostId}
+    </update>
+
+    <!-- 라운지 댓글 삭제 -->
+    <update id="deleteLoungeComment">
+        UPDATE lounge_comment
+        SET deleted_at = SYSDATE
+        WHERE lounge_post_id = #{loungePostId}
+    </update>
 
 </mapper>

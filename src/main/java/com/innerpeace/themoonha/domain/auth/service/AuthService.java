@@ -1,5 +1,7 @@
 package com.innerpeace.themoonha.domain.auth.service;
 
+import com.innerpeace.themoonha.domain.auth.dto.JwtDTO;
+import com.innerpeace.themoonha.domain.auth.dto.LoginRequest;
 import com.innerpeace.themoonha.domain.auth.dto.SignUpRequest;
 
 /**
@@ -12,9 +14,13 @@ import com.innerpeace.themoonha.domain.auth.dto.SignUpRequest;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.25  	최유경       최초 생성
+ * 2024.08.26  	최유경       로그인 메서드 생성
+ * 2024.08.27   최유경       토큰 만료 재발급 로직
  * </pre>
  */
 public interface AuthService {
-    int signUp(SignUpRequest request);
-    boolean checkAvailableUsername(String userName);
+    int signUp(SignUpRequest signUpRequest);
+    boolean checkAvailableUsername(String username);
+    JwtDTO login(LoginRequest loginRequest);
+    JwtDTO regenerateToken(String refreshToken);
 }

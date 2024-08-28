@@ -15,9 +15,9 @@ import java.util.List;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
- * 2024.08.25  	조희정       findLoungeList 메서드 추가
- * 2024.08.26  	조희정       findLoungeHome, findLoungePostDetail 메서드 추가
- * 2024.08.27  	조희정       addLoungePost, addLoungeComment 메서드 추가
+ * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
+ * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
+ * 2024.08.27  	조희정       게시글 생성, 삭제, 수정 구현
  * </pre>
  */
 public interface LoungeService {
@@ -58,4 +58,19 @@ public interface LoungeService {
      * @return
      */
     CommonResponse addLoungeComment(LoungeCommentRequest loungeCommentRequest, Long memberId);
+
+    /**
+     * 라운지 게시물 수정
+     * @param loungePostId
+     * @param loungePostRequest
+     * @return
+     */
+    CommonResponse modifyLoungePost(Long loungePostId, LoungePostRequest loungePostRequest);
+
+    /**
+     * 라운지 게시물 삭제
+     * @param loungePostId
+     * @return
+     */
+    CommonResponse deleteLoungePost(Long loungePostId);
 }
