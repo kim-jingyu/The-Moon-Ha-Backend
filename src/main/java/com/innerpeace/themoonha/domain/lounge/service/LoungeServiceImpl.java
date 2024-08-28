@@ -5,15 +5,15 @@ import com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import com.innerpeace.themoonha.global.service.S3Service;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +39,8 @@ import java.util.stream.Collectors;
 public class LoungeServiceImpl implements LoungeService {
 
     private final LoungeMapper loungeMapper;
+    private final S3Service s3Service;
+    private String S3Path = "lounge";
 
     /**
      * 라운지 목록 조회
@@ -107,22 +109,43 @@ public class LoungeServiceImpl implements LoungeService {
      * @return
      */
     @Override
-    public CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId) {
+    public CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId, List<MultipartFile> loungePostImgs) {
         // 게시물 저장
         if(loungeMapper.insertLoungePost(loungePostRequest, memberId) != 1) {
             throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
         }
 
-        // 이미지 저장
-        if (loungePostRequest.getLoungePostImgList() != null && !loungePostRequest.getLoungePostImgList().isEmpty()) {
-            int insertedCount = loungeMapper.insertLoungePostImgUrls(loungePostRequest.getLoungePostId(), loungePostRequest.getLoungePostImgList());
-
-            if (insertedCount != loungePostRequest.getLoungePostImgList().size()) {
+        // 이미지 정보 저장
+        if (!loungePostImgs.isEmpty()) {
+            List<String> s3Imgs = s3Service.uploadFiles(loungePostImgs, S3Path);
+            int insertCount = loungeMapper.insertLoungePostImgUrls(loungePostRequest.getLoungePostId(), s3Imgs);
+            if (insertCount != s3Imgs.size()) {
                 throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
             }
         }
 
         return CommonResponse.of(true, SuccessCode.LOUNGE_POST_ADD_SUCCESS.getMessage());
+    }
+
+    @Override
+    public List<String> addLoungePostImg(List<MultipartFile> loungePostImgList, Long loungePostId) throws IOException {
+//        List<String> loungePostImgUrls = new ArrayList<>();
+//        if (loungePostImgList != null && !loungePostImgList.isEmpty()) {
+//            for (MultipartFile multipartFile : loungePostImgList) {
+//                String savedFiles = FileUtil.uploadFile(multipartFile);
+//                if (loungeMapper.insertLoungePostImgUrls(loungePostId, savedFiles) != 1) {
+//                    throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
+//                }
+//                loungePostImgUrls.add(savedFiles);
+//            }
+//        }
+//        return loungePostImgUrls;
+        return null;
+    }
+
+    @Override
+    public CommonResponse deleteLoungePostImg(String loungePostImgUrl) {
+        return null;
     }
 
     /**
@@ -146,40 +169,41 @@ public class LoungeServiceImpl implements LoungeService {
      * @return
      */
     @Override
-    public CommonResponse modifyLoungePost(Long loungePostId, LoungePostRequest loungePostRequest) {
-        // 기존 이미지 URL 리스트 가져오기
-        List<String> oldImageUrls = loungeMapper.selectLoungePostImgList(loungePostId);
+    public CommonResponse modifyLoungePost(Long loungePostId, LoungePostRequest loungePostRequest, List<MultipartFile> imgsToAdd, List<String> imgsToDelete) {
+//        // 기존 이미지 URL 리스트 가져오기
+//        List<String> oldImageUrls = loungeMapper.selectLoungePostImgList(loungePostId);
+//
+//        // 새로운 이미지 리스트
+//        List<String> newImageUrls = loungePostRequest.getLoungePostImgList();
+//
+//        // 삭제할 이미지 URL 리스트
+//        List<String> imagesToDelete = oldImageUrls.stream()
+//                .filter(oldUrl -> !newImageUrls.contains(oldUrl))
+//                .collect(Collectors.toList());
+//
+//        // 추가된 이미지 URL 리스트
+//        List<String> imagesToAdd = newImageUrls.stream()
+//                .filter(newUrl -> !oldImageUrls.contains(newUrl))
+//                .collect(Collectors.toList());
+         // 이미지 삭제
+        if (imgsToDelete != null || !imgsToDelete.isEmpty()) {
+            int deletedCount = loungeMapper.deleteLoungePostImgUrls(loungePostId, imgsToDelete);
 
-        // 새로운 이미지 리스트
-        List<String> newImageUrls = loungePostRequest.getLoungePostImgList();
-
-        // 삭제할 이미지 URL 리스트
-        List<String> imagesToDelete = oldImageUrls.stream()
-                .filter(oldUrl -> !newImageUrls.contains(oldUrl))
-                .collect(Collectors.toList());
-
-        // 추가된 이미지 URL 리스트
-        List<String> imagesToAdd = newImageUrls.stream()
-                .filter(newUrl -> !oldImageUrls.contains(newUrl))
-                .collect(Collectors.toList());
-
-        // 이미지 삭제
-        if (!imagesToDelete.isEmpty()) {
-            int deletedCount = loungeMapper.deleteLoungePostImgUrls(loungePostId, imagesToDelete);
-
-            if (deletedCount != imagesToDelete.size()) {
+            if (deletedCount != imgsToDelete.size()) {
                 throw new CustomException(ErrorCode.LOUNGE_POST_UPDATE_FAILED);
             }
         }
 
         // 이미지 추가
-        if (!imagesToAdd.isEmpty()) {
-            int insertedCount = loungeMapper.insertLoungePostImgUrls(loungePostId, imagesToAdd);
-
-            if (insertedCount != imagesToAdd.size()) {
-                throw new CustomException(ErrorCode.LOUNGE_POST_UPDATE_FAILED);
+        if (imgsToAdd != null || !imgsToAdd.isEmpty()) {
+            List<String> s3Imgs = s3Service.uploadFiles(imgsToAdd, S3Path);
+            int insertCount = loungeMapper.insertLoungePostImgUrls(loungePostId, s3Imgs);
+            if (insertCount != s3Imgs.size()) {
+                throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
             }
         }
+
+
 
         // 나머지 게시물 내용 수정
         if (loungeMapper.updateLoungePost(loungePostRequest) != 1) {
@@ -210,6 +234,17 @@ public class LoungeServiceImpl implements LoungeService {
         }
         return CommonResponse.of(true, SuccessCode.LOUNGE_POST_DELETE_SUCCESS.getMessage());
     }
+//
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public int deleteLoungePostImgs(Long loungePostId, List<String> imagesToDelete) {
+//        return loungeMapper.deleteLoungePostImgUrls(loungePostId, imagesToDelete);
+//    }
+//
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public int insertLoungePostImgs(Long loungePostId, List<String> imagesToAdd) {
+//        return loungeMapper.insertLoungePostImgUrls(loungePostId, imagesToAdd);
+//    }
+
 
 }
 

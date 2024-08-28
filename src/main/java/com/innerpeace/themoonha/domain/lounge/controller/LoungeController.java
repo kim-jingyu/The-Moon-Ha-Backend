@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -73,10 +75,18 @@ public class LoungeController {
      * @return
      */
     @PostMapping("/post/register")
-    public ResponseEntity<CommonResponse> loungePostRegister(@RequestBody LoungePostRequest loungePostRequest) {
+    public ResponseEntity<CommonResponse> loungePostRegister(@RequestPart("loungePostRequest") LoungePostRequest loungePostRequest,
+                                                             @RequestPart(value = "files", required = false) List<MultipartFile> loungePostImgs) {
         Long memberId = 1L;
-        return ResponseEntity.ok(loungeService.addLoungePost(loungePostRequest, memberId));
+        return ResponseEntity.ok(loungeService.addLoungePost(loungePostRequest, memberId, loungePostImgs));
     }
+
+    @PostMapping("/post/img-upload")
+    public ResponseEntity<List<String>> loungePostImgUpload(@ModelAttribute List<MultipartFile> loungePostImgList) throws IOException {
+        Long memberId = 1L;
+        return ResponseEntity.ok(loungeService.addLoungePostImg(loungePostImgList, 0L));
+    }
+
 
     /**
      * 라운지 댓글 등록
@@ -95,9 +105,12 @@ public class LoungeController {
      * @param loungePostRequest
      * @return
      */
-    @PatchMapping("/post/{loungePostId}/edit")
-    public ResponseEntity<CommonResponse> loungePostEdit(@PathVariable Long loungePostId, @RequestBody LoungePostRequest loungePostRequest) {
-        return ResponseEntity.ok(loungeService.modifyLoungePost(loungePostId, loungePostRequest));
+    @PostMapping("/post/{loungePostId}/edit")
+    public ResponseEntity<CommonResponse> loungePostEdit(@PathVariable Long loungePostId,
+                                                         @RequestPart("loungePostRequest") LoungePostRequest loungePostRequest,
+                                                         @RequestPart(value = "addfiles", required = false) List<MultipartFile> imgsToAdd,
+                                                         @RequestPart(value = "deletefiles", required = false) List<String> imgsToDelete) {
+        return ResponseEntity.ok(loungeService.modifyLoungePost(loungePostId, loungePostRequest, imgsToAdd, imgsToDelete));
     }
 
     /**

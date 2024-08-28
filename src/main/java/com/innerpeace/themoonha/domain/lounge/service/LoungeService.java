@@ -2,7 +2,9 @@ package com.innerpeace.themoonha.domain.lounge.service;
 
 import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -49,7 +51,11 @@ public interface LoungeService {
      * @param loungePostRequest
      * @return
      */
-    CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId);
+    CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId, List<MultipartFile> loungePostImgs);
+
+    List<String> addLoungePostImg(List<MultipartFile> loungePostImgList, Long loungePostId) throws IOException;
+
+    CommonResponse deleteLoungePostImg(String loungePostImgUrl);
 
     /**
      * 라운지 게시물에 댓글 등록
@@ -65,7 +71,7 @@ public interface LoungeService {
      * @param loungePostRequest
      * @return
      */
-    CommonResponse modifyLoungePost(Long loungePostId, LoungePostRequest loungePostRequest);
+    CommonResponse modifyLoungePost(Long loungePostId, LoungePostRequest loungePostRequest, List<MultipartFile> imgsToAdd, List<String> imgsToDelete);
 
     /**
      * 라운지 게시물 삭제
