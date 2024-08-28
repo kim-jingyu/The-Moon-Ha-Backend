@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 어드민 강좌 매퍼 XML
+ * @author 최유경
+ * @since 2024.08.28
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.28  	최유경        최초 생성
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper">
+
+    <select id="selectLessonByTutorSchedule"
+            parameterType="com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest"
+            resultType="int">
+        <![CDATA[
+        SELECT COUNT(DISTINCT lesson_id)
+        FROM lesson
+        WHERE (
+                (member_id = #{memberId}
+                AND day = #{day})
+                AND (start_date <= #{endDate} AND end_date >= #{startDate})
+                AND (start_time < #{endTime} AND end_time > #{startTime})
+            )
+            OR (title = #{title})
+        ]]>
+    </select>
+
+
+    <insert id="insertLesson">
+        <![CDATA[
+        insert into lesson (lesson_id, branch_id, category_id, member_id, title, start_date, end_date, start_time, end_time, summary, cnt, cost, curriculum, supply, preview_video_url, thumbnail_url, place, day, target, online_cost)
+        values (lesson_seq.nextval,
+                #{registerRequest.branchId},
+                #{registerRequest.categoryId},
+                #{registerRequest.memberId},
+                #{registerRequest.title},
+                #{registerRequest.startDate},
+                #{registerRequest.endDate},
+                #{registerRequest.startTime},
+                #{registerRequest.endTime},
+                #{registerRequest.summary},
+                #{registerRequest.cnt},
+                #{registerRequest.cost},
+                #{registerRequest.curriculum},
+                #{registerRequest.supply},
+                #{previewS3Url},
+                #{thumbnailS3Url},
+                #{registerRequest.place},
+                #{registerRequest.day},
+                #{registerRequest.target},
+                #{registerRequest.onlineCost})
+        ]]>
+    </insert>
+</mapper>
