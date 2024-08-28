@@ -28,7 +28,7 @@
         <result property="memberRole" column="member_role" javaType="int"/>
     </resultMap>
 
-    <select id="selectMemberByUsername" resultType="com.innerpeace.themoonha.global.entity.Member">
+    <select id="findByUsername" resultType="com.innerpeace.themoonha.global.entity.Member">
         <![CDATA[
             select
                 member_id,

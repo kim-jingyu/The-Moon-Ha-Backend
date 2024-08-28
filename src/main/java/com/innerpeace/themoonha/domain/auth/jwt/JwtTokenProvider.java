@@ -2,6 +2,8 @@ package com.innerpeace.themoonha.domain.auth.jwt;
 
 import com.innerpeace.themoonha.domain.auth.dto.JwtDTO;
 import com.innerpeace.themoonha.global.entity.Member;
+import com.innerpeace.themoonha.global.exception.CustomException;
+import com.innerpeace.themoonha.global.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -10,12 +12,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,14 +41,13 @@ import org.springframework.util.StringUtils;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.26  	최유경       최초 생성
+ * 2024.08.27  	최유경       getSigningKey refactor, 토큰 재발급 로직
  * </pre>
  */
 @Slf4j
 @Component
 @PropertySource(value={"classpath:application.properties"})
 public class JwtTokenProvider {
-    private Key key;
-
     @Value("${jwt.access.expire.time}")
     private long ACCESS_TOKEN_EXPIRE_TIME;
 
@@ -59,10 +60,9 @@ public class JwtTokenProvider {
     /**
      *  JWT 비밀 키를 초기화하는 메서드
      */
-    @PostConstruct
-    public void init() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(this.SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     /**
@@ -76,20 +76,44 @@ public class JwtTokenProvider {
 
         // AccessToken 생성
         String accessToken = Jwts.builder()
+                .setSubject(String.valueOf(member.getMemberId()))
                 .claim("memberId", member.getMemberId())
                 .claim("username", member.getUsername())
                 .claim("auth", member.getMemberRole().getRole())
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(this.getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         // RefreshToken 생성
         String refreshToken = Jwts.builder()
+                .setSubject(String.valueOf(member.getMemberId()))
                 .claim("memberId", member.getMemberId())
                 .claim("username", member.getUsername())
                 .claim("auth", member.getMemberRole().getRole())
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(this.getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        return JwtDTO.of(accessToken,refreshToken);
+    }
+
+
+    public JwtDTO regenerateAccessToken(String refreshToken){
+        Claims claims = parseClaims(refreshToken);
+        if (claims.get("auth") == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
+        long now = (new Date()).getTime();
+
+        // AccessToken 생성
+        String accessToken = Jwts.builder()
+                .setSubject(claims.getSubject())
+                .claim("memberId", claims.get("memberId"))
+                .claim("username", claims.get("username"))
+                .claim("auth", claims.get("auth"))
+                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(this.getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         return JwtDTO.of(accessToken,refreshToken);
@@ -112,6 +136,8 @@ public class JwtTokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
+        log.info("getAuthentication ROLE : {}", authorities);
+
         // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
@@ -121,15 +147,15 @@ public class JwtTokenProvider {
      * JWT Claim 추출
      *
      * @apiNote JWT 토큰 안의 Claim 정보를 추출
-     * @param accessToken
+     * @param token
      * @return
      */
-    private Claims parseClaims(String accessToken){
+    public Claims parseClaims(String token){
         try{
             return Jwts.parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(this.getSigningKey())
                     .build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e){
             return e.getClaims();
@@ -144,7 +170,9 @@ public class JwtTokenProvider {
      */
     public boolean validateToken(String token){
         try{
-            Jwts.parserBuilder().setSigningKey(key)
+            log.info("validateToken : {}", token);
+            Jwts.parserBuilder()
+                    .setSigningKey(this.getSigningKey())
                     .build()
                     .parseClaimsJws(token);
             return true;
@@ -152,10 +180,14 @@ public class JwtTokenProvider {
             log.info("유효하지 않은 JWT 토큰입니다. ", e);
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.", e);
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.info("제공되지 않은 JWT 토큰입니다. ", e);
         } catch (IllegalArgumentException e) {
             log.info("JWT Claim 문자열이 비어있습니다. ", e);
+        } catch (Exception e){
+            log.info("예상치 못한 오류가 발생했습니다. ", e);
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
         return false;
     }
@@ -166,11 +198,23 @@ public class JwtTokenProvider {
      * @param request
      * @return token
      */
-    public String resolveToken(HttpServletRequest request){
+    public JwtDTO resolveToken(HttpServletRequest request){
+        String accessToken = null;
+        String refreshToken = null;
+
+        // AccessToken 추출
         String bearerToken = request.getHeader("Authorization");
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer"))
-            return bearerToken.substring(7);
-        return null;
+             accessToken = bearerToken.substring(7);
+
+        // RefreshToken 추출
+        for(Cookie cookie : request.getCookies()){
+            if ("refreshToken".equals(cookie.getName())) {
+                refreshToken = cookie.getValue();
+            }
+        }
+
+        return JwtDTO.of(accessToken,refreshToken);
     }
 
 }

@@ -4,6 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * 공통 응답 dto
+ * @author 최유경
+ * @since 2024.08.26
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.08.26  	최유경       최초 생성
+ * </pre>
+ */
 @Getter
 @Builder
 @AllArgsConstructor
