@@ -34,4 +34,7 @@ public interface CraftMapper {
 
     int insertPrologueLike(@Param("prologueId") Long prologueId,
                            @Param("memberId") Long memberId);
+
+    int insertWishLessonVote(@Param("wishLessonId") Long wishLessonId,
+                             @Param("memberId") Long memberId);
 }
