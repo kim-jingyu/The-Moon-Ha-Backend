@@ -19,7 +19,8 @@ public enum ErrorCode {
     SUGGESTION_FAILED(400, "제안합니다 댓글 작성에 실패했습니다"),
     LOUNGE_POST_NOT_FOUND(404, "라운지 게시글 정보가 존재하지 않습니다."),
     PROLOGUE_LIKE_ALREADY_EXISTS(400, "해당 프롤로그에 대해 이미 좋아요를 눌렀습니다."),
-    WISHLESSON_VOTE_ALREADY_EXISTS(400, "듣고싶은 강좌에 이미 투표했습니다.");
+    WISHLESSON_VOTE_ALREADY_EXISTS(400, "듣고싶은 강좌에 이미 투표했습니다.")
+    ;
 
     private final int status;
     private final String message;

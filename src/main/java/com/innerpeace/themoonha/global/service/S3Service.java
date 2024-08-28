@@ -20,22 +20,27 @@ public class S3Service {
     @Value("${aws.bucket}")
     private String bucket;
 
-    public String saveFile(MultipartFile multipartFile) throws IOException {
+    public String saveFile(MultipartFile multipartFile, String folderName) throws IOException {
         String originalFilename = multipartFile.getOriginalFilename();
+        String fullPath = getFullPath(folderName, originalFilename);
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
 
-        s3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+        s3Client.putObject(bucket, fullPath, multipartFile.getInputStream(), metadata);
         return s3Client.getUrl(bucket, originalFilename).toString();
     }
 
-    public UrlResource downloadFile(String originalFilename) {
-        return new UrlResource(s3Client.getUrl(bucket, originalFilename));
+    public UrlResource downloadFile(String folderName, String originalFilename) {
+        return new UrlResource(s3Client.getUrl(bucket, getFullPath(folderName, originalFilename)));
     }
 
-    public void deleteFile(String originalFilename) {
-        s3Client.deleteObject(bucket, originalFilename);
+    public void deleteFile(String folderName, String originalFilename) {
+        s3Client.deleteObject(bucket, getFullPath(folderName, originalFilename));
+    }
+
+    private String getFullPath(String folderName, String originalFilename) {
+        return folderName + "/" + originalFilename;
     }
 }

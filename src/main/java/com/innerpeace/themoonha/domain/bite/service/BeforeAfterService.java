@@ -19,6 +19,8 @@ import java.util.List;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.27  김진규        최초 생성
+ * 2024.08.27  김진규        getBeforeAfterList 메서드 추가
+ * 2024.08.28  김진규        makeBeforeAfter, findBeforeAfterByTitle, findBeforeAfterByHashTags 메서드 추가
  * </pre>
  * @since 2024.08.27
  */

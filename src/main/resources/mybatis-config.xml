@@ -7,7 +7,4 @@
         <setting name="mapUnderscoreToCamelCase" value="true" />
         <setting name="jdbcTypeForNull" value="NULL" />
     </settings>
-    <typeHandlers>
-        <typeHandler handler="com.innerpeace.themoonha.global.handler.JsonTypeHandler" javaType="java.util.List" jdbcType="CLOB" />
-    </typeHandlers>
 </configuration>
