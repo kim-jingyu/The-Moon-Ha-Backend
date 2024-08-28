@@ -1,11 +1,14 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
+import com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse;
+import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
 import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.service.S3Service;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.28  	최유경       최초 생성
+ * 2024.08.28   최유경       강좌 조희 기능
  * </pre>
  */
 @Service
@@ -31,6 +35,13 @@ public class AdminLessonServiceImpl implements AdminLessonService {
     private final AdminLessonMapper adminLessonMapper;
     private final S3Service s3Service;
 
+    /**
+     * 강좌 등록 메서드
+     *
+     * @param registerRequest 강좌 등록 요청 dto
+     * @param thumbnailFile 강좌 썸네일 사진 파일
+     * @param previewVideoFile 강좌 프리뷰 영상 파일
+     */
     @Override
     @Transactional
     public void addLesson(LessonRegisterRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile) {
@@ -55,5 +66,17 @@ public class AdminLessonServiceImpl implements AdminLessonService {
         // 데이터베이스에 저장하기
         if(adminLessonMapper.insertLesson(registerRequest, thumbnailS3Url, previewS3Url)!=1)
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+
+    /**
+     * 강좌 조회 메서드
+     *
+     * @param lessonListRequest 조회 필터 요청 dto
+     * @return 조회 결과 dto
+     */
+    @Override
+    public List<AdminLessonResponse> findLessonList(AdminLessonListRequest lessonListRequest) {
+        return adminLessonMapper.selectLessonList(lessonListRequest);
     }
 }
