@@ -37,6 +37,21 @@ public class S3Service {
         return s3Client.getUrl(bucket, fullPath).toString();
     }
 
+    public List<String> saveFiles(List<MultipartFile> files, String path) {
+        List<String> images = new ArrayList<>();
+        if (!files.isEmpty()) {
+            for (MultipartFile file : files) {
+                try {
+                    String savedFileUrl = saveFile(file, path);
+                    images.add(savedFileUrl);
+                } catch (IOException e) {
+                    throw new CustomException(ErrorCode.LOUNGE_IMG_UPLOAD_FAILED);
+                }
+            }
+        }
+        return images;
+    }
+
     public UrlResource downloadFile(String folderName, String originalFilename) {
         return new UrlResource(s3Client.getUrl(bucket, getFullPath(folderName, originalFilename)));
     }

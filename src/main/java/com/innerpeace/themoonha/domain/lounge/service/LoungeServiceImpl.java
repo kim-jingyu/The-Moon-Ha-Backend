@@ -121,7 +121,7 @@ public class LoungeServiceImpl implements LoungeService {
 
         // 이미지 정보 저장
         if (!loungePostImgs.isEmpty()) {
-            List<String> s3Imgs = s3Service.uploadFiles(loungePostImgs, S3Path);
+            List<String> s3Imgs = s3Service.saveFiles(loungePostImgs, S3Path);
             int insertCount = loungeMapper.insertLoungePostImgUrls(loungePostRequest.getLoungePostId(), s3Imgs);
             if (insertCount != s3Imgs.size()) {
                 throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
@@ -163,7 +163,7 @@ public class LoungeServiceImpl implements LoungeService {
 
         // 추가할 이미지
         if (imgsToAdd != null && !imgsToAdd.isEmpty()) {
-            List<String> s3Imgs = s3Service.uploadFiles(imgsToAdd, S3Path);
+            List<String> s3Imgs = s3Service.saveFiles(imgsToAdd, S3Path);
             imgUrls.addAll(s3Imgs);
         }
 
