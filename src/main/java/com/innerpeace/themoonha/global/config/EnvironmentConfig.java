@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
  * application.properties 설정
@@ -27,5 +30,13 @@ public class EnvironmentConfig {
                 new ClassPathResource("application-s3.properties")
         );
         return configurer;
+    }
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(10485760); // 최대 파일 크기 10MB
+        multipartResolver.setMaxUploadSizePerFile(10485760); // 파일 당 최대 크기 10MB
+        return multipartResolver;
     }
 }
