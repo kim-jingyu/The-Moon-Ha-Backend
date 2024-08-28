@@ -44,4 +44,16 @@ public class CraftController {
         Long memberId = 1L;
         return ResponseEntity.ok(craftService.addSuggestion(suggestionRequest, memberId));
     }
+
+    @PostMapping("/prologue/{prologueId}")
+    public ResponseEntity<CommonResponse> prologueLike(@PathVariable Long prologueId) {
+        Long memberId = 1L;
+        return ResponseEntity.ok(craftService.addPrologueLike(prologueId, memberId));
+    }
+
+    @PostMapping("/wishlesson/{wishLessonId}")
+    public ResponseEntity<CommonResponse> wishLessonVote(@PathVariable Long wishLessonId) {
+        Long memberId = 1L;
+        return ResponseEntity.ok(craftService.addWishLessonVote(wishLessonId, memberId));
+    }
 }

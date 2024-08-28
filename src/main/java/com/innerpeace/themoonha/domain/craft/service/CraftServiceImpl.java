@@ -37,13 +37,8 @@ public class CraftServiceImpl implements CraftService {
     @Override
     @Transactional(readOnly = true)
     public CraftMainResponse findCraftMain(Criteria criteria) {
-        // 1. 프롤로그 목록 불러오기
         List<PrologueDTO> prologueList = craftMapper.selectPrologueList();
-
-        // 2. 듣고싶은 강좌 목록 불러오기
         List<WishLessonDTO> wishLessonList = craftMapper.selectWishLessonList();
-
-        // 3. 제안합니다 댓글 목록 불러오기
         List<SuggestionDTO> suggestionList = craftMapper.selectSuggestionList(criteria);
 
         return CraftMainResponse.of(prologueList, wishLessonList, suggestionList);
@@ -64,5 +59,24 @@ public class CraftServiceImpl implements CraftService {
             throw new CustomException(ErrorCode.SUGGESTION_FAILED);
         }
         return CommonResponse.from(SuccessCode.SUGGESTION_WRITE_SUCCESS.getMessage());
+    }
+
+    @Override
+    @Transactional
+    public CommonResponse addPrologueLike(Long prologueId, Long memberId) {
+        if (craftMapper.insertPrologueLike(prologueId, memberId) != 1) {
+            throw new CustomException(ErrorCode.PROLOGUE_LIKE_ALREADY_EXISTS);
+        }
+
+        return CommonResponse.from(SuccessCode.PROLOGUE_LIKE_SUCCESS.getMessage());
+    }
+
+    @Override
+    public CommonResponse addWishLessonVote(Long wishLessonId, Long memberId) {
+        if (craftMapper.insertWishLessonVote(wishLessonId, memberId) != 1) {
+            throw new CustomException(ErrorCode.WISHLESSON_VOTE_ALREADY_EXISTS);
+        }
+
+        return CommonResponse.from(SuccessCode.WISHLESSON_VOTE_SUCCESS.getMessage());
     }
 }
