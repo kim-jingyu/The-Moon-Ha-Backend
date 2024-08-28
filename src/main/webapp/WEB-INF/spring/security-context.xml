@@ -18,6 +18,10 @@
     </beans:bean>
 
     <http pattern="/auth/login" security="none"></http>
+    <http pattern="/lounge/**" security="none"></http>
+    <http pattern="/lesson/**" security="none"></http>
+    <http pattern="/bite/**" security="none"></http>
+    <http pattern="/craft/**" security="none"></http>
 
     <!-- HTTP 보안 설정 -->
     <http auto-config="true" use-expressions="true">
