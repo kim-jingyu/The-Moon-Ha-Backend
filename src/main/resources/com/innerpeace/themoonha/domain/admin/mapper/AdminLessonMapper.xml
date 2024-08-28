@@ -58,4 +58,73 @@
                 #{registerRequest.onlineCost})
         ]]>
     </insert>
+
+    <select id="selectLessonList"
+            parameterType="com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest"
+            resultType="com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse">
+        SELECT
+            l.lesson_id,
+            l.branch_id,
+            b.name branch_name,
+            l.category_id,
+            c.category,
+            l.member_id,
+            m.name tutor_name,
+            l.title,
+            l.cnt,
+            l.cost,
+            l.thumbnail_url,
+            l.preview_video_url,
+            l.start_date,
+            l.end_date,
+            CASE
+                WHEN l.cnt = 1 THEN l.start_date || ' ' || l.start_time || '~' || l.end_time
+                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
+            END AS  lesson_time,
+            l.day || '요일' day,
+            l.place,
+            l.target,
+            l.online_cost,
+            l.created_at
+        FROM
+            lesson l
+            JOIN
+            branch b
+            ON
+            l.branch_id = b.branch_id
+            JOIN
+            member m
+            ON
+            l.member_id = m.member_id
+            JOIN
+            category c
+            ON
+            l.category_id = c.category_id
+        <where>
+            <if test="branchId != null">
+                l.branch_id = #{branchId}
+            </if>
+
+            <if test="lessonTitle != null and lessonTitle != ''">
+                AND l.title LIKE '%' || #{lessonTitle} || '%'
+            </if>
+
+            <if test="tutorName != null and tutorName != ''">
+                AND m.name LIKE #{tutorName} || '%'
+            </if>
+
+            <if test="day != null">
+                AND l.day = #{day}
+            </if>
+
+            <if test="target != null">
+                AND l.target = #{target}
+            </if>
+
+            <if test="categoryId != null and categoryId != ''">
+                AND c.category = #{categoryId}
+            </if>
+            AND l.deleted_at IS NULL
+        </where>
+    </select>
 </mapper>

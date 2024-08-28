@@ -1,11 +1,14 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
+import com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse;
+import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
 import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.service.S3Service;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,5 +58,11 @@ public class AdminLessonServiceImpl implements AdminLessonService {
         // 데이터베이스에 저장하기
         if(adminLessonMapper.insertLesson(registerRequest, thumbnailS3Url, previewS3Url)!=1)
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @Override
+    public List<AdminLessonResponse> findLessonList(AdminLessonListRequest lessonListRequest) {
+        return adminLessonMapper.selectLessonList(lessonListRequest);
     }
 }
