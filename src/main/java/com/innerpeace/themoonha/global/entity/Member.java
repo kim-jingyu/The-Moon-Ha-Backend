@@ -27,7 +27,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Member {
-    private int memberId;
+    private Long memberId;
     private String username;
     private String password;
     private String name;
