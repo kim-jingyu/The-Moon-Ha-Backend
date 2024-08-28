@@ -28,4 +28,6 @@ public interface CraftService {
     CommonResponse addSuggestion(SuggestionRequest suggestionRequest, Long memberId);
 
     CommonResponse addPrologueLike(Long prologueId, Long memberId);
+
+    CommonResponse addWishLessonVote(Long wishLessonId, Long memberId);
 }
