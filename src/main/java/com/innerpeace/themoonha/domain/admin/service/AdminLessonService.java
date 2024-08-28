@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
 import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 어드민 강좌 관리 서비스
@@ -16,5 +17,5 @@ import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
  */
 public interface AdminLessonService {
 
-    void addLesson(LessonRegisterRequest registerRequest);
+    void addLesson(LessonRegisterRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile);
 }

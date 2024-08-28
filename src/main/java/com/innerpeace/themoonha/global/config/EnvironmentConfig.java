@@ -4,12 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-
-import javax.sql.DataSource;
 
 /**
  * application.properties 설정
@@ -27,13 +21,20 @@ import javax.sql.DataSource;
 public class EnvironmentConfig {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
+        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+        configurer.setLocations(
+                new ClassPathResource("application.properties"),
+                new ClassPathResource("application-s3.properties")
+        );
+        return configurer;
     }
+
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(524288000);
+        multipartResolver.setMaxUploadSize(10485760); // 최대 파일 크기 10MB
+        multipartResolver.setMaxUploadSizePerFile(10485760); // 파일 당 최대 크기 10MB
         return multipartResolver;
     }
 }

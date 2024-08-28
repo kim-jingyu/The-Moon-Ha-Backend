@@ -5,10 +5,13 @@ import com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.service.S3Service;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 어드민 강좌 관리 서비스 구현체
@@ -27,10 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AdminLessonServiceImpl implements AdminLessonService {
     private final AdminLessonMapper adminLessonMapper;
+    private final S3Service s3Service;
 
     @Override
     @Transactional
-    public void addLesson(LessonRegisterRequest registerRequest) {
+    public void addLesson(LessonRegisterRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile) {
         // 중복 여부 확인
         // 1. 동일한 강사가 동일 지점, 동일 시간대에 중복된 강좌 확인
         // 2. 현재 진행중인 강좌 중, 중복된 강좌명 확인
@@ -40,9 +44,14 @@ public class AdminLessonServiceImpl implements AdminLessonService {
         // 썸네일 및 프리뷰 S3 업로드
         String thumbnailS3Url = null;
         String previewS3Url = null;
-
-        // url 받아서 Lesson builder 구성
-
+        try{
+            if(!thumbnailFile.isEmpty())
+                thumbnailS3Url = s3Service.saveFile(thumbnailFile, "lesson/image");
+            if(!previewVideoFile.isEmpty())
+                previewS3Url = s3Service.saveFile(previewVideoFile, "lesson/preview");
+        } catch (IOException e){
+            throw  new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         // 데이터베이스에 저장하기
         if(adminLessonMapper.insertLesson(registerRequest, thumbnailS3Url, previewS3Url)!=1)
