@@ -17,7 +17,8 @@ public enum SuccessCode {
     LOUNGE_POST_DELETE_SUCCESS(200, "라운지 게시물이 삭제되었습니다."),
     WISHLESSON_VOTE_SUCCESS(200, "듣고싶은 강좌에 투표를 완료했습니다"),
     AUTH_SIGNUP_SUCCESS(200,"회원가입에 성공하였습니다."),
-    AUTH_LOGIN_SUCCESS(200, "로그인에 성공하였습니다.");
+    AUTH_LOGIN_SUCCESS(200, "로그인에 성공하였습니다."),
+    ADMIN_LESSON_REGISTER_SUCCESS(200,"강좌 등록이 완료되었습니다.");
 
     private final int status;
     private final String message;

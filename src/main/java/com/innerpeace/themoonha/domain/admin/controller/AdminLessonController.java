@@ -5,6 +5,7 @@ import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
 import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
 import com.innerpeace.themoonha.domain.admin.service.AdminLessonService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.vo.SuccessCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.28  	최유경       최초 생성
+ * 2024.08.28   최유경       강좌 조희 기능
  * </pre>
  */
 @RestController
@@ -42,7 +44,7 @@ public class AdminLessonController {
         log.info("/admin/lesson/register : {}", registerRequest.toString());
         adminLessonService.addLesson(registerRequest, thumbnailFile, previewVideoFile);
 
-        return ResponseEntity.ok(CommonResponse.from("강좌 등록이 완료되었습니다."));
+        return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_LESSON_REGISTER_SUCCESS.getMessage()));
     }
 
     @GetMapping("/list")

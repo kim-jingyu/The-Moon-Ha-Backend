@@ -121,7 +121,7 @@
                 AND l.target = #{target}
             </if>
 
-            <if test="categoryId != null and categoryId != ''">
+            <if test="categoryId != null">
                 AND c.category = #{categoryId}
             </if>
             AND l.deleted_at IS NULL

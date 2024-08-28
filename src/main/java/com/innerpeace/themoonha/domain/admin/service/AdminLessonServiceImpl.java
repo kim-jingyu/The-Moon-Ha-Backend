@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.28  	최유경       최초 생성
+ * 2024.08.28   최유경       강좌 조희 기능
  * </pre>
  */
 @Service
@@ -34,6 +35,13 @@ public class AdminLessonServiceImpl implements AdminLessonService {
     private final AdminLessonMapper adminLessonMapper;
     private final S3Service s3Service;
 
+    /**
+     * 강좌 등록 메서드
+     *
+     * @param registerRequest 강좌 등록 요청 dto
+     * @param thumbnailFile 강좌 썸네일 사진 파일
+     * @param previewVideoFile 강좌 프리뷰 영상 파일
+     */
     @Override
     @Transactional
     public void addLesson(LessonRegisterRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile) {
@@ -61,6 +69,12 @@ public class AdminLessonServiceImpl implements AdminLessonService {
     }
 
 
+    /**
+     * 강좌 조회 메서드
+     *
+     * @param lessonListRequest 조회 필터 요청 dto
+     * @return 조회 결과 dto
+     */
     @Override
     public List<AdminLessonResponse> findLessonList(AdminLessonListRequest lessonListRequest) {
         return adminLessonMapper.selectLessonList(lessonListRequest);
