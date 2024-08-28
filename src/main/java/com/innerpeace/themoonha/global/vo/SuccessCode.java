@@ -13,6 +13,8 @@ public enum SuccessCode {
     PROLOGUE_LIKE_SUCCESS(200, "프롤로그에 좋아요를 눌렀습니다."),
     LOUNGE_POST_ADD_SUCCESS(200, "라운지에 게시물이 등록되었습니다."),
     LOUNGE_COMMENT_ADD_SUCCESS(200, "라운지에 댓글이 등록되었습니다."),
+    LOUNGE_POST_UPDATE_SUCCESS(200, "라운지 게시물이 수정되었습니다."),
+    LOUNGE_POST_DELETE_SUCCESS(200, "라운지 게시물이 삭제되었습니다."),
     WISHLESSON_VOTE_SUCCESS(200, "듣고싶은 강좌에 투표를 완료했습니다"),
     AUTH_SIGNUP_SUCCESS(200,"회원가입에 성공하였습니다."),
     AUTH_LOGIN_SUCCESS(200, "로그인에 성공하였습니다.");
