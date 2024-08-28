@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
- * 2024.08.28  	조희정       게시글 수정 구현
+ * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * </pre>
  */
 @Service
@@ -51,8 +51,8 @@ public class LoungeServiceImpl implements LoungeService {
      * @return
      */
     @Override
-    public List<LoungeListResponse> findLoungeList(Long memberId) {
-        return loungeMapper.selectLoungeList(memberId);
+    public List<LoungeListResponse> findLoungeList(Long memberId, String role) {
+        return loungeMapper.selectLoungeList(memberId, role);
     }
 
     /**
@@ -186,13 +186,13 @@ public class LoungeServiceImpl implements LoungeService {
      * @return
      */
     @Override
-    public CommonResponse deleteLoungePost(Long loungePostId) {
+    public CommonResponse removeLoungePost(Long loungePostId) {
         // 게시물 삭제
         if(loungeMapper.deleteLoungePost(loungePostId) != 1) {
             throw new CustomException(ErrorCode.LOUNGE_POST_DELETE_FAILED);
         }
         // 댓글 삭제
-        if(loungeMapper.deleteLoungeComment(loungePostId) < 0) {
+        if(loungeMapper.deleteLoungeComment(loungePostId, null) < 0) {
             throw new CustomException(ErrorCode.LOUNGE_POST_DELETE_FAILED);
         }
         // 이미지 삭제
@@ -202,7 +202,31 @@ public class LoungeServiceImpl implements LoungeService {
         return CommonResponse.of(true, SuccessCode.LOUNGE_POST_DELETE_SUCCESS.getMessage());
     }
 
+    /**
+     * 라운지 댓글 삭제
+     * @param loungeCommentId
+     * @return
+     */
+    @Override
+    public CommonResponse removeLoungeComment(Long loungeCommentId) {
+        if (loungeMapper.deleteLoungeComment(null, loungeCommentId) != 1) {
+            throw new CustomException(ErrorCode.LOUNGE_COMMENT_DELETE_FAILED);
+        }
+        return CommonResponse.of(true, SuccessCode.LOUNGE_COMMENT_DELETE_SUCCESS.getMessage());
+    }
 
+    /**
+     * 라운지 댓글 수정
+     * @param loungeCommentUpdateRequest
+     * @return
+     */
+    @Override
+    public CommonResponse modifyLoungeComment(LoungeCommentUpdateRequest loungeCommentUpdateRequest) {
+        if (loungeMapper.updateLoungeComment(loungeCommentUpdateRequest) != 1) {
+            throw new CustomException(ErrorCode.LOUNGE_COMMENT_UPDATE_FAILED);
+        }
+        return CommonResponse.of(true, SuccessCode.LOUNGE_COMMENT_UPDATE_SUCCESS.getMessage());
+    }
 }
 
 

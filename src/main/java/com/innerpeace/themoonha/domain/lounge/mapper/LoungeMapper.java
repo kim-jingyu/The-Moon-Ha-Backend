@@ -19,7 +19,7 @@ import java.util.Optional;
  * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
- * 2024.08.28  	조희정       게시글 수정 구현
+ * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * </pre>
  */
 public interface LoungeMapper {
@@ -28,7 +28,7 @@ public interface LoungeMapper {
      * @param memberId
      * @return
      */
-    List<LoungeListResponse> selectLoungeList(Long memberId);
+    List<LoungeListResponse> selectLoungeList(@Param("memberId") Long memberId, @Param("role") String role);
 
     /**
      * 라운지 기본 정보 조회
@@ -133,7 +133,7 @@ public interface LoungeMapper {
      * @param loungePostId
      * @return
      */
-    int deleteLoungeComment(Long loungePostId);
+    int deleteLoungeComment(@Param("loungePostId") Long loungePostId, @Param("loungeCommentId") Long loungeCommentId);
 
     /**
      * 라운지 이미지 삭제 및 추가
@@ -142,4 +142,12 @@ public interface LoungeMapper {
      * @return
      */
     int updateLoungePostImages(@Param("loungePostId") Long loungePostId, @Param("imgUrls") List<String> imgUrls);
+
+    /**
+     * 라운지 댓글 수정
+     * @param loungeCommentUpdateRequest
+     * @return
+     */
+    int updateLoungeComment(LoungeCommentUpdateRequest loungeCommentUpdateRequest);
+
 }
