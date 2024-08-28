@@ -29,7 +29,7 @@ import java.util.List;
  * </pre>
  * @since 2024.08.27
  */
-@RequestMapping("/before-after")
+@RequestMapping("/bite/before-after")
 @RestController
 @RequiredArgsConstructor
 public class BeforeAfterController {

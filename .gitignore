@@ -40,3 +40,6 @@ build/
 **/.DS_Store
 .DS_Storeroot-context.xml
 src/main/resources/application.properties
+
+### smart tomcat ###
+.smarttomcat
