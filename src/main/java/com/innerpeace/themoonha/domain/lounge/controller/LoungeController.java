@@ -5,6 +5,7 @@ import com.innerpeace.themoonha.domain.lounge.service.LoungeService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,9 @@ import java.util.List;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
- * 2024.08.25  	조희정       loungeList 메서드 추가
- * 2024.08.26  	조희정       loungeHome, loungePostDetail 메서드 추가
- * 2024.08.27  	조희정       loungePostRegister, loungeCommentRegister 메서드 추가
+ * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
+ * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
+ * 2024.08.27  	조희정       게시글 생성, 삭제, 수정 구현
  * </pre>
  */
 @RestController
@@ -86,5 +87,26 @@ public class LoungeController {
     public ResponseEntity<CommonResponse> loungeCommentRegister(@RequestBody LoungeCommentRequest loungeCommentRequest) {
         Long memberId = 1L;
         return ResponseEntity.ok(loungeService.addLoungeComment(loungeCommentRequest, memberId));
+    }
+
+    /**
+     * 라운지 게시글 수정
+     * @param loungePostId
+     * @param loungePostRequest
+     * @return
+     */
+    @PatchMapping("/post/{loungePostId}/edit")
+    public ResponseEntity<CommonResponse> loungePostEdit(@PathVariable Long loungePostId, @RequestBody LoungePostRequest loungePostRequest) {
+        return ResponseEntity.ok(loungeService.modifyLoungePost(loungePostId, loungePostRequest));
+    }
+
+    /**
+     * 라운지 게시글 삭제
+     * @param loungePostId
+     * @return
+     */
+    @DeleteMapping("/post/{loungePostId}/delete")
+    public ResponseEntity<CommonResponse> loungePostDelete(@PathVariable Long loungePostId) {
+        return ResponseEntity.ok(loungeService.deleteLoungePost(loungePostId));
     }
 }

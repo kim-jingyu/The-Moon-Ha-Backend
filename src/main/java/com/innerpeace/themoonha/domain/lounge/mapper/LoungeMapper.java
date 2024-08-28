@@ -16,9 +16,9 @@ import java.util.Optional;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.25  	조희정       최초 생성
- * 2024.08.25  	조희정       selectLoungeList 메서드 생성
- * 2024.08.26  	조희정       selectLoungeInfo, selectLoungePostList, selectAttendanceList, selectLoungeMemberList, selectLoungePostDetail 메서드 생성
- * 2024.08.27  	조희정       selectLoungePostImgList, selectLoungeCommentList, insertLoungePost, insertLoungePostImgUrls, insertLoungeComment 메서드 생성
+ * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
+ * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
+ * 2024.08.27  	조희정       게시글 생성, 삭제, 수정 구현
  * </pre>
  */
 public interface LoungeMapper {
@@ -92,10 +92,10 @@ public interface LoungeMapper {
     /**
      * 라운지 게시물 이미지 등록
      * @param loungePostId
-     * @param postImgUrl
+     * @param postImgUrls
      * @return
      */
-    int insertLoungePostImgUrls(@Param("loungePostId") Long loungePostId, @Param("postImgUrl") String postImgUrl);
+    int insertLoungePostImgUrls(@Param("loungePostId") Long loungePostId, @Param("postImgUrls") List<String> postImgUrls);
 
     /**
      * 라운지 댓글 등록
@@ -104,4 +104,33 @@ public interface LoungeMapper {
      * @return
      */
     int insertLoungeComment(@Param("loungeComment") LoungeCommentRequest loungeCommentRequest, @Param("memberId") Long memberId);
+
+    /**
+     * 라운지 게시글 이미지 삭제
+     * @param loungePostId
+     * @param postImgUrls
+     * @return
+     */
+    int deleteLoungePostImgUrls(@Param("loungePostId") Long loungePostId, @Param("postImgUrls") List<String> postImgUrls);
+
+    /**
+     * 라운지 게시글 내용 수정
+     * @param loungePostRequest
+     * @return
+     */
+    int updateLoungePost(LoungePostRequest loungePostRequest);
+
+    /**
+     * 라운지 게시물 삭제
+     * @param loungePostId
+     * @return
+     */
+    int deleteLoungePost(Long loungePostId);
+
+    /**
+     * 라운지 댓글 삭제
+     * @param loungePostId
+     * @return
+     */
+    int deleteLoungeComment(Long loungePostId);
 }
