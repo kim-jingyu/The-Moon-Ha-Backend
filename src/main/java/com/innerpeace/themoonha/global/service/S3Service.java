@@ -25,39 +25,28 @@ public class S3Service {
     @Value("${aws.bucket}")
     private String bucket;
 
-    public String saveFile(MultipartFile multipartFile, String path) throws IOException {
-
-        String originalFilename = path + "/" + getFileNameServer(multipartFile);
+    public String saveFile(MultipartFile multipartFile, String folderName) throws IOException {
+        String originalFilename = getFileNameServer(multipartFile);
+        String fullPath = getFullPath(folderName, originalFilename);
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
 
-        s3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
-        return s3Client.getUrl(bucket, originalFilename).toString();
+        s3Client.putObject(bucket, fullPath, multipartFile.getInputStream(), metadata);
+        return s3Client.getUrl(bucket, fullPath).toString();
     }
 
-    public List<String> uploadFiles(List<MultipartFile> files, String path) {
-        List<String> images = new ArrayList<>();
-        if (!files.isEmpty()) {
-            for (MultipartFile file : files) {
-                try {
-                    String savedFileUrl = saveFile(file, path);
-                    images.add(savedFileUrl);
-                } catch (IOException e) {
-                    throw new CustomException(ErrorCode.LOUNGE_IMG_UPLOAD_FAILED);
-                }
-            }
-        }
-        return images;
+    public UrlResource downloadFile(String folderName, String originalFilename) {
+        return new UrlResource(s3Client.getUrl(bucket, getFullPath(folderName, originalFilename)));
     }
 
-    public UrlResource downloadFile(String originalFilename) {
-        return new UrlResource(s3Client.getUrl(bucket, originalFilename));
+    public void deleteFile(String folderName, String originalFilename) {
+        s3Client.deleteObject(bucket, getFullPath(folderName, originalFilename));
     }
 
-    public void deleteFile(String originalFilename) {
-        s3Client.deleteObject(bucket, originalFilename);
+    private String getFullPath(String folderName, String originalFilename) {
+        return folderName + "/" + originalFilename;
     }
 
     /**
@@ -79,6 +68,6 @@ public class S3Service {
         // 파일 확장자
         String ext = multipartFile.getOriginalFilename().substring(pos + 1);
 
-        return today + "_" + uuid + "_" + baseName + "." + ext;
+        return today + "_" + uuid.split("-")[0] + "_" + baseName + "." + ext;
     }
 }
