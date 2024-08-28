@@ -5,7 +5,6 @@ import com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.service.S3Service;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
