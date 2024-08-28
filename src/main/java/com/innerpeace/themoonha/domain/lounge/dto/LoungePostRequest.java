@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.lounge.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,5 +25,4 @@ public class LoungePostRequest {
     private Long loungeId;
     private String content;
     private Boolean noticeYn;
-    private List<String> loungePostImgList;
 }

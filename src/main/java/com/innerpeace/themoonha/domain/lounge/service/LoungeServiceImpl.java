@@ -5,15 +5,17 @@ import com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import com.innerpeace.themoonha.global.service.S3Service;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,8 @@ import java.util.stream.Collectors;
  * 2024.08.25  	조희정       최초 생성
  * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
- * 2024.08.27  	조희정       게시글 생성, 삭제, 수정 구현
+ * 2024.08.27  	조희정       게시글 생성, 삭제 구현
+ * 2024.08.28  	조희정       게시글 수정 구현
  * </pre>
  */
 @Service
@@ -39,6 +42,8 @@ import java.util.stream.Collectors;
 public class LoungeServiceImpl implements LoungeService {
 
     private final LoungeMapper loungeMapper;
+    private final S3Service s3Service;
+    private final String S3Path = "lounge";
 
     /**
      * 라운지 목록 조회
@@ -101,23 +106,24 @@ public class LoungeServiceImpl implements LoungeService {
     }
 
     /**
-     * 라운지 게시물 등록
+     * 라운지 게시물 수정
      * @param loungePostRequest
      * @param memberId
+     * @param loungePostImgs
      * @return
      */
     @Override
-    public CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId) {
+    public CommonResponse addLoungePost(LoungePostRequest loungePostRequest, Long memberId, List<MultipartFile> loungePostImgs) {
         // 게시물 저장
         if(loungeMapper.insertLoungePost(loungePostRequest, memberId) != 1) {
             throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
         }
 
-        // 이미지 저장
-        if (loungePostRequest.getLoungePostImgList() != null && !loungePostRequest.getLoungePostImgList().isEmpty()) {
-            int insertedCount = loungeMapper.insertLoungePostImgUrls(loungePostRequest.getLoungePostId(), loungePostRequest.getLoungePostImgList());
-
-            if (insertedCount != loungePostRequest.getLoungePostImgList().size()) {
+        // 이미지 정보 저장
+        if (!loungePostImgs.isEmpty()) {
+            List<String> s3Imgs = s3Service.saveFiles(loungePostImgs, S3Path);
+            int insertCount = loungeMapper.insertLoungePostImgUrls(loungePostRequest.getLoungePostId(), s3Imgs);
+            if (insertCount != s3Imgs.size()) {
                 throw new CustomException(ErrorCode.LOUNGE_POST_FAILED);
             }
         }
@@ -146,40 +152,25 @@ public class LoungeServiceImpl implements LoungeService {
      * @return
      */
     @Override
-    public CommonResponse modifyLoungePost(Long loungePostId, LoungePostRequest loungePostRequest) {
-        // 기존 이미지 URL 리스트 가져오기
-        List<String> oldImageUrls = loungeMapper.selectLoungePostImgList(loungePostId);
+    public CommonResponse modifyLoungePost(Long loungePostId, LoungePostRequest loungePostRequest, List<MultipartFile> imgsToAdd, List<String> imgsToDelete) {
+        // 이미지 URL 리스트
+        List<String> imgUrls = new ArrayList<>();
 
-        // 새로운 이미지 리스트
-        List<String> newImageUrls = loungePostRequest.getLoungePostImgList();
-
-        // 삭제할 이미지 URL 리스트
-        List<String> imagesToDelete = oldImageUrls.stream()
-                .filter(oldUrl -> !newImageUrls.contains(oldUrl))
-                .collect(Collectors.toList());
-
-        // 추가된 이미지 URL 리스트
-        List<String> imagesToAdd = newImageUrls.stream()
-                .filter(newUrl -> !oldImageUrls.contains(newUrl))
-                .collect(Collectors.toList());
-
-        // 이미지 삭제
-        if (!imagesToDelete.isEmpty()) {
-            int deletedCount = loungeMapper.deleteLoungePostImgUrls(loungePostId, imagesToDelete);
-
-            if (deletedCount != imagesToDelete.size()) {
-                throw new CustomException(ErrorCode.LOUNGE_POST_UPDATE_FAILED);
-            }
+        // 삭제할 이미지
+        if (imgsToDelete != null && !imgsToDelete.isEmpty()) {
+            imgUrls.addAll(imgsToDelete);
         }
 
-        // 이미지 추가
-        if (!imagesToAdd.isEmpty()) {
-            int insertedCount = loungeMapper.insertLoungePostImgUrls(loungePostId, imagesToAdd);
-
-            if (insertedCount != imagesToAdd.size()) {
-                throw new CustomException(ErrorCode.LOUNGE_POST_UPDATE_FAILED);
-            }
+        // 추가할 이미지
+        if (imgsToAdd != null && !imgsToAdd.isEmpty()) {
+            List<String> s3Imgs = s3Service.saveFiles(imgsToAdd, S3Path);
+            imgUrls.addAll(s3Imgs);
         }
+
+        // 이미지 추가 및 삭제
+        if (loungeMapper.updateLoungePostImages(loungePostId, imgUrls) != imgUrls.size()) {
+            throw new CustomException(ErrorCode.LOUNGE_POST_UPDATE_FAILED);
+        };
 
         // 나머지 게시물 내용 수정
         if (loungeMapper.updateLoungePost(loungePostRequest) != 1) {
@@ -210,6 +201,7 @@ public class LoungeServiceImpl implements LoungeService {
         }
         return CommonResponse.of(true, SuccessCode.LOUNGE_POST_DELETE_SUCCESS.getMessage());
     }
+
 
 }
 

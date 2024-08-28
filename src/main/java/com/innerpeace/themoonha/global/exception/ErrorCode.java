@@ -24,6 +24,7 @@ public enum ErrorCode {
     WISHLESSON_VOTE_ALREADY_EXISTS(400, "듣고싶은 강좌에 이미 투표했습니다."),
     MEMBER_INCORRECT_AUTH(400, "아이디와 비밀번호가 일치하지 않습니다."),
     INTERNAL_SERVER_ERROR(500, "예상치 못한 오류가 발생하였습니다."),
+    LOUNGE_IMG_UPLOAD_FAILED(400, "라운지 게시물 이미지 업로드에 실패했습니다."),
     ADMIN_LESSON_REGISTER_DUPLICATE(409, "수강 스케줄 혹은 강좌명이 중복되었습니다.");
     private final int status;
     private final String message;
