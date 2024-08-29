@@ -22,4 +22,5 @@ public class LoungeMemberDTO {
     private Long memberId;
     private String name;
     private String profileImgUrl;
+    private boolean loungeYn;
 }

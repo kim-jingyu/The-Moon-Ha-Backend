@@ -4,7 +4,6 @@ import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
  * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
- * 2024.08.28  	조희정       게시글 수정 구현
+ * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * </pre>
  */
 public interface LoungeService {
@@ -29,7 +28,7 @@ public interface LoungeService {
      * @param memberId
      * @return
      */
-    List<LoungeListResponse> findLoungeList(Long memberId);
+    List<LoungeListResponse> findLoungeList(Long memberId, String role);
 
     /**
      * 라운지 홈 조회
@@ -80,5 +79,19 @@ public interface LoungeService {
      * @param loungePostId
      * @return
      */
-    CommonResponse deleteLoungePost(Long loungePostId);
+    CommonResponse removeLoungePost(Long loungePostId);
+
+    /**
+     * 라운지 댓글 삭제
+     * @param loungeCommentId
+     * @return
+     */
+    CommonResponse removeLoungeComment(Long loungeCommentId);
+
+    /**
+     * 라운지 댓글 수정
+     * @param loungeCommentUpdateRequest
+     * @return
+     */
+    CommonResponse modifyLoungeComment(LoungeCommentUpdateRequest loungeCommentUpdateRequest);
 }
