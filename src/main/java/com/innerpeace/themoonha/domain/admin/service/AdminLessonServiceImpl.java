@@ -1,8 +1,8 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse;
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
-import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse;
+import com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
@@ -44,7 +44,7 @@ public class AdminLessonServiceImpl implements AdminLessonService {
      */
     @Override
     @Transactional
-    public void addLesson(LessonRegisterRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile) {
+    public void addLesson(LessonRegisterAdminRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile) {
         // 중복 여부 확인
         // 1. 동일한 강사가 동일 지점, 동일 시간대에 중복된 강좌 확인
         // 2. 현재 진행중인 강좌 중, 중복된 강좌명 확인
@@ -72,11 +72,11 @@ public class AdminLessonServiceImpl implements AdminLessonService {
     /**
      * 강좌 조회 메서드
      *
-     * @param lessonListRequest 조회 필터 요청 dto
+     * @param lessonListAdminRequest 조회 필터 요청 dto
      * @return 조회 결과 dto
      */
     @Override
-    public List<AdminLessonResponse> findLessonList(AdminLessonListRequest lessonListRequest) {
-        return adminLessonMapper.selectLessonList(lessonListRequest);
+    public List<LessonAdminResponse> findLessonList(LessonListAdminRequest lessonListAdminRequest) {
+        return adminLessonMapper.selectLessonList(lessonListAdminRequest);
     }
 }
