@@ -74,7 +74,7 @@ public class LoungeServiceImpl implements LoungeService {
                 })
                 .collect(Collectors.toList());
         List<AttendanceDTO> attendanceList = loungeMapper.selectAttendanceList(loungeId, memberId, role);
-        List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeId);
+        List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeInfo.getLessonId(), role);
 
         return LoungeHomeResponse.of(
                 loungeInfo,

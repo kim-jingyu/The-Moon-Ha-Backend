@@ -175,17 +175,20 @@
         SELECT /*+ INDEX_ASC(m PK_MEMBER) */
             m.member_id,
             m.name,
-            m.profile_img_url
+            m.profile_img_url,
+            su.lounge_yn
         FROM
             sugang su
                 JOIN member m ON su.member_id = m.member_id
         WHERE
             su.lesson_id = #{lessonId}
           AND su.deleted_at IS NULL
-          AND su.online_yn = 0
-          AND su.lounge_yn = 1
+          AND m.deleted_at IS NULL
+          <if test="role == 'ROLE_MEMBER'">
+              AND su.lounge_yn = 1
+          </if>
         ORDER BY
-            m.member_id ASC
+            m.name ASC
     </select>
 
     <!-- 라운지 게시글 상세 한 건 조회 -->

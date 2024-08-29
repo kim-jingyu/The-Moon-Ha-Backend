@@ -64,10 +64,10 @@ public interface LoungeMapper {
 
     /**
      * 라운지 회원 목록 조회
-     * @param loungeId
+     * @param lessonId
      * @return
      */
-    List<LoungeMemberDTO> selectLoungeMemberList(Long loungeId);
+    List<LoungeMemberDTO> selectLoungeMemberList(@Param("lessonId") Long lessonId, @Param("role") String role);
 
     /**
      * 라운지 게시글 한 건 조회
