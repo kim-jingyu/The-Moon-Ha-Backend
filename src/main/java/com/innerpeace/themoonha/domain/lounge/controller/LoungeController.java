@@ -5,12 +5,10 @@ import com.innerpeace.themoonha.domain.lounge.service.LoungeService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,6 +24,7 @@ import java.util.List;
  * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제, 수정 구현
+ * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * </pre>
  */
 @RestController
@@ -43,7 +42,8 @@ public class LoungeController {
     @GetMapping("/list")
     public ResponseEntity<List<LoungeListResponse>> loungeList() {
         Long memberId = 1L; // 임시 memberId
-        return ResponseEntity.ok(loungeService.findLoungeList(memberId));
+        String role = "ROLE_TUTOR";
+        return ResponseEntity.ok(loungeService.findLoungeList(memberId, role));
     }
 
     /**
@@ -52,7 +52,7 @@ public class LoungeController {
      * @return
      */
     @GetMapping("/{loungeId}/home")
-    public ResponseEntity<LoungeHomeResponse> loungeHome(@PathVariable Long loungeId) {
+    public ResponseEntity<LoungeHomeResponse> loungeHomeList(@PathVariable Long loungeId) {
         Long memberId = 1L; // 임시 memberId
         String role = "ROLE_TUTOR"; // 임시 role
         return ResponseEntity.ok(loungeService.findLoungeHome(loungeId, memberId, role));
@@ -65,7 +65,7 @@ public class LoungeController {
      * @return
      */
     @GetMapping("/{loungeId}/post/{loungePostId}")
-    public ResponseEntity<LoungePostDetailDTO> loungePostDetail(@PathVariable Long loungeId, @PathVariable Long loungePostId) {
+    public ResponseEntity<LoungePostDetailDTO> loungePostDetails(@PathVariable Long loungeId, @PathVariable Long loungePostId) {
         return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId));
     }
 
@@ -75,7 +75,7 @@ public class LoungeController {
      * @return
      */
     @PostMapping("/post/register")
-    public ResponseEntity<CommonResponse> loungePostRegister(@RequestPart("loungePostRequest") LoungePostRequest loungePostRequest,
+    public ResponseEntity<CommonResponse> loungePostAdd(@RequestPart("loungePostRequest") LoungePostRequest loungePostRequest,
                                                              @RequestPart(value = "files", required = false) List<MultipartFile> loungePostImgs) {
         Long memberId = 1L;
         return ResponseEntity.ok(loungeService.addLoungePost(loungePostRequest, memberId, loungePostImgs));
@@ -88,7 +88,7 @@ public class LoungeController {
      * @return
      */
     @PostMapping("/comment/register")
-    public ResponseEntity<CommonResponse> loungeCommentRegister(@RequestBody LoungeCommentRequest loungeCommentRequest) {
+    public ResponseEntity<CommonResponse> loungeCommentAdd(@RequestBody LoungeCommentRequest loungeCommentRequest) {
         Long memberId = 1L;
         return ResponseEntity.ok(loungeService.addLoungeComment(loungeCommentRequest, memberId));
     }
@@ -100,7 +100,7 @@ public class LoungeController {
      * @return
      */
     @PostMapping("/post/{loungePostId}/edit")
-    public ResponseEntity<CommonResponse> loungePostEdit(@PathVariable Long loungePostId,
+    public ResponseEntity<CommonResponse> loungePostModify(@PathVariable Long loungePostId,
                                                          @RequestPart("loungePostRequest") LoungePostRequest loungePostRequest,
                                                          @RequestPart(value = "addfiles", required = false) List<MultipartFile> imgsToAdd,
                                                          @RequestPart(value = "deletefiles", required = false) List<String> imgsToDelete) {
@@ -113,7 +113,29 @@ public class LoungeController {
      * @return
      */
     @DeleteMapping("/post/{loungePostId}/delete")
-    public ResponseEntity<CommonResponse> loungePostDelete(@PathVariable Long loungePostId) {
-        return ResponseEntity.ok(loungeService.deleteLoungePost(loungePostId));
+    public ResponseEntity<CommonResponse> loungePostRemove(@PathVariable Long loungePostId) {
+        return ResponseEntity.ok(loungeService.removeLoungePost(loungePostId));
     }
+
+    /**
+     * 라운지 댓글 삭제
+     * @param loungeCommentId
+     * @return
+     */
+    @DeleteMapping("/comment/{loungeCommentId}/delete")
+    public ResponseEntity<CommonResponse> loungeCommentRemove(@PathVariable Long loungeCommentId) {
+        return ResponseEntity.ok(loungeService.removeLoungeComment(loungeCommentId));
+    }
+
+    /**
+     * 라운지 댓글 수정
+     * @param loungeCommentId
+     * @param loungeCommentUpdateRequest
+     * @return
+     */
+    @PostMapping("/comment/{loungeCommentId}/edit")
+    public ResponseEntity<CommonResponse> loungeCommentUpdate(@PathVariable Long loungeCommentId, @RequestBody LoungeCommentUpdateRequest loungeCommentUpdateRequest) {
+        return ResponseEntity.ok(loungeService.modifyLoungeComment(loungeCommentUpdateRequest));
+    }
+
 }

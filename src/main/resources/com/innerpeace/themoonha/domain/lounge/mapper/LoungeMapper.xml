@@ -15,7 +15,7 @@
  * 2024.08.25  	조희정       라운지 목록 조회 기능 구현
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
- * 2024.08.28  	조희정       게시글 수정 구현
+ * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper">
@@ -59,22 +59,34 @@
             lo.lounge_img_url,
             lp.created_at AS latest_post_time
         FROM
-            sugang s
-                JOIN member m ON m.member_id = s.member_id
-                JOIN lounge lo ON lo.lesson_id = s.lesson_id
-                JOIN lesson le ON s.lesson_id = le.lesson_id
-                LEFT JOIN lounge_post lp ON lo.lounge_id = lp.lounge_id
-                AND lp.created_at = (
-                    SELECT /*+ INDEX_DESC(lp PK_LOUNGE_POST) */
-                        MAX(created_at)
-                    FROM lounge_post
-                    WHERE lounge_id = lo.lounge_id
-                )
+            lounge lo
+            JOIN lesson le ON lo.lesson_id = le.lesson_id
+            LEFT JOIN lounge_post lp ON lo.lounge_id = lp.lounge_id
+            AND lp.created_at = (
+                SELECT /*+ INDEX_DESC(lp PK_LOUNGE_POST) */
+                    MAX(created_at)
+                FROM lounge_post
+                WHERE lounge_id = lo.lounge_id
+                    AND deleted_at IS NULL
+            )
         WHERE
-            m.member_id = #{memberId}
-          AND s.online_yn = 0
-          AND s.lounge_yn = 1
-          AND lo.deleted_at IS NULL
+            lo.deleted_at IS NULL
+            AND le.deleted_at IS NULL
+            <if test="role == 'ROLE_MEMBER'">
+                AND lo.lesson_id IN (
+                    SELECT s.lesson_id
+                    FROM sugang s
+                    WHERE s.member_id = #{memberId}
+                        AND s.lounge_yn = 1
+                        AND s.deleted_at IS NULL
+                )
+            </if>
+            <if test="role == 'ROLE_TUTOR'">
+                AND le.member_id = #{memberId}
+            </if>
+            AND (lp.lounge_post_id IS NULL OR lp.deleted_at IS NULL)
+        ORDER BY
+            lo.lounge_id DESC
     </select>
 
     <!-- 라운지 기본 정보 조회 -->
@@ -163,17 +175,20 @@
         SELECT /*+ INDEX_ASC(m PK_MEMBER) */
             m.member_id,
             m.name,
-            m.profile_img_url
+            m.profile_img_url,
+            su.lounge_yn
         FROM
             sugang su
                 JOIN member m ON su.member_id = m.member_id
         WHERE
             su.lesson_id = #{lessonId}
           AND su.deleted_at IS NULL
-          AND su.online_yn = 0
-          AND su.lounge_yn = 1
+          AND m.deleted_at IS NULL
+          <if test="role == 'ROLE_MEMBER'">
+              AND su.lounge_yn = 1
+          </if>
         ORDER BY
-            m.member_id ASC
+            m.name ASC
     </select>
 
     <!-- 라운지 게시글 상세 한 건 조회 -->
@@ -276,7 +291,13 @@
     <update id="deleteLoungeComment">
         UPDATE lounge_comment
         SET deleted_at = SYSDATE
-        WHERE lounge_post_id = #{loungePostId}
+        WHERE 1 = 1
+            <if test="loungePostId != null">
+                AND lounge_post_id = #{loungePostId}
+            </if>
+            <if test="loungeCommentId != null">
+                AND lounge_comment_id = #{loungeCommentId}
+            </if>
     </update>
 
     <!-- 라운지 게시글 수정 -->
@@ -307,6 +328,13 @@
                 src.post_img_url,
                 src.current_time
             )
+    </update>
+
+    <!-- 라운지 댓글 수정 -->
+    <update id="updateLoungeComment">
+        UPDATE lounge_comment
+        SET content = #{content}
+        WHERE lounge_comment_id = #{loungeCommentId}
     </update>
 
 </mapper>
