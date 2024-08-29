@@ -89,34 +89,34 @@
     <!-- 비포애프터 전체 콘텐츠 목록 조회 -->
     <select id="findBeforeAfterList" resultMap="BeforeAfterListResponseMap">
         SELECT
-        ba.before_content_url AS beforeUrl,
-        CASE
-        WHEN ba.before_content_url LIKE '%/image/%' THEN 1
-        ELSE 0
-        END as beforeIsImage,
-        ba.after_content_url AS afterUrl,
-        CASE
-        WHEN ba.after_content_url LIKE '%/image/%' THEN 1
-        ELSE 0
-        END as afterIsImage,
-        ba.title as title,
-        m.profile_img_url AS profileImageUrl,
-        m.name AS memberName,
-        LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
+            ba.before_content_url AS beforeUrl,
+            CASE
+                WHEN ba.before_content_url LIKE '%/image/%' THEN 1
+                ELSE 0
+            END as beforeIsImage,
+            ba.after_content_url AS afterUrl,
+            CASE
+                WHEN ba.after_content_url LIKE '%/image/%' THEN 1
+                ELSE 0
+            END as afterIsImage,
+            ba.title as title,
+            m.profile_img_url AS profileImageUrl,
+            m.name AS memberName,
+            LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
-        before_after ba
+            before_after ba
         JOIN
-        member m ON ba.member_id = m.member_id
+            member m ON ba.member_id = m.member_id
         LEFT JOIN
-        before_after_hashtag bah ON ba.before_after_id = bah.before_after_id
+            before_after_hashtag bah ON ba.before_after_id = bah.before_after_id
         LEFT JOIN
-        hashtag h ON bah.hashtag_id = h.hashtag_id
+            hashtag h ON bah.hashtag_id = h.hashtag_id
         GROUP BY
-        ba.before_content_url,
-        ba.after_content_url,
-        ba.title,
-        m.profile_img_url,
-        m.name
+            ba.before_content_url,
+            ba.after_content_url,
+            ba.title,
+            m.profile_img_url,
+            m.name
     </select>
 
     <!-- 해시태그 조회 -->
