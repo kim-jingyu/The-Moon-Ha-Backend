@@ -15,6 +15,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 어드민 숏폼 관리 서비스 구현체
+ * @author 최유경
+ * @since 2024.08.29
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.08.29  	최유경       최초 생성
+ * 2024.08.30   최유경       숏폼 조회
+ * </pre>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
