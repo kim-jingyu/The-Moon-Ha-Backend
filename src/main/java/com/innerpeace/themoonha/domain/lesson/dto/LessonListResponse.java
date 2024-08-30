@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LessonListResponse {
-    private String branchName;
+    private Long branchId;
     private List<ShortFormDTO> shortFormList;
     private String memberName;
     private List<LessonDTO> lessonList;
@@ -32,7 +32,7 @@ public class LessonListResponse {
 
         return LessonListResponse.builder()
                 .lessonList(lessonList.getLessonList())
-                .branchName(lessonList.getBranchName())
+                .branchId(lessonList.getBranchId())
                 .shortFormList(shortFormList)
                 .memberName(memberName)
                 .build();

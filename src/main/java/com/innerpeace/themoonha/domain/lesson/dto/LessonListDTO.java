@@ -23,6 +23,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LessonListDTO {
-    private String branchName;
+    private Long branchId;
     private List<LessonDTO> lessonList;
 }
