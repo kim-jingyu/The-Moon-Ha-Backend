@@ -23,6 +23,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AttendanceDTO {
 
+    private Long attendanceId;
     private Long memberId;
     private String name;
     private String attendanceDate;

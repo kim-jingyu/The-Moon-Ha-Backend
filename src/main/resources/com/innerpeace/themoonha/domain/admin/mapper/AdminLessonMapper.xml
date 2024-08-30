@@ -17,7 +17,7 @@
 <mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper">
 
     <select id="selectLessonByTutorSchedule"
-            parameterType="com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest"
+            parameterType="com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest"
             resultType="int">
         <![CDATA[
         SELECT COUNT(DISTINCT lesson_id)
@@ -60,8 +60,8 @@
     </insert>
 
     <select id="selectLessonList"
-            parameterType="com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest"
-            resultType="com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse">
+            parameterType="com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest"
+            resultType="com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse">
         SELECT
             l.lesson_id,
             l.branch_id,

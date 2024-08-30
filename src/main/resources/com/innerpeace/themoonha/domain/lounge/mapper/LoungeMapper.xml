@@ -16,6 +16,8 @@
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
+ * 2024.08.29  	조희정       출석 시작 구현
+ * 2024.08.30  	조희정       출석 정보 수정 구현
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper">
@@ -146,6 +148,7 @@
     <select id="selectAttendanceList"
             resultType="com.innerpeace.themoonha.domain.lounge.dto.AttendanceDTO">
         SELECT /*+ INDEX_ASC(a PK_ATTENDANCE) INDEX_ASC(sm PK_MEMBER) */
+            a.attendance_id,
             a.attendance_date,
             a.attendance_yn,
             sm.member_id,
@@ -175,8 +178,7 @@
         SELECT /*+ INDEX_ASC(m PK_MEMBER) */
             m.member_id,
             m.name,
-            m.profile_img_url,
-            su.lounge_yn
+            m.profile_img_url
         FROM
             sugang su
                 JOIN member m ON su.member_id = m.member_id
@@ -184,9 +186,7 @@
             su.lesson_id = #{lessonId}
           AND su.deleted_at IS NULL
           AND m.deleted_at IS NULL
-          <if test="role == 'ROLE_MEMBER'">
-              AND su.lounge_yn = 1
-          </if>
+          AND su.lounge_yn = 1
         ORDER BY
             m.name ASC
     </select>
@@ -335,6 +335,50 @@
         UPDATE lounge_comment
         SET content = #{content}
         WHERE lounge_comment_id = #{loungeCommentId}
+    </update>
+
+    <!-- 수강생 출석 데이터 넣기 -->
+    <insert id="insertAttendanceList">
+        INSERT INTO attendance (attendance_id, sugang_id, attendance_date, attendance_yn)
+        SELECT attendance_seq.nextval, s.sugang_id, TO_DATE(#{currentTime}, 'YYYY-MM-DD'), 0
+        FROM sugang s
+        WHERE s.lesson_id = #{lessonId}
+          AND NOT EXISTS (
+            SELECT 1
+            FROM attendance a
+            WHERE a.sugang_id = s.sugang_id
+              AND a.attendance_date = TO_DATE(#{currentTime}, 'YYYY-MM-DD')
+            )
+    </insert>
+
+    <!-- 수강생 출석 데이터 조회 -->
+    <select id="selectAttendanceStartedList" resultType="com.innerpeace.themoonha.domain.lounge.dto.AttendanceDTO">
+        SELECT
+            a.attendance_id,
+            s.member_id,
+            m.name,
+            a.attendance_date,
+            a.attendance_yn
+        FROM
+            attendance a
+                JOIN
+            sugang s ON a.sugang_id = s.sugang_id
+                JOIN
+            member m ON s.member_id = m.member_id
+        WHERE
+            s.lesson_id = #{lessonId}
+                AND a.attendance_date = TO_DATE(#{currentTime}, 'YYYY-MM-DD')
+    </select>
+
+    <!-- 수강생 출석 여부 수정 -->
+    <update id="updateAttendanceYn">
+        UPDATE attendance
+        SET attendance_yn =
+            CASE
+                WHEN attendance_yn = 0 THEN 1
+                ELSE 0
+            END
+        WHERE attendance_id = #{attendanceId}
     </update>
 
 </mapper>

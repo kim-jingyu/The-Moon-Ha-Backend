@@ -1,8 +1,8 @@
 package com.innerpeace.themoonha.domain.admin.controller;
 
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse;
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
-import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse;
+import com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.service.AdminLessonService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
@@ -38,7 +38,7 @@ public class AdminLessonController {
     private final AdminLessonService adminLessonService;
 
     @PostMapping("/register")
-    public ResponseEntity<CommonResponse> LessonAdd(@RequestPart("registerRequest") LessonRegisterRequest registerRequest,
+    public ResponseEntity<CommonResponse> LessonAdd(@RequestPart("registerRequest") LessonRegisterAdminRequest registerRequest,
                                                     @RequestPart(value="thumbnailFile", required=false) MultipartFile thumbnailFile,
                                                     @RequestPart(value="previewVideoFile", required=false) MultipartFile previewVideoFile){
         log.info("/admin/lesson/register : {}", registerRequest.toString());
@@ -48,9 +48,9 @@ public class AdminLessonController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<AdminLessonResponse>> LessonList(AdminLessonListRequest lessonListRequest){
-        log.info("LessonList : {}", lessonListRequest.toString());
-        List<AdminLessonResponse> lessonDTOList = adminLessonService.findLessonList(lessonListRequest);
+    public ResponseEntity<List<LessonAdminResponse>> LessonList(LessonListAdminRequest lessonListAdminRequest){
+        log.info("LessonList : {}", lessonListAdminRequest.toString());
+        List<LessonAdminResponse> lessonDTOList = adminLessonService.findLessonList(lessonListAdminRequest);
         return ResponseEntity.ok(lessonDTOList);
     }
 

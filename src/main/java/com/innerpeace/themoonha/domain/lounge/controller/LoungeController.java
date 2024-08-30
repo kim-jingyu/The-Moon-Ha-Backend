@@ -25,6 +25,8 @@ import java.util.List;
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제, 수정 구현
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
+ * 2024.08.29  	조희정       출석 시작 구현
+ * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
  * </pre>
  */
 @RestController
@@ -42,7 +44,7 @@ public class LoungeController {
     @GetMapping("/list")
     public ResponseEntity<List<LoungeListResponse>> loungeList() {
         Long memberId = 1L; // 임시 memberId
-        String role = "ROLE_TUTOR";
+        String role = "ROLE_MEMBER";
         return ResponseEntity.ok(loungeService.findLoungeList(memberId, role));
     }
 
@@ -136,6 +138,26 @@ public class LoungeController {
     @PostMapping("/comment/{loungeCommentId}/edit")
     public ResponseEntity<CommonResponse> loungeCommentUpdate(@PathVariable Long loungeCommentId, @RequestBody LoungeCommentUpdateRequest loungeCommentUpdateRequest) {
         return ResponseEntity.ok(loungeService.modifyLoungeComment(loungeCommentUpdateRequest));
+    }
+
+    /**
+     * 출석 시작
+     * @param lessonId
+     * @return
+     */
+    @PostMapping("/attendance")
+    public ResponseEntity<List<AttendanceDTO>> loungeAttendanceList(@RequestBody Long lessonId) {
+        return ResponseEntity.ok(loungeService.saveAttendanceList(lessonId));
+    }
+
+    /**
+     * 수강생 출석 여부 수정
+     * @param attendanceId
+     * @return
+     */
+    @PostMapping("/attendance/update")
+    public ResponseEntity<CommonResponse> loungeAttendanceUpdate(@RequestBody Long attendanceId) {
+        return ResponseEntity.ok(loungeService.modifyAttendanceYn(attendanceId));
     }
 
 }

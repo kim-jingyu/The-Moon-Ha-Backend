@@ -39,15 +39,15 @@ public class LessonServiceImpl implements LessonService {
     private final LessonMapper lessonMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public LessonListResponse findLessonList(LessonListRequest lessonListRequest) {
         String memberName = "고객1"; // 임시값
-        lessonListRequest.setLessonTime();
 
-        LessonListResponse lessonListResponse = lessonMapper.selectLessonList(lessonListRequest)
+        LessonListDTO lessonList = lessonMapper.selectLessonList(lessonListRequest)
                 .orElseThrow(() -> new CustomException(ErrorCode.LESSON_NOT_FOUND));
-        lessonListResponse.setMemberName(memberName);
+        List<ShortFormDTO> shortFormList = lessonMapper.selectShortFormList();
 
-        return lessonListResponse;
+        return LessonListResponse.of(lessonList, shortFormList, memberName);
     }
 
     @Override

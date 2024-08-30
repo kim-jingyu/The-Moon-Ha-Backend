@@ -10,12 +10,12 @@ import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
+ * 2024.08.29  	조희정       출석 시작 구현
+ * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
  * </pre>
  */
 @Service
@@ -74,7 +76,7 @@ public class LoungeServiceImpl implements LoungeService {
                 })
                 .collect(Collectors.toList());
         List<AttendanceDTO> attendanceList = loungeMapper.selectAttendanceList(loungeId, memberId, role);
-        List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeInfo.getLessonId(), role);
+        List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeInfo.getLessonId());
 
         return LoungeHomeResponse.of(
                 loungeInfo,
@@ -226,6 +228,36 @@ public class LoungeServiceImpl implements LoungeService {
             throw new CustomException(ErrorCode.LOUNGE_COMMENT_UPDATE_FAILED);
         }
         return CommonResponse.of(true, SuccessCode.LOUNGE_COMMENT_UPDATE_SUCCESS.getMessage());
+    }
+
+    /**
+     * 출석 시작
+     * @param lessonId
+     * @return
+     */
+    @Override
+    public List<AttendanceDTO> saveAttendanceList(Long lessonId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = sdf.format(new Date());
+
+        if (loungeMapper.insertAttendanceList(lessonId, formattedDate) == 0) {
+            throw new CustomException(ErrorCode.ATTENDANCE_START_FAILED);
+        }
+
+        return loungeMapper.selectAttendanceStartedList(lessonId, formattedDate);
+    }
+
+    /**
+     * 수강생 출석 여부 수정
+     * @param attendanceId
+     * @return
+     */
+    @Override
+    public CommonResponse modifyAttendanceYn(Long attendanceId) {
+        if (loungeMapper.updateAttendanceYn(attendanceId) != 1) {
+            throw new CustomException(ErrorCode.ATTENDANCE_UPDATE_FAILED);
+        }
+        return CommonResponse.of(true, SuccessCode.ATTENDANCE_UPDATE_SUCCESS.getMessage());
     }
 }
 

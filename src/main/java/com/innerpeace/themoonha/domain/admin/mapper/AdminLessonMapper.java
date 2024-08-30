@@ -1,8 +1,8 @@
 package com.innerpeace.themoonha.domain.admin.mapper;
 
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse;
-import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse;
+import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,11 +21,11 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface AdminLessonMapper {
-    int selectLessonByTutorSchedule(LessonRegisterRequest lessonRegisterRequest);
-    int insertLesson(@Param("registerRequest") LessonRegisterRequest registerRequest,
+    int selectLessonByTutorSchedule(LessonRegisterAdminRequest lessonRegisterAdminRequest);
+    int insertLesson(@Param("registerRequest") LessonRegisterAdminRequest registerRequest,
                      @Param("thumbnailS3Url") String thumbnailS3Url,
                      @Param("previewS3Url") String previewS3Url);
 
-    List<AdminLessonResponse> selectLessonList(AdminLessonListRequest lessonListRequest);
+    List<LessonAdminResponse> selectLessonList(LessonListAdminRequest lessonListAdminRequest);
 
 }
