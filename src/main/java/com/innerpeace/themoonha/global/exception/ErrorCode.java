@@ -27,7 +27,9 @@ public enum ErrorCode {
     LOUNGE_IMG_UPLOAD_FAILED(400, "라운지 게시물 이미지 업로드에 실패했습니다."),
     ADMIN_LESSON_REGISTER_DUPLICATE(409, "수강 스케줄 혹은 강좌명이 중복되었습니다."),
     LOUNGE_COMMENT_DELETE_FAILED(400, "라운지 댓글 삭제에 실패했습니다."),
-    LOUNGE_COMMENT_UPDATE_FAILED(400, "라운지 댓글 수정에 실패했습니다");
+    LOUNGE_COMMENT_UPDATE_FAILED(400, "라운지 댓글 수정에 실패했습니다"),
+    ATTENDANCE_START_FAILED(400, "출석 시작에 실패했습니다."),
+    ATTENDANCE_UPDATE_FAILED(400, "출석 정보 수정에 실패했습니다.");
     private final int status;
     private final String message;
 

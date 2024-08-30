@@ -20,6 +20,8 @@ import java.util.Optional;
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
+ * 2024.08.29  	조희정       출석 시작 구현
+ * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
  * </pre>
  */
 public interface LoungeMapper {
@@ -52,7 +54,7 @@ public interface LoungeMapper {
     List<String> selectLoungePostImgList(Long LoungePostId);
 
     /**
-     * 수강생 출석 정보 조회
+     * 수강생 출석 여부 조회
      * @param loungeId
      * @param memberId
      * @param role
@@ -63,11 +65,11 @@ public interface LoungeMapper {
                                              @Param("role") String role);
 
     /**
-     * 라운지 회원 목록 조회
+     * 라운지 회원 목록 조회 (강사: 수강생 전부 조회 / 수강생: 라운지에 포함된 수강생만 조회)
      * @param lessonId
      * @return
      */
-    List<LoungeMemberDTO> selectLoungeMemberList(@Param("lessonId") Long lessonId, @Param("role") String role);
+    List<LoungeMemberDTO> selectLoungeMemberList(Long lessonId);
 
     /**
      * 라운지 게시글 한 건 조회
@@ -149,5 +151,28 @@ public interface LoungeMapper {
      * @return
      */
     int updateLoungeComment(LoungeCommentUpdateRequest loungeCommentUpdateRequest);
+
+    /**
+     * 출석 시작
+     * @param lessonId
+     * @param currentTime
+     * @return
+     */
+    int insertAttendanceList(@Param("lessonId") Long lessonId, @Param("currentTime") String currentTime);
+
+    /**
+     * 출석 시작 리스트 조회
+     * @param lessonId
+     * @param currentTime
+     * @return
+     */
+    List<AttendanceDTO> selectAttendanceStartedList(@Param("lessonId") Long lessonId, @Param("currentTime") String currentTime);
+
+    /**
+     * 수강생 출석 여부 수정
+     * @param attendanceId
+     * @return
+     */
+    int updateAttendanceYn(Long attendanceId);
 
 }
