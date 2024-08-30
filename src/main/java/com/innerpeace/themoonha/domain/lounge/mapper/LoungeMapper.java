@@ -65,7 +65,7 @@ public interface LoungeMapper {
                                              @Param("role") String role);
 
     /**
-     * 라운지 회원 목록 조회 (강사: 수강생 전부 조회 / 수강생: 라운지에 포함된 수강생만 조회)
+     * 라운지 회원 목록 조회
      * @param lessonId
      * @return
      */
