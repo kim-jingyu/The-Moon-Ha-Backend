@@ -20,6 +20,8 @@ import java.util.List;
  * 2024.08.26  	조희정       라운지 홈 조회, 게시글 상세 조회 구현
  * 2024.08.27  	조희정       게시글 생성, 삭제 구현
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
+ * 2024.08.29  	조희정       출석 시작 구현
+ * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
  * </pre>
  */
 public interface LoungeService {
@@ -94,4 +96,18 @@ public interface LoungeService {
      * @return
      */
     CommonResponse modifyLoungeComment(LoungeCommentUpdateRequest loungeCommentUpdateRequest);
+
+    /**
+     * 출석 시작
+     * @param lessonId
+     * @return
+     */
+    List<AttendanceDTO> saveAttendanceList(Long lessonId);
+
+    /**
+     * 수강생 출석 여부 수정
+     * @param attendanceId
+     * @return
+     */
+    CommonResponse modifyAttendanceYn(Long attendanceId);
 }
