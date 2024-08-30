@@ -19,9 +19,8 @@
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
 
-    <resultMap id="LessonListResponseMap" type="com.innerpeace.themoonha.domain.lesson.dto.LessonListResponse">
+    <resultMap id="LessonListMap" type="com.innerpeace.themoonha.domain.lesson.dto.LessonListDTO">
         <result property="branchName" column="branch_name"/>
-
         <collection property="lessonList" ofType="com.innerpeace.themoonha.domain.lesson.dto.LessonDTO">
             <id property="lessonId" column="lesson_id"/>
             <result property="thumbnailUrl" column="lesson_thumbnail_url"/>
@@ -32,19 +31,12 @@
             <result property="tutorName" column="tutor_name"/>
             <result property="lessonTime" column="lesson_time"/>
         </collection>
-
-        <collection property="shortFormList" ofType="com.innerpeace.themoonha.domain.lesson.dto.ShortFormDTO">
-            <id property="shortFormId" column="short_form_id"/>
-            <result property="name" column="short_form_name"/>
-            <result property="thumbnailUrl" column="short_form_thumbnail_url"/>
-            <result property="target" column="target" />
-        </collection>
     </resultMap>
 
     <select id="selectLessonList"
             parameterType="com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest"
-            resultMap="LessonListResponseMap">
-        select
+            resultMap="LessonListMap">
+        SELECT
             b.name branch_name,
             l.lesson_id,
             l.thumbnail_url lesson_thumbnail_url,
@@ -53,34 +45,23 @@
             l.cnt,
             l.cost,
             m.name tutor_name,
-            sf.short_form_id,
-            sf.name short_form_name,
-            sf.thumbnail_url short_form_thumbnail_url,
             CASE
             WHEN l.cnt = 1 THEN l.start_date || ' ' || l.start_time || '~' || l.end_time
             ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
             END AS  lesson_time
-        from
+        FROM
             lesson l
-        join
+        JOIN
             branch b
-        on
+        ON
             l.branch_id = b.branch_id
-        join
+        JOIN
             member m
-        on
+        ON
             l.member_id = m.member_id
-        join
-            category c
-        on
-            l.category_id = c.category_id
-        join
-            short_form sf
-        on
-            l.lesson_id = sf.lesson_id
         <where>
-            <if test="branchName != null and branchName != ''">
-                b.name = #{branchName}
+            <if test="branchId != null">
+                b.branch_id = #{branchId}
             </if>
 
             <if test="lessonTitle != null and lessonTitle != ''">
@@ -99,8 +80,8 @@
                 and l.target = #{target}
             </if>
 
-            <if test="category != null and category != ''">
-                and c.category = #{category}
+            <if test="categoryId != null">
+                and c.category_id = #{categoryId}
             </if>
 
             <if test="startTime != null and startTime != ''">
@@ -125,6 +106,24 @@
                 </choose>
             </if>
         </where>
+    </select>
+
+    <select id="selectShortFormList"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.ShortFormDTO">
+        SELECT
+            s.short_form_id,
+            s.name,
+            s.thumbnail_url,
+            l.target
+        FROM
+            short_form s
+        JOIN
+            lesson l
+        ON
+            s.lesson_id = l.lesson_id
+        WHERE
+            s.deleted_at IS NULL AND
+            s.expire_date > sysdate
     </select>
 
     <select id="selectLessonDetail"
