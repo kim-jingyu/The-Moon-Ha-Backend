@@ -22,7 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class AdminLessonListRequest {
+public class LessonListAdminRequest {
     private Long branchId;
     private String lessonTitle;
     private String tutorName;

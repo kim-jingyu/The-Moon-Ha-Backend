@@ -1,8 +1,8 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonResponse;
-import com.innerpeace.themoonha.domain.admin.dto.AdminLessonListRequest;
-import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse;
+import com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface AdminLessonService {
 
-    void addLesson(LessonRegisterRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile);
-    List<AdminLessonResponse> findLessonList(AdminLessonListRequest lessonListRequest);
+    void addLesson(LessonRegisterAdminRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile);
+    List<LessonAdminResponse> findLessonList(LessonListAdminRequest lessonListAdminRequest);
 }

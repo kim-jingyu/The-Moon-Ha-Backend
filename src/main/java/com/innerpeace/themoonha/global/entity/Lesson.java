@@ -1,6 +1,5 @@
 package com.innerpeace.themoonha.global.entity;
 
-import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterRequest;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

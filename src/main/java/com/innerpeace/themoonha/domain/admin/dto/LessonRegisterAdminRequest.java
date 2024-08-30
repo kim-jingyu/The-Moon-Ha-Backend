@@ -24,7 +24,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class LessonRegisterRequest {
+public class LessonRegisterAdminRequest {
     private Long branchId;
     private Long categoryId;
     private Long memberId;
