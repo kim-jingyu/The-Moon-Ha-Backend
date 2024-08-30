@@ -81,7 +81,7 @@
             </if>
 
             <if test="categoryId != null">
-                and c.category_id = #{categoryId}
+                and l.category_id = #{categoryId}
             </if>
 
             <if test="startTime != null and startTime != ''">
