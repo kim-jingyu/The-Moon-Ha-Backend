@@ -27,4 +27,54 @@
                 #{registerRequest.expireDate})
         ]]>
     </insert>
+
+    <select id="selectShortFormList" resultType="com.innerpeace.themoonha.domain.admin.dto.ShortFormListAdminResponse">
+
+            SELECT
+                sf.short_form_id,
+                sf.lesson_id,
+                sf.name,
+                sf.video_url,
+                sf.start_date,
+                sf.expire_date,
+                sf.created_at,
+                l.branch_id,
+                b.name branch_name,
+                l.member_id,
+                m.name tutor_name,
+                l.title
+            FROM
+                short_form sf
+                JOIN
+                lesson l
+                ON sf.lesson_id = l.lesson_id
+                JOIN
+                branch b
+                ON
+                l.branch_id = b.branch_id
+                JOIN
+                member m
+                ON
+                l.member_id = m.member_id
+            <where>
+                sf.deleted_at IS NULL
+                AND l.deleted_at IS NULL
+                <if test="branchId != null">
+                    AND l.branch_id = #{branchId}
+                </if>
+
+                <if test="expiredYn != null">
+                    AND expire_date
+                    <choose>
+                        <when test="expiredYn == 0">
+                            > SYSDATE
+                        </when>
+                        <when test="expiredYn == 1">
+                            <![CDATA[<= SYSDATE]]>
+                        </when>
+                    </choose>
+                </if>
+            </where>
+
+    </select>
 </mapper>

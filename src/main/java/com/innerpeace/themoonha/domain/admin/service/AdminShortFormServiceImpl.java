@@ -1,5 +1,6 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
+import com.innerpeace.themoonha.domain.admin.dto.ShortFormListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.ShortFormRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminShortFormMapper;
@@ -7,6 +8,7 @@ import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.service.S3Service;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,5 +38,10 @@ public class AdminShortFormServiceImpl implements AdminShortFormService {
         } catch (IOException e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public List<ShortFormListAdminResponse> findShortFormList(Long branchId, int expiredYn) {
+        return adminShortFormMapper.selectShortFormList(branchId, expiredYn);
     }
 }
