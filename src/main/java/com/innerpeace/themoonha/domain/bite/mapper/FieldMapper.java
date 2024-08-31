@@ -26,7 +26,7 @@ public interface FieldMapper {
     List<FieldResponseForList> findFieldList();
     void insertField(FieldDTO fieldDTO);
     List<FieldSearchResponse> findBeforeAfterListByTitle(String keyword);
-    void insertHashtagAndFieldHashtag(@Param("hashtags") List<String> hashtags, @Param("beforeAfterId") Long beforeAfterId);
+    void insertHashtagAndFieldHashtag(@Param("hashtags") List<String> hashtags, @Param("fieldId") Long fieldId);
     List<FieldSearchResponse> findFieldListByHashtags(@Param("hashtags") List<String> hashtags);
-    FieldResponseForDetail findFieldContent(Long beforeAfterId);
+    FieldResponseForDetail findFieldContent(Long fieldId);
 }
