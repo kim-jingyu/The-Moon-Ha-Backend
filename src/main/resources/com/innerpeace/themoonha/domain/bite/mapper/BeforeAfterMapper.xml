@@ -21,7 +21,7 @@
         <result property="beforeThumbnailUrl" column="beforeThumbnailUrl" />
         <result property="afterThumbnailUrl" column="afterThumbnailUrl" />
         <result property="title" column="title" />
-        <result property="profileImageUrl" column="profileImageUrl" />
+        <result property="profileImgUrl" column="profileImgUrl" />
         <result property="memberName" column="memberName" />
     </resultMap>
 
@@ -32,7 +32,7 @@
         <result property="afterUrl" column="afterUrl" />
         <result property="afterIsImage" column="afterIsImage" />
         <result property="title" column="title" />
-        <result property="profileImageUrl" column="profileImageUrl" />
+        <result property="profileImgUrl" column="profileImgUrl" />
         <result property="memberName" column="memberName" />
         <result property="hashtags" column="hashtags" typeHandler="com.innerpeace.themoonha.global.handler.CommaSeparatedStringToListTypeHandler" />
     </resultMap>
@@ -118,11 +118,11 @@
     <!-- 비포애프터 콘텐츠 전체 목록 조회 -->
     <select id="findBeforeAfterList" resultMap="BeforeAfterListResponseMap">
         SELECT
-            before_thumbnail_url AS beforeThumbnailUrl,
-            after_thumbnail_url AS afterThumbnailUrl,
-            title,
-            profile_image_url AS profileImageUrl,
-            name AS memberName
+            ba.before_thumbnail_url AS beforeThumbnailUrl,
+            ba.after_thumbnail_url AS afterThumbnailUrl,
+            ba.title,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS memberName
         FROM before_after ba
         JOIN member m ON ba.member_id = m.member_id
     </select>

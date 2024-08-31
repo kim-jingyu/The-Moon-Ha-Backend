@@ -29,7 +29,7 @@ public class BeforeAfterResponseForDetail {
     private String afterUrl;
     private int afterIsImage;
     private String title;
-    private String profileImageUrl;
+    private String profileImgUrl;
     private String memberName;
     private List<String> hashtags;
 }

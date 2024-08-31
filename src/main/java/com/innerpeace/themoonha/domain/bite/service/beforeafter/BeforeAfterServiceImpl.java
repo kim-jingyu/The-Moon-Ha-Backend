@@ -36,8 +36,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BeforeAfterServiceImpl implements BeforeAfterService {
-    private static final String BEFORE_THUMBNAIL_PATH = "before-after/before/thumbnail";
-    private static final String AFTER_THUMBNAIL_PATH = "before-after/after/thumbnail";
+    private static final String BEFORE_THUMBNAIL_PATH = "bite/before-after/before/thumbnail";
+    private static final String AFTER_THUMBNAIL_PATH = "bite/before-after/after/thumbnail";
+    private static final String BEFORE = "before";
+    private static final String AFTER = "after";
 
     private final BeforeAfterMapper beforeAfterMapper;
     private final S3Service s3Service;
@@ -76,26 +78,18 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
     @Override
     @Transactional
     public CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeThumbnail, MultipartFile afterThumbnail, MultipartFile beforeContent, MultipartFile afterContent) {
-        BeforeAfterDTO beforeAfterDTO = null;
+        String beforeContentPath = determineContentPath(beforeContent.getContentType(), determineContentPath(beforeContent.getContentType(), BEFORE));
+        String afterContentPath = determineContentPath(beforeContent.getContentType(), determineContentPath(beforeContent.getContentType(), AFTER));
         try {
-            beforeAfterDTO = BeforeAfterDTO.of(
-                    memberId,
-                    beforeAfterRequest,
-                    s3Service.saveFile(beforeThumbnail, BEFORE_THUMBNAIL_PATH),
-                    s3Service.saveFile(afterThumbnail, AFTER_THUMBNAIL_PATH),
-                    s3Service.saveFile(beforeContent, determineContentPath(beforeContent.getContentType(), "before")),
-                    s3Service.saveFile(afterContent, determineContentPath(afterContent.getContentType(), "after"))
-            );
+            BeforeAfterDTO beforeAfterDTO = createBeforeAfterDTO(memberId, beforeAfterRequest, beforeThumbnail, afterThumbnail, beforeContent, afterContent, beforeContentPath, afterContentPath);
+            saveBeforeAfterContent(beforeAfterRequest, beforeAfterDTO);
+            return CommonResponse.from(String.valueOf(beforeAfterDTO.getBeforeAfterId()));
         } catch (IOException e) {
             throw new CustomException(ErrorCode.S3_UPLOAD_FAILED);
+        } catch (Exception e) {
+            deleteS3Files(beforeThumbnail.getOriginalFilename(), afterThumbnail.getOriginalFilename(), beforeContent.getOriginalFilename(), afterContent.getOriginalFilename(), beforeContentPath, afterContentPath);
+            throw new CustomException(ErrorCode.BEFORE_AFTER_CREATION_FAILED);
         }
-
-        beforeAfterMapper.insertBeforeAfter(beforeAfterDTO);
-        List<String> hashtags = beforeAfterRequest.getHashtags();
-        if (!hashtags.isEmpty()) {
-            beforeAfterMapper.insertHashtagAndBeforeAfterHashtag(hashtags, beforeAfterDTO.getBeforeAfterId());
-        }
-        return CommonResponse.from(String.valueOf(beforeAfterDTO.getBeforeAfterId()));
     }
 
     /**
@@ -121,9 +115,9 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
 
     private String determineContentPath(String contentType, String prefix) {
         if (checkImageFileType(contentType)) {
-            return "before-after/" + prefix + "/content/image";
+            return "bite/before-after/" + prefix + "/content/image";
         } else if (checkVideoFileType(contentType)) {
-            return "before-after/" + prefix + "/content/video";
+            return "bite/before-after/" + prefix + "/content/video";
         }
         throw new CustomException(ErrorCode.UNSUPPORTED_CONTENT_TYPE);
     }
@@ -134,5 +128,31 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
 
     private boolean checkVideoFileType(String contentType) {
         return contentType != null && contentType.startsWith("video/");
+    }
+
+    private void saveBeforeAfterContent(BeforeAfterRequest beforeAfterRequest, BeforeAfterDTO beforeAfterDTO) {
+        beforeAfterMapper.insertBeforeAfter(beforeAfterDTO);
+        List<String> hashtags = beforeAfterRequest.getHashtags();
+        if (!hashtags.isEmpty()) {
+            beforeAfterMapper.insertHashtagAndBeforeAfterHashtag(hashtags, beforeAfterDTO.getBeforeAfterId());
+        }
+    }
+
+    private void deleteS3Files(String beforeThumbnailFilename, String afterThumbnailFilename, String beforeContentFilename, String afterContentFilename, String beforeContentPath, String afterContentPath) {
+        s3Service.deleteFile(BEFORE_THUMBNAIL_PATH, beforeThumbnailFilename);
+        s3Service.deleteFile(AFTER_THUMBNAIL_PATH, afterThumbnailFilename);
+        s3Service.deleteFile(beforeContentPath, beforeContentPath);
+        s3Service.deleteFile(afterContentPath, afterContentPath);
+    }
+
+    private BeforeAfterDTO createBeforeAfterDTO(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeThumbnail, MultipartFile afterThumbnail, MultipartFile beforeContent, MultipartFile afterContent, String beforeContentPath, String afterContentPath) throws IOException {
+        return BeforeAfterDTO.of(
+                memberId,
+                beforeAfterRequest,
+                s3Service.saveFile(beforeThumbnail, BEFORE_THUMBNAIL_PATH),
+                s3Service.saveFile(afterThumbnail, AFTER_THUMBNAIL_PATH),
+                s3Service.saveFile(beforeContent, beforeContentPath),
+                s3Service.saveFile(afterContent, afterContentPath)
+        );
     }
 }

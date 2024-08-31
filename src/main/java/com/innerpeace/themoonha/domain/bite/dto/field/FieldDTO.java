@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
 
 /**
- * 비포애프터 DTO
+ * 분야별 한 입 DTO
  * @author 김진규
- * @since 2024.08.27
+ * @since 2024.08.31
  * @version 1.0
  *
  * <pre>
@@ -25,15 +25,15 @@ public class FieldDTO {
     private Long lessonId;
     private String title;
     private String thumbnailUrl;
-    private String content;
+    private String contentUrl;
 
-    public static FieldDTO of(Long memberId, FieldRequest fieldRequest, String thumbnailUrl, String content) throws JsonProcessingException {
+    public static FieldDTO of(Long memberId, FieldRequest fieldRequest, String thumbnailUrl, String contentUrl) throws JsonProcessingException {
         return FieldDTO.builder()
                 .memberId(memberId)
                 .lessonId(fieldRequest.getLessonId())
                 .title(fieldRequest.getTitle())
                 .thumbnailUrl(thumbnailUrl)
-                .content(content)
+                .contentUrl(contentUrl)
                 .build();
     }
 }

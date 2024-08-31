@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.PROTECTED;
 
 /**
- * 비포애프터 해시태그 DTO
+ * 분야별 한 입 해시태그 DTO
  * @author 김진규
- * @since 2024.08.28
+ * @since 2024.08.31
  * @version 1.0
  *
  * <pre>

@@ -33,9 +33,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FieldServiceImpl implements FieldService {
-    private static final String FIELD_CONTENT_IMAGE_PATH = "field/content/image";
-    private static final String FIELD_CONTENT_VIDEO_PATH = "field/content/video";
-    private static final String FIELD_THUMBNAIL_PATH = "field/thumbnail";
+    private static final String FIELD_CONTENT_IMAGE_PATH = "bite/field/content/image";
+    private static final String FIELD_CONTENT_VIDEO_PATH = "bite/field/content/video";
+    private static final String FIELD_THUMBNAIL_PATH = "bite/field/thumbnail";
 
     private final FieldMapper fieldMapper;
     private final S3Service s3Service;
@@ -70,24 +70,17 @@ public class FieldServiceImpl implements FieldService {
      */
     @Override
     public CommonResponse makeField(Long memberId, FieldRequest fieldRequest, MultipartFile thumbnail, MultipartFile content) {
-        FieldDTO fieldDTO = null;
+        String contentPath = determineContentPath(content.getContentType());
         try {
-            fieldDTO = FieldDTO.of(
-                    memberId,
-                    fieldRequest,
-                    s3Service.saveFile(thumbnail, FIELD_THUMBNAIL_PATH),
-                    s3Service.saveFile(content, determineContentPath(content.getContentType()))
-            );
+            FieldDTO fieldDTO = createFieldDTO(memberId, fieldRequest, thumbnail, content, contentPath);
+            saveFieldContent(fieldRequest, fieldDTO);
+            return CommonResponse.from(String.valueOf(fieldDTO.getFieldId()));
         } catch (IOException e) {
             throw new CustomException(ErrorCode.S3_UPLOAD_FAILED);
+        } catch (Exception e) {
+            deleteS3Files(thumbnail.getOriginalFilename(), content.getOriginalFilename(), contentPath);
+            throw new CustomException(ErrorCode.FIELD_CREATION_FAILED);
         }
-
-        fieldMapper.insertField(fieldDTO);
-        List<String> hashtags = fieldRequest.getHashtags();
-        if (!hashtags.isEmpty()) {
-            fieldMapper.insertHashtagAndFieldHashtag(hashtags, fieldDTO.getFieldId());
-        }
-        return CommonResponse.from(String.valueOf(fieldDTO.getFieldId()));
     }
 
     /**
@@ -97,7 +90,7 @@ public class FieldServiceImpl implements FieldService {
      */
     @Override
     public List<FieldSearchResponse> findFieldByTitle(String keyword) {
-        return fieldMapper.findBeforeAfterListByTitle(keyword);
+        return fieldMapper.findFieldListByTitle(keyword);
     }
 
     /**
@@ -126,5 +119,27 @@ public class FieldServiceImpl implements FieldService {
 
     private boolean checkVideoFileType(String contentType) {
         return contentType != null && contentType.startsWith("video/");
+    }
+
+    private void deleteS3Files(String thumbnailFilename, String contentFilename, String contentPath) {
+        s3Service.deleteFile(FIELD_THUMBNAIL_PATH, thumbnailFilename);
+        s3Service.deleteFile(contentPath, contentFilename);
+    }
+
+    private void saveFieldContent(FieldRequest fieldRequest, FieldDTO fieldDTO) {
+        fieldMapper.insertField(fieldDTO);
+        List<String> hashtags = fieldRequest.getHashtags();
+        if (!hashtags.isEmpty()) {
+            fieldMapper.insertHashtagAndFieldHashtag(hashtags, fieldDTO.getFieldId());
+        }
+    }
+
+    private FieldDTO createFieldDTO(Long memberId, FieldRequest fieldRequest, MultipartFile thumbnail, MultipartFile content, String contentPath) throws IOException {
+        return FieldDTO.of(
+                memberId,
+                fieldRequest,
+                s3Service.saveFile(thumbnail, FIELD_THUMBNAIL_PATH),
+                s3Service.saveFile(content, contentPath)
+        );
     }
 }

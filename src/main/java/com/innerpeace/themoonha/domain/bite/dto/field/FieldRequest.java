@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 비포애프터 요청 DTO
+ * 분야별 한 입 요청 DTO
  * @author 김진규
- * @since 2024.08.27
+ * @since 2024.08.31
  * @version 1.0
  *
  * <pre>

@@ -18,7 +18,7 @@
     <resultMap id="FieldListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.field.FieldResponseForList">
         <result property="thumbnailUrl" column="thumbnailUrl" />
         <result property="title" column="title" />
-        <result property="profileImageUrl" column="profileImageUrl" />
+        <result property="profileImgUrl" column="profileImgUrl" />
         <result property="memberName" column="memberName" />
     </resultMap>
 
@@ -27,7 +27,7 @@
         <result property="contentUrl" column="contentUrl" />
         <result property="contentIsImage" column="contentIsImage" />
         <result property="title" column="title" />
-        <result property="profileImageUrl" column="profileImageUrl" />
+        <result property="profileImgUrl" column="profileImgUrl" />
         <result property="memberName" column="memberName" />
         <result property="hashtags" column="hashtags" typeHandler="com.innerpeace.themoonha.global.handler.CommaSeparatedStringToListTypeHandler" />
     </resultMap>
@@ -103,10 +103,10 @@
     <!-- 분야별 한 입 콘텐츠 전체 목록 조회 -->
     <select id="findFieldList" resultMap="FieldListResponseMap">
         SELECT
-            thumbnail_url AS thumbnailUrl,
-            title,
-            profile_image_url AS profileImageUrl,
-            name AS memberName
+            f.thumbnail_url AS thumbnailUrl,
+            f.title,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS memberName
         FROM field f
         JOIN member m ON f.member_id = m.member_id
     </select>

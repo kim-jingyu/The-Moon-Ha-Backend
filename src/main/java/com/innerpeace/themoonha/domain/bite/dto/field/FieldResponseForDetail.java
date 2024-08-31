@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 비포애프터 상세보기용 응답 DTO
- *
+ * 분야별 한 입 상세보기용 응답 DTO
  * @author 김진규
+ * @since 2024.08.31
  * @version 1.0
  *
  * <pre>
@@ -27,7 +27,7 @@ public class FieldResponseForDetail {
     private String contentUrl;
     private int contentIsImage;
     private String title;
-    private String profileImageUrl;
+    private String profileImgUrl;
     private String memberName;
     private List<String> hashtags;
 }

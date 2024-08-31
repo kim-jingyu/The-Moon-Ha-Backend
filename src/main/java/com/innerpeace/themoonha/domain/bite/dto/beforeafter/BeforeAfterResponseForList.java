@@ -4,8 +4,8 @@ import lombok.*;
 
 /**
  * 비포애프터 리스트용 응답 DTO
- *
  * @author 김진규
+ * @since 2024.08.27
  * @version 1.0
  *
  * <pre>
@@ -23,6 +23,6 @@ public class BeforeAfterResponseForList {
     private String beforeThumbnailUrl;
     private String afterThumbnailUrl;
     private String title;
-    private String profileImageUrl;
+    private String profileImgUrl;
     private String memberName;
 }

@@ -25,7 +25,7 @@ import java.util.List;
 public interface FieldMapper {
     List<FieldResponseForList> findFieldList();
     void insertField(FieldDTO fieldDTO);
-    List<FieldSearchResponse> findBeforeAfterListByTitle(String keyword);
+    List<FieldSearchResponse> findFieldListByTitle(String keyword);
     void insertHashtagAndFieldHashtag(@Param("hashtags") List<String> hashtags, @Param("fieldId") Long fieldId);
     List<FieldSearchResponse> findFieldListByHashtags(@Param("hashtags") List<String> hashtags);
     FieldResponseForDetail findFieldContent(Long fieldId);
