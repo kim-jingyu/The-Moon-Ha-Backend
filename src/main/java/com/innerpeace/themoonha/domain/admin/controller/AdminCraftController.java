@@ -1,5 +1,6 @@
 package com.innerpeace.themoonha.domain.admin.controller;
 
+import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.service.AdminCraftService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -47,7 +49,13 @@ public class AdminCraftController {
 
     @GetMapping("/prologue/theme/list")
     public ResponseEntity<List<PrologueThemeListAdminResponse>> PrologueThemeList(){
-        List<PrologueThemeListAdminResponse> prologueThemeList = adminCraftService.findPrologueList();
+        List<PrologueThemeListAdminResponse> prologueThemeList = adminCraftService.findPrologueThemeList();
         return ResponseEntity.ok(prologueThemeList);
+    }
+
+    @GetMapping("/prologue/theme/{prologueThemeId}")
+    public ResponseEntity<List<PrologueListAdminResponse>> PrologueThemeList(@PathVariable Long prologueThemeId){
+        List<PrologueListAdminResponse> prologueList = adminCraftService.findPrologueList(prologueThemeId);
+        return ResponseEntity.ok(prologueList);
     }
 }

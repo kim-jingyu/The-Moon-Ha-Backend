@@ -1,10 +1,12 @@
 package com.innerpeace.themoonha.domain.admin.mapper;
 
+import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 /**
  * 어드민 문화공방 관리 매퍼
@@ -27,5 +29,7 @@ public interface AdminCraftMapper {
                         @Param("prologueS3Url") List<String> prologueS3Url);
 
     List<PrologueThemeListAdminResponse> selectPrologueThemeList();
+
+    List<PrologueListAdminResponse> selectPrologueListByTheme(@Param("prologueThemeId") Long prologueThemeId);
 
 }

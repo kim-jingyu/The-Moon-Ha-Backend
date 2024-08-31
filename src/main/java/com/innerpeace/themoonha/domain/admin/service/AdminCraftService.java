@@ -25,6 +25,7 @@ public interface AdminCraftService {
                      List<MultipartFile> thumbnailFile,
                      List<MultipartFile> prologueVideoFil);
 
-    List<PrologueThemeListAdminResponse> findPrologueList();
+    List<PrologueThemeListAdminResponse> findPrologueThemeList();
 
+    List<PrologueListAdminResponse> findPrologueList(Long prologueThemeId);
 }

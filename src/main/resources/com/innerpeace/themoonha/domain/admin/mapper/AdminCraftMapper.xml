@@ -58,4 +58,29 @@
             pt.created_at DESC
         ]]>
     </select>
+
+
+    <select id="selectPrologueListByTheme" resultType="com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse">
+        SELECT
+            p.prologue_id,
+            p.prologue_theme_id,
+            p.title,
+            p.video_url,
+            NVL(p.updated_at,p.created_at) AS latest_update_date,
+            p.thumbnail_url,
+            NVL(lc.cnt,0) AS like_cnt
+        FROM
+            prologue p
+                LEFT JOIN
+            (SELECT
+                 COUNT(like_cnt_id) AS cnt,
+                 prologue_id
+             FROM like_cnt
+             WHERE prologue_id IS NOT NULL
+             GROUP BY prologue_id
+            ) lc
+            ON p.prologue_id = lc.prologue_id
+        WHERE
+            p.prologue_theme_id = #{prologueThemeId}
+    </select>
 </mapper>

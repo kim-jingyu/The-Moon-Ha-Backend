@@ -1,4 +1,4 @@
-package com.innerpeace.themoonha.domain.admin.dto;
+package com.innerpeace.themoonha.global.entity;
 
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -7,16 +7,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @ToString
-public class PrologueListAdminResponse {
+public class Prologue {
     private Long prologueId;
     private Long prologueThemeId;
     private String title;
     private String videoUrl;
-    private Date latestUpdateDate;
+    private Date createdAt;
+    private Date updatedAt;
+    private Date deletedAt;
     private String thumbnailUrl;
-    private int likeCnt;
 }

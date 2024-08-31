@@ -50,7 +50,13 @@ public class AdminCraftServiceImpl implements AdminCraftService{
     }
 
     @Override
-    public List<PrologueThemeListAdminResponse> findPrologueList() {
+    public List<PrologueThemeListAdminResponse> findPrologueThemeList() {
         return adminCraftMapper.selectPrologueThemeList();
+    }
+
+
+    @Override
+    public List<PrologueListAdminResponse> findPrologueList(Long prologueThemeId) {
+        return adminCraftMapper.selectPrologueListByTheme(prologueThemeId);
     }
 }
