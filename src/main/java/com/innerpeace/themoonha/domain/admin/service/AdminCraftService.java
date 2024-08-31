@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.admin.service;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,6 @@ public interface AdminCraftService {
                      List<MultipartFile> thumbnailFile,
                      List<MultipartFile> prologueVideoFil);
 
-    List<PrologueListAdminResponse> findPrologueList();
+    List<PrologueThemeListAdminResponse> findPrologueList();
 
 }

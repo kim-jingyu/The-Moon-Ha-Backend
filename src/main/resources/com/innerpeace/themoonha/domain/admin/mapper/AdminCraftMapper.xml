@@ -30,4 +30,32 @@
                 #{prologueS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler}
             )
     </insert>
+
+    <select id="selectPrologueThemeList" resultType="com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse">
+        <![CDATA[
+        SELECT
+            pt.prologue_theme_id,
+            pt.member_id,
+            m.name AS writer,
+            pt.name,
+            pt.description,
+            pt.video_cnt,
+            TO_CHAR(pt.start_date, 'YYYY-MM-DD') || ' ~ ' ||  TO_CHAR(pt.expire_date, 'YYYY-MM-DD') AS period,
+            NVL2(pt.updated_at, pt.updated_at, pt.created_at) AS latest_update_date,
+            CASE
+                WHEN pt.start_date <= SYSDATE AND SYSDATE < pt.expire_date THEN '진행중'
+                WHEN pt.start_date > SYSDATE THEN '시작전'
+                ELSE '종료됨'
+            END AS theme_status
+        FROM
+            prologue_theme pt
+            JOIN
+            member m
+            ON pt.member_id = m.member_id
+        WHERE
+            pt.deleted_at IS NULL
+        ORDER BY
+            pt.created_at DESC
+        ]]>
+    </select>
 </mapper>

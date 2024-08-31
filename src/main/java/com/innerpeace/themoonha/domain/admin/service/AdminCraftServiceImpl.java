@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.admin.service;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminCraftMapper;
 import com.innerpeace.themoonha.global.service.S3Service;
 import java.util.List;
@@ -49,7 +50,7 @@ public class AdminCraftServiceImpl implements AdminCraftService{
     }
 
     @Override
-    public List<PrologueListAdminResponse> findPrologueList() {
-        return null;
+    public List<PrologueThemeListAdminResponse> findPrologueList() {
+        return adminCraftMapper.selectPrologueThemeList();
     }
 }

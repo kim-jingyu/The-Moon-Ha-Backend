@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.admin.mapper;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,6 +26,6 @@ public interface AdminCraftMapper {
                         @Param("thumbnailS3Url") List<String> thumbnailS3Url,
                         @Param("prologueS3Url") List<String> prologueS3Url);
 
-    void selectPrologueList();
+    List<PrologueThemeListAdminResponse> selectPrologueThemeList();
 
 }

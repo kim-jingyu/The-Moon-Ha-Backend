@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.admin.controller;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.service.AdminCraftService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
@@ -8,6 +9,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -41,5 +43,11 @@ public class AdminCraftController {
         adminCraftService.addPrologue(registerAdminRequest, thumbnailFile, prologueVideoFile);
 
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_PROLOGUE_REGISTER_SUCCESS.getMessage()));
+    }
+
+    @GetMapping("/prologue/theme/list")
+    public ResponseEntity<List<PrologueThemeListAdminResponse>> PrologueThemeList(){
+        List<PrologueThemeListAdminResponse> prologueThemeList = adminCraftService.findPrologueList();
+        return ResponseEntity.ok(prologueThemeList);
     }
 }
