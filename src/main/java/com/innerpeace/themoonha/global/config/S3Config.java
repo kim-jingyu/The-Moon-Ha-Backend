@@ -9,6 +9,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+/**
+ * S3 클라이언트 빈 설정
+ *
+ * @author 김진규
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.08.27  김진규        최초 생성
+ * </pre>
+ * @since 2024.08.27
+ */
 @Component
 @PropertySource(value={"classpath:application.properties"})
 public class S3Config {

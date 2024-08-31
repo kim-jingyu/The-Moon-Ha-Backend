@@ -12,6 +12,19 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
+/**
+ * 레디스 빈 설정
+ *
+ * @author 김진규
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.08.27  김진규        최초 생성
+ * </pre>
+ * @since 2024.08.27
+ */
 @Configuration
 public class RedisConfig {
     @Bean

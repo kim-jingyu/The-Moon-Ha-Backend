@@ -29,7 +29,10 @@ public enum ErrorCode {
     LOUNGE_COMMENT_DELETE_FAILED(400, "라운지 댓글 삭제에 실패했습니다."),
     LOUNGE_COMMENT_UPDATE_FAILED(400, "라운지 댓글 수정에 실패했습니다"),
     ATTENDANCE_START_FAILED(400, "출석 시작에 실패했습니다."),
-    ATTENDANCE_UPDATE_FAILED(400, "출석 정보 수정에 실패했습니다.");
+    ATTENDANCE_UPDATE_FAILED(400, "출석 정보 수정에 실패했습니다."),
+    UNSUPPORTED_CONTENT_TYPE(400, "지원되지 않는 콘텐츠 타입 정보입니다."),
+    S3_UPLOAD_FAILED(400, "콘텐츠 업로드에 실패하였습니다.");
+
     private final int status;
     private final String message;
 

@@ -1,9 +1,10 @@
 package com.innerpeace.themoonha.domain.bite.controller;
 
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterRequest;
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse;
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse;
-import com.innerpeace.themoonha.domain.bite.service.BeforeAfterService;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterRequest;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForDetail;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForList;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse;
+import com.innerpeace.themoonha.domain.bite.service.beforeafter.BeforeAfterService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,8 +41,18 @@ public class BeforeAfterController {
      * @return 비포애프터 콘텐츠 목록
      */
     @GetMapping
-    public ResponseEntity<List<BeforeAfterResponse>> retrieveBeforeAfterList() {
+    public ResponseEntity<List<BeforeAfterResponseForList>> retrieveBeforeAfterList() {
         return ResponseEntity.ok(beforeAfterService.getBeforeAfterList());
+    }
+
+    /**
+     * 비포애프터 콘텐츠 상세 조회 API
+     * @param id
+     * @return 비포애프터 콘텐츠
+     */
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<BeforeAfterResponseForDetail> retrieveBeforeAfterContent(@PathVariable Long id) {
+        return ResponseEntity.ok(beforeAfterService.getBeforeAfterContent(id));
     }
 
     /**
@@ -54,10 +65,12 @@ public class BeforeAfterController {
      */
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<CommonResponse> makeBeforeAfter(@RequestPart BeforeAfterRequest beforeAfterRequest,
+                                                        @RequestPart MultipartFile beforeThumbnail,
+                                                        @RequestPart MultipartFile afterThumbnail,
                                                         @RequestPart MultipartFile beforeContent,
-                                                        @RequestPart MultipartFile afterContent) throws IOException {
+                                                        @RequestPart MultipartFile afterContent){
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(beforeAfterService.makeBeforeAfter(1L, beforeAfterRequest, beforeContent, afterContent));
+            .body(beforeAfterService.makeBeforeAfter(1L, beforeAfterRequest, beforeThumbnail, afterThumbnail, beforeContent, afterContent));
     }
 
     /**

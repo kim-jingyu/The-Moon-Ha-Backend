@@ -1,12 +1,12 @@
-package com.innerpeace.themoonha.domain.bite.service;
+package com.innerpeace.themoonha.domain.bite.service.beforeafter;
 
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterRequest;
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse;
-import com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterRequest;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForDetail;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForList;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,8 +25,9 @@ import java.util.List;
  * @since 2024.08.27
  */
 public interface BeforeAfterService {
-    List<BeforeAfterResponse> getBeforeAfterList();
-    CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeContent, MultipartFile afterContent) throws IOException;
+    List<BeforeAfterResponseForList> getBeforeAfterList();
+    BeforeAfterResponseForDetail getBeforeAfterContent(Long beforeAfterId);
+    CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeThumbnail, MultipartFile afterThumbnail, MultipartFile beforeContent, MultipartFile afterContent);
     List<BeforeAfterSearchResponse> findBeforeAfterByTitle(String keyword);
     List<BeforeAfterSearchResponse> findBeforeAfterByHashTags(List<String> hashtags);
 }
