@@ -1,7 +1,5 @@
 package com.innerpeace.themoonha.domain.admin.controller;
 
-import com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse;
-import com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.ShortFormListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.ShortFormRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.service.AdminShortFormService;
