@@ -21,11 +21,28 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface AdminCraftService {
 
+    /**
+     * 테마 및 프롤로그 등록
+     *
+     * @param prologueRegisterAdminRequest 테마 정보
+     * @param thumbnailFile 썸네일 사진 리스트
+     * @param prologueVideoFil 영상 파일 리스트
+     */
     void addPrologue(PrologueRegisterAdminRequest prologueRegisterAdminRequest,
                      List<MultipartFile> thumbnailFile,
                      List<MultipartFile> prologueVideoFil);
 
+    /**
+     * 테마 조회
+     *
+     * @return 테마 리스트
+     */
     List<PrologueThemeListAdminResponse> findPrologueThemeList();
 
+    /**
+     * 테마별 프롤로그 조회
+     * @param prologueThemeId 테마 ID
+     * @return 테마별 프롤로그 리스트
+     */
     List<PrologueListAdminResponse> findPrologueList(Long prologueThemeId);
 }

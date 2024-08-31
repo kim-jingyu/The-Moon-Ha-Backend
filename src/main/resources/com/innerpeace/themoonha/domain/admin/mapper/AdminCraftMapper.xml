@@ -3,20 +3,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--
- * 어드민 문확 공방 관리 매퍼 XML
+ * 어드민 문화 공방 관리 매퍼 XML
  * @author 최유경
- * @since 2024.08.28
+ * @since 2024.08.30
  * @version 1.0
  *
  * <pre>
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
- * 2024.08.28  	최유경        최초 생성
+ * 2024.08.30  	최유경        최초 생성
+ * 2024.08.31  	최유경        프롤로그 테마 기획 변경
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminCraftMapper">
 
-
+    <!-- 테마 등록 및 프롤로그 등록 -->
     <insert id="insertPrologue">
         CALL insert_prologue_theme_and_prologue(
                 #{registerRequest.memberId, mode=IN, jdbcType=NUMERIC},
@@ -31,6 +32,7 @@
             )
     </insert>
 
+    <!-- 테마 조회 -->
     <select id="selectPrologueThemeList" resultType="com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse">
         <![CDATA[
         SELECT
@@ -59,7 +61,7 @@
         ]]>
     </select>
 
-
+    <!-- 프롤로그 조회 -->
     <select id="selectPrologueListByTheme" resultType="com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse">
         SELECT
             p.prologue_id,

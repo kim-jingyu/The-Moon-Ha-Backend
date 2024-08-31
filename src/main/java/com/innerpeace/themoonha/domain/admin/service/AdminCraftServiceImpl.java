@@ -32,6 +32,13 @@ public class AdminCraftServiceImpl implements AdminCraftService{
     private final AdminCraftMapper adminCraftMapper;
     private final S3Service s3Service;
 
+    /**
+     * 테마 및 프롤로그 등록
+     *
+     * @param prologueRegisterAdminRequest 테마 정보
+     * @param thumbnailFile 썸네일 사진 리스트
+     * @param prologueVideoFil 영상 파일 리스트
+     */
     @Override
     @Transactional
     public void addPrologue(PrologueRegisterAdminRequest prologueRegisterAdminRequest,
@@ -46,15 +53,24 @@ public class AdminCraftServiceImpl implements AdminCraftService{
         adminCraftMapper.insertPrologue(prologueRegisterAdminRequest,
                 thumbnailS3Url,
                 prologueS3Url);
-
     }
 
+    /**
+     * 테마 조회
+     *
+     * @return 테마 리스트
+     */
     @Override
     public List<PrologueThemeListAdminResponse> findPrologueThemeList() {
         return adminCraftMapper.selectPrologueThemeList();
     }
 
 
+    /**
+     * 테마별 프롤로그 조회
+     * @param prologueThemeId 테마 ID
+     * @return 테마별 프롤로그 리스트
+     */
     @Override
     public List<PrologueListAdminResponse> findPrologueList(Long prologueThemeId) {
         return adminCraftMapper.selectPrologueListByTheme(prologueThemeId);

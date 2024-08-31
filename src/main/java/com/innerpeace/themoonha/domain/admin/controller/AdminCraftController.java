@@ -38,6 +38,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminCraftController {
     private final AdminCraftService adminCraftService;
 
+    /**
+     * 테마 및 프롤로그 등록
+     *
+     * @param registerAdminRequest 테마 정보
+     * @param thumbnailFile 영상 썸네일 사진 리스트
+     * @param prologueVideoFile 영상 파일 리스
+     * @return
+     */
     @PostMapping("/prologue/register")
     public ResponseEntity<CommonResponse> PrologueAdd(@RequestPart("registerRequest") PrologueRegisterAdminRequest registerAdminRequest,
                                                       @RequestPart("thumbnailFile") List<MultipartFile> thumbnailFile,
@@ -47,12 +55,23 @@ public class AdminCraftController {
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_PROLOGUE_REGISTER_SUCCESS.getMessage()));
     }
 
+    /**
+     * 테마 전체 조회
+     *
+     * @return 테마 리스트
+     */
     @GetMapping("/prologue/theme/list")
     public ResponseEntity<List<PrologueThemeListAdminResponse>> PrologueThemeList(){
         List<PrologueThemeListAdminResponse> prologueThemeList = adminCraftService.findPrologueThemeList();
         return ResponseEntity.ok(prologueThemeList);
     }
 
+    /**
+     * 테마별 프롤로그 조회
+     *
+     * @param prologueThemeId 테마 ID
+     * @return 프롤로그 리스트
+     */
     @GetMapping("/prologue/theme/{prologueThemeId}")
     public ResponseEntity<List<PrologueListAdminResponse>> PrologueThemeList(@PathVariable Long prologueThemeId){
         List<PrologueListAdminResponse> prologueList = adminCraftService.findPrologueList(prologueThemeId);
