@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.service.AdminCraftService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,8 @@ public class AdminCraftController {
 
     @PostMapping("/prologue/register")
     public ResponseEntity<CommonResponse> PrologueAdd(@RequestPart("registerRequest") PrologueRegisterAdminRequest registerAdminRequest,
-                                                      @RequestPart("thumbnailFile") MultipartFile thumbnailFile,
-                                                      @RequestPart("prologueVideoFile")MultipartFile prologueVideoFile){
+                                                      @RequestPart("thumbnailFile") List<MultipartFile> thumbnailFile,
+                                                      @RequestPart("prologueVideoFile")List<MultipartFile> prologueVideoFile){
         adminCraftService.addPrologue(registerAdminRequest, thumbnailFile, prologueVideoFile);
 
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_PROLOGUE_REGISTER_SUCCESS.getMessage()));

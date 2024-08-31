@@ -24,18 +24,18 @@ public class AdminCraftServiceImpl implements AdminCraftService{
     @Override
     @Transactional
     public void addPrologue(PrologueRegisterAdminRequest prologueRegisterAdminRequest,
-                            MultipartFile thumbnailFile,
-                            MultipartFile prologueVideoFil) {
-        try{
-            // S3에 업로드
-            String thumbnailS3Url = s3Service.saveFile(thumbnailFile, "craft");
-            String prologueS3Url = s3Service.saveFile(prologueVideoFil, "craft");
+                            List<MultipartFile> thumbnailFile,
+                            List<MultipartFile> prologueVideoFil) {
 
-            // 데이터베이스 저장
-            adminCraftMapper.insertPrologue(prologueRegisterAdminRequest, thumbnailS3Url, prologueS3Url);
-        } catch (IOException e){
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        // S3에 업로드
+        List<String> thumbnailS3Url = s3Service.saveFiles(thumbnailFile, "craft");
+        List<String> prologueS3Url = s3Service.saveFiles(prologueVideoFil, "craft");
+
+        // 데이터베이스 저장
+        adminCraftMapper.insertPrologue(prologueRegisterAdminRequest,
+                thumbnailS3Url,
+                prologueS3Url);
+
     }
 
     @Override

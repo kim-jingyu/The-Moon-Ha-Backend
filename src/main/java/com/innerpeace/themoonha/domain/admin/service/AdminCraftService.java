@@ -8,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminCraftService {
 
     void addPrologue(PrologueRegisterAdminRequest prologueRegisterAdminRequest,
-                     MultipartFile thumbnailFile,
-                     MultipartFile prologueVideoFil);
+                     List<MultipartFile> thumbnailFile,
+                     List<MultipartFile> prologueVideoFil);
 
     List<PrologueListAdminResponse> findPrologueList();
 

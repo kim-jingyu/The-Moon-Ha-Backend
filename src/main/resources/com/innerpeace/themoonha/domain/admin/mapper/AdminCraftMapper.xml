@@ -16,14 +16,18 @@
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminCraftMapper">
 
+
     <insert id="insertPrologue">
-        <![CDATA[
-        insert into prologue (prologue_id, title, video_url, thumbnail_url, type)
-        values (prologue_seq.nextval,
-                #{registerRequest.title},
-                #{prologueS3Url},
-                #{thumbnailS3Url},
-                #{registerRequest.type})
-        ]]>
+        CALL insert_prologue_theme_and_prologue(
+                #{registerRequest.memberId, mode=IN, jdbcType=NUMERIC},
+                #{registerRequest.name, mode=IN, jdbcType=VARCHAR},
+                #{registerRequest.description, mode=IN, jdbcType=VARCHAR},
+                #{registerRequest.videoCnt, mode=IN, jdbcType=NUMERIC},
+                #{registerRequest.startDate, mode=IN, jdbcType=DATE},
+                #{registerRequest.expireDate, mode=IN, jdbcType=DATE},
+                #{registerRequest.prologueList, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
+                #{thumbnailS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
+                #{prologueS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler}
+            )
     </insert>
 </mapper>
