@@ -43,11 +43,9 @@ public class LessonServiceImpl implements LessonService {
     public LessonListResponse findLessonList(LessonListRequest lessonListRequest) {
         String memberName = "고객1"; // 임시값
 
-        LessonListDTO lessonList = lessonMapper.selectLessonList(lessonListRequest)
-                .orElseThrow(() -> new CustomException(ErrorCode.LESSON_NOT_FOUND));
+        List<LessonDTO> lessonList = lessonMapper.selectLessonList(lessonListRequest);
         List<ShortFormDTO> shortFormList = lessonMapper.selectShortFormList();
-
-        return LessonListResponse.of(lessonList, shortFormList, memberName);
+        return LessonListResponse.of(lessonList, shortFormList, memberName, lessonListRequest.getBranchId());
     }
 
     @Override

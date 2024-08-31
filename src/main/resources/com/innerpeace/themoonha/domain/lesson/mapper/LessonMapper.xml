@@ -18,28 +18,13 @@
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper">
-
-    <resultMap id="LessonListMap" type="com.innerpeace.themoonha.domain.lesson.dto.LessonListDTO">
-        <result property="branchId" column="branch_id"/>
-        <collection property="lessonList" ofType="com.innerpeace.themoonha.domain.lesson.dto.LessonDTO">
-            <id property="lessonId" column="lesson_id"/>
-            <result property="thumbnailUrl" column="lesson_thumbnail_url"/>
-            <result property="target" column="target"/>
-            <result property="title" column="title"/>
-            <result property="cnt" column="cnt"/>
-            <result property="cost" column="cost"/>
-            <result property="tutorName" column="tutor_name"/>
-            <result property="lessonTime" column="lesson_time"/>
-        </collection>
-    </resultMap>
-
     <select id="selectLessonList"
             parameterType="com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest"
-            resultMap="LessonListMap">
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonDTO">
         SELECT
             l.branch_id,
             l.lesson_id,
-            l.thumbnail_url lesson_thumbnail_url,
+            l.thumbnail_url,
             l.target,
             l.title,
             l.cnt,
