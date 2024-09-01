@@ -17,6 +17,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * S3 클라이언트 서비스
+ *
+ * @author 김진규
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.08.27  김진규        최초 생성
+ * </pre>
+ * @since 2024.08.27
+ */
 @Service
 @RequiredArgsConstructor
 public class S3Service {

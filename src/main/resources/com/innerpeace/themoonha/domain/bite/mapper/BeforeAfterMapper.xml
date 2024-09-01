@@ -12,35 +12,39 @@
  * 2024.08.27  김진규       최초 생성
  * 2024.08.27  김진규       findBeforeAfterList, insertBeforeAfter, findBeforeAfterListByTitle 쿼리 추가
  * 2024.08.28  김진규       insertHashtag, insertBeforeAfterHashtag, findBeforeAfterListByHashtags, findHashtag 쿼리 추가
+ * 2024.08.30  김진규       insertHashtag, insertBeforeAfterHashtag, findHashtag 쿼리 삭제 및 insertHashtagAndBeforeAfterHashtag 쿼리 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.bite.mapper.BeforeAfterMapper">
-    <!-- 비포애프터 응답 정보 -->
-    <resultMap id="BeforeAfterListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterResponse">
+    <!-- 비포애프터 리스트용 응답 정보 -->
+    <resultMap id="BeforeAfterListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForList">
+        <result property="beforeThumbnailUrl" column="beforeThumbnailUrl" />
+        <result property="afterThumbnailUrl" column="afterThumbnailUrl" />
+        <result property="title" column="title" />
+        <result property="profileImgUrl" column="profileImgUrl" />
+        <result property="memberName" column="memberName" />
+    </resultMap>
+
+    <!-- 비포애프터 상세보기용 응답 정보 -->
+    <resultMap id="BeforeAfterDetailResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForDetail">
         <result property="beforeUrl" column="beforeUrl" />
         <result property="beforeIsImage" column="beforeIsImage" />
         <result property="afterUrl" column="afterUrl" />
         <result property="afterIsImage" column="afterIsImage" />
         <result property="title" column="title" />
-        <result property="profileImageUrl" column="profileImageUrl" />
+        <result property="profileImgUrl" column="profileImgUrl" />
         <result property="memberName" column="memberName" />
         <result property="hashtags" column="hashtags" typeHandler="com.innerpeace.themoonha.global.handler.CommaSeparatedStringToListTypeHandler" />
     </resultMap>
 
     <!-- 비포애프터 검색 응답 정보 -->
-    <resultMap id="BeforeAfterSearchResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterSearchResponse">
+    <resultMap id="BeforeAfterSearchResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse">
         <result property="beforeAfterId" column="beforeAfterId" />
         <result property="title" column="title" />
     </resultMap>
 
-    <!-- 해시태그 정보 -->
-    <resultMap id="HashtagMap" type="com.innerpeace.themoonha.domain.bite.dto.Hashtag">
-        <result property="hashtagId" column="hashtagId" />
-        <result property="name" column="name" />
-    </resultMap>
-
     <!-- 비포애프터 콘텐츠 등록 -->
-    <insert id="insertBeforeAfter" parameterType="com.innerpeace.themoonha.domain.bite.dto.BeforeAfterDTO">
+    <insert id="insertBeforeAfter" parameterType="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDTO">
         <selectKey keyProperty="beforeAfterId" resultType="java.lang.Long" order="BEFORE">
             SELECT before_after_seq.NEXTVAL FROM DUAL
         </selectKey>
@@ -50,6 +54,8 @@
             member_id,
             lesson_id,
             title,
+            before_content_thumbnail_url,
+            after_content_thumbnail_url,
             before_content_url,
             after_content_url,
             created_at,
@@ -59,6 +65,8 @@
             #{memberId},
             #{lessonId},
             #{title},
+            #{beforeContentThumbnailUrl},
+            #{afterContentThumbnailUrl}
             #{beforeContentUrl},
             #{afterContentUrl},
             sysdate,
@@ -66,28 +74,16 @@
         )
     </insert>
 
-    <!-- 해시태그 등록 -->
-    <insert id="insertHashtag" parameterType="map" keyProperty="hashtagId" useGeneratedKeys="true">
-        <selectKey keyProperty="hashtagId" resultType="java.lang.Long" order="BEFORE">
-            SELECT hashtag_seq.nextval FROM DUAL
-        </selectKey>
+    <!-- 해시태그 등록 및 비포애프터 해시태그 등록 -->
+    <select id="insertHashtagAndBeforeAfterHashtag" statementType="CALLABLE">
+        {CALL insert_hashtag_and_beforeafterhashtag(
+            #{hashtags, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
+            #{beforeAfterId, mode=IN, jdbcType=NUMERIC}
+        )}
+    </select>
 
-        INSERT /*+ NO_PARALLEL */ INTO hashtag (hashtag_id, name)
-        SELECT #{hashtagId}, #{name}
-        FROM dual
-        WHERE NOT EXISTS (
-            SELECT 1 FROM hashtag WHERE name = #{name}
-        )
-    </insert>
-
-    <!-- 비포애프터 해시태그 등록 -->
-    <insert id="insertBeforeAfterHashtag">
-        INSERT /*+ NO_PARALLEL */ INTO before_after_hashtag (before_after_hashtag_id, hashtag_id, before_after_id)
-        VALUES (before_after_hashtag_seq.nextval, #{hashtagId}, #{beforeAfterId})
-    </insert>
-
-    <!-- 비포애프터 전체 콘텐츠 목록 조회 -->
-    <select id="findBeforeAfterList" resultMap="BeforeAfterListResponseMap">
+    <!-- 비포애프터 콘텐츠 상세 조회 -->
+    <select id="findBeforeAfterDetail" resultMap="BeforeAfterDetailResponseMap">
         SELECT
             ba.before_content_url AS beforeUrl,
             CASE
@@ -119,11 +115,16 @@
             m.name
     </select>
 
-    <!-- 해시태그 조회 -->
-    <select id="findHashtag" resultMap="HashtagMap">
-        SELECT hashtag_id as hashtagId, name
-        FROM hashtag
-        WHERE name = #{name}
+    <!-- 비포애프터 콘텐츠 전체 목록 조회 -->
+    <select id="findBeforeAfterList" resultMap="BeforeAfterListResponseMap">
+        SELECT
+            ba.before_thumbnail_url AS beforeThumbnailUrl,
+            ba.after_thumbnail_url AS afterThumbnailUrl,
+            ba.title,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS memberName
+        FROM before_after ba
+        JOIN member m ON ba.member_id = m.member_id
     </select>
 
     <!-- 비포애프터 해시태그 기반 목록 검색 -->
@@ -134,10 +135,11 @@
         FROM before_after ba
         JOIN before_after_hashtag bah ON ba.before_after_id = bah.before_after_id
         JOIN hashtag h ON bah.hashtag_id = h.hashtag_id
-        WHERE h.name IN
-        <foreach collection="hashtags" item="name" open="(" separator="," close=")">
-            #{name}
-        </foreach>
+        WHERE
+            h.name IN
+            <foreach collection="hashtags" item="name" open="(" separator="," close=")">
+                #{name}
+            </foreach>
     </select>
 
     <!-- 비포애프터 타이틀 기반 목록 검색 -->

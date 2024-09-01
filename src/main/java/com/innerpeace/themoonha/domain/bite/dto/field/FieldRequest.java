@@ -1,14 +1,16 @@
-package com.innerpeace.themoonha.domain.bite.dto;
+package com.innerpeace.themoonha.domain.bite.dto.field;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * 비포애프터 검색용 응답 DTO
+ * 분야별 한 입 요청 DTO
  * @author 김진규
- * @since 2024.08.27
+ * @since 2024.08.31
  * @version 1.0
  *
  * <pre>
@@ -20,7 +22,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BeforeAfterSearchResponse {
-    private Long beforeAfterId;
+public class FieldRequest {
+    private Long lessonId;
     private String title;
+    private List<String> hashtags;
 }
