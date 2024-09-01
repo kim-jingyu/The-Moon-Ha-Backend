@@ -55,12 +55,6 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public ShortFormDetailResponse findShortFormDetail(Long shortFormId) {
-        return lessonMapper.selectShortFormDetail(shortFormId)
-                .orElseThrow(() -> new CustomException(ErrorCode.SHORTFORM_NOT_FOUND));
-    }
-
-    @Override
     public TutorDetailResponse findTutorDetail(Long tutorId) {
         List<TutorLessonDetailDTO> tutorDetailList = Optional
                 .ofNullable(lessonMapper.selectTutorDetail(tutorId))

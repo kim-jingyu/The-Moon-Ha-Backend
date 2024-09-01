@@ -24,7 +24,6 @@ import java.util.List;
 public interface LessonService {
     LessonListResponse findLessonList(LessonListRequest lessonListRequest);
     LessonDetailResponse findLessonDetail(Long lessonId);
-    ShortFormDetailResponse findShortFormDetail(Long shortFormId);
     TutorDetailResponse findTutorDetail(Long tutorId);
     List<CartResponse> findCartList(Long memberId);
     CommonResponse addCart(CartRequest cartRequest);
