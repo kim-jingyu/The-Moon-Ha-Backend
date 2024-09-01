@@ -25,7 +25,6 @@ public interface LessonMapper {
     List<LessonDTO> selectLessonList(LessonListRequest lessonListRequest);
     List<ShortFormDTO> selectShortFormList();
     Optional<LessonDetailResponse> selectLessonDetail(Long lessonId);
-    Optional<ShortFormDetailResponse> selectShortFormDetail(Long shortFormId);
     List<TutorLessonDetailDTO> selectTutorDetail(Long tutorId);
     List<CartResponse> selectCartList(Long memberId);
     int insertCart(CartRequest cartRequest);
