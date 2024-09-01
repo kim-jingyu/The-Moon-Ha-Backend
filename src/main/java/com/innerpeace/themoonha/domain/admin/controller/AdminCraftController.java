@@ -4,7 +4,9 @@ import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.service.AdminCraftService;
+import com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.util.Criteria;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
  * ----------  --------    ---------------------------
  * 2024.08.30  	최유경       최초 생성
  * 2024.08.31   최유경       프롤로그 테마 기획 변경
+ * 2024.09.01   최유경       제안합니다 조회
  * </pre>
  */
 @RestController
@@ -77,4 +80,18 @@ public class AdminCraftController {
         List<PrologueListAdminResponse> prologueList = adminCraftService.findPrologueList(prologueThemeId);
         return ResponseEntity.ok(prologueList);
     }
+
+
+    /**
+     * 제안합니다 조회
+     *
+     * @param criteria 페이징처리
+     * @return 제안합니다 리스트
+     */
+    @GetMapping("/suggestion/list")
+    public ResponseEntity<List<SuggestionDTO>> SuggestionList(Criteria criteria){
+        List<SuggestionDTO> suggestionDTOList = adminCraftService.findSuggestionList(criteria);
+        return ResponseEntity.ok(suggestionDTOList);
+    }
+
 }
