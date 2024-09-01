@@ -16,6 +16,7 @@ import java.time.Duration;
  * 레디스 빈 설정
  *
  * @author 김진규
+ * @since 2024.08.27
  * @version 1.0
  *
  * <pre>
@@ -27,9 +28,11 @@ import java.time.Duration;
  */
 @Configuration
 public class RedisConfig {
+    private static final String REDIS = "redis";
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory("localhost", 6379);
+        return new LettuceConnectionFactory(REDIS, 6379);
     }
 
     @Bean

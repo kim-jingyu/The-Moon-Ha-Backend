@@ -1,8 +1,8 @@
 package com.innerpeace.themoonha.domain.bite.controller;
 
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldRequest;
-import com.innerpeace.themoonha.domain.bite.dto.field.FieldResponseForDetail;
-import com.innerpeace.themoonha.domain.bite.dto.field.FieldResponseForList;
+import com.innerpeace.themoonha.domain.bite.dto.field.FieldDetailResponse;
+import com.innerpeace.themoonha.domain.bite.dto.field.FieldListResponse;
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldSearchResponse;
 import com.innerpeace.themoonha.domain.bite.service.field.FieldService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
@@ -39,7 +39,7 @@ public class FieldController {
      * @return 분야별 한 입 콘텐츠 목록
      */
     @GetMapping
-    public ResponseEntity<List<FieldResponseForList>> retrieveFieldList() {
+    public ResponseEntity<List<FieldListResponse>> retrieveFieldList() {
         return ResponseEntity.ok(fieldService.getFieldList());
     }
 
@@ -49,7 +49,7 @@ public class FieldController {
      * @return 분야별 한 입 콘텐츠
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<FieldResponseForDetail> retrieveFieldContent(@PathVariable Long id) {
+    public ResponseEntity<FieldDetailResponse> retrieveFieldContent(@PathVariable Long id) {
         return ResponseEntity.ok(fieldService.getFieldContent(id));
     }
 

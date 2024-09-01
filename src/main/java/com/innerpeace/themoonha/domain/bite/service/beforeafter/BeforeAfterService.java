@@ -1,8 +1,8 @@
 package com.innerpeace.themoonha.domain.bite.service.beforeafter;
 
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterRequest;
-import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForDetail;
-import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForList;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDetailResponse;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterListResponse;
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,8 +25,8 @@ import java.util.List;
  * @since 2024.08.27
  */
 public interface BeforeAfterService {
-    List<BeforeAfterResponseForList> getBeforeAfterList();
-    BeforeAfterResponseForDetail getBeforeAfterContent(Long beforeAfterId);
+    List<BeforeAfterListResponse> getBeforeAfterList();
+    BeforeAfterDetailResponse getBeforeAfterContent(Long beforeAfterId);
     CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeThumbnail, MultipartFile afterThumbnail, MultipartFile beforeContent, MultipartFile afterContent);
     List<BeforeAfterSearchResponse> findBeforeAfterByTitle(String keyword);
     List<BeforeAfterSearchResponse> findBeforeAfterByHashTags(List<String> hashtags);

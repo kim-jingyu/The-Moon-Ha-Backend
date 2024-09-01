@@ -1,0 +1,99 @@
+package com.innerpeace.themoonha.domain.live.service;
+
+import com.innerpeace.themoonha.domain.auth.mapper.AuthMapper;
+import com.innerpeace.themoonha.domain.live.dto.LiveLessonDetailResponse;
+import com.innerpeace.themoonha.domain.live.dto.LiveLessonRequest;
+import com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse;
+import com.innerpeace.themoonha.domain.live.dto.LiveLessonStatusResponse;
+import com.innerpeace.themoonha.domain.live.mapper.LiveLessonMapper;
+import com.innerpeace.themoonha.domain.live.vo.LiveLesson;
+import com.innerpeace.themoonha.global.exception.CustomException;
+import com.innerpeace.themoonha.global.service.S3Service;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+
+import static com.innerpeace.themoonha.domain.live.vo.LiveStatus.ENDED;
+import static com.innerpeace.themoonha.domain.live.vo.LiveStatus.ON_AIR;
+import static com.innerpeace.themoonha.global.exception.ErrorCode.*;
+
+/**
+ * 실시간 강좌 서비스 구현체
+ *
+ * @author 김진규
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.01  김진규        최초 생성
+ * </pre>
+ * @since 2024.09.01
+ */
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class LiveLessonServiceImpl implements LiveLessonService {
+    private final LiveLessonMapper liveLessonMapper;
+    private final AuthMapper authMapper;
+    private final S3Service s3Service;
+    private final LiveLessonEventService liveLessonEventService;
+
+    private static final String FRONT_DOMAIN = "http://localhost:3000/live/";
+    private static final String LIVE_THUMBNAIL_PATH = "/live/thumbnail";
+
+    @Override
+    public List<LiveLessonResponse> getLiveLessonsByMember(Long memberId) {
+        return liveLessonMapper.findLiveLessonsByMember(memberId);
+    }
+
+    @Override
+    public List<LiveLessonResponse> getLiveLessonsMemberDoesNotHave(Long memberId) {
+        return liveLessonMapper.findLiveLessonsMemberDoesNotHave(memberId);
+    }
+
+    @Override
+    public LiveLessonDetailResponse getLiveLessonDetails(Long livedId, Long memberId) {
+        return liveLessonMapper.findLiveLessonDetailById(livedId, memberId)
+                .orElseThrow(() -> new CustomException(LIVE_LESSON_NOT_FOUND));
+    }
+
+    @Override
+    public LiveLessonResponse createLiveLesson(LiveLessonRequest liveLessonRequest, MultipartFile thumbnail) {
+        try {
+            LiveLesson liveLesson = LiveLesson.createLiveLesson(liveLessonRequest, s3Service.saveFile(thumbnail, LIVE_THUMBNAIL_PATH));
+            liveLessonMapper.insertLiveLesson(liveLesson);
+            liveLesson.startLiveLesson();
+            liveLessonEventService.sendStatusEvent(liveLesson.getLiveId(), liveLesson.getStatus().name());
+            return LiveLessonResponse.of(liveLesson, authMapper.selectByMemberId(liveLesson.getMemberId())
+                    .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND)).getUsername());
+        } catch (IOException e) {
+            throw new CustomException(S3_UPLOAD_FAILED);
+        }
+    }
+
+    @Override
+    public void endLiveLesson(Long liveId) {
+        LiveLesson liveLesson = liveLessonMapper.findLiveLessonById(liveId)
+                .orElseThrow(() -> new CustomException(LIVE_LESSON_NOT_FOUND));
+        if (liveLesson.getStatus() != ON_AIR) throw new CustomException(LIVE_LESSON_NOT_FOUND);
+        liveLesson.endLiveLesson();
+        liveLessonMapper.updateLiveLessonStatus(liveId, ENDED);
+        liveLessonEventService.sendStatusEvent(liveId, liveLesson.getStatus().name());
+    }
+
+    @Override
+    public LiveLessonStatusResponse getLiveLessonStatus(Long liveId) {
+        return LiveLessonStatusResponse.from(liveLessonMapper.findLiveLessonById(liveId)
+                .orElseThrow(() -> new CustomException(LIVE_LESSON_NOT_FOUND)));
+    }
+
+    @Override
+    public String getShareLink(Long liveId) {
+        return FRONT_DOMAIN + liveId;
+    }
+}

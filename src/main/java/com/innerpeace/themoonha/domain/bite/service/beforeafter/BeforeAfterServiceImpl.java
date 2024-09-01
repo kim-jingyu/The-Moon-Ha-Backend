@@ -4,7 +4,6 @@ import com.innerpeace.themoonha.domain.bite.dto.beforeafter.*;
 import com.innerpeace.themoonha.domain.bite.mapper.BeforeAfterMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;
-import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+
+import static com.innerpeace.themoonha.global.exception.ErrorCode.*;
 
 /**
  * 비포애프터 서비스 구현체
@@ -49,7 +50,7 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
      * @return 비포애프터 콘텐츠 목록
      */
     @Override
-    public List<BeforeAfterResponseForList> getBeforeAfterList() {
+    public List<BeforeAfterListResponse> getBeforeAfterList() {
         return beforeAfterMapper.findBeforeAfterList();
     }
 
@@ -59,8 +60,9 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
      * @return 비포애프터 콘텐츠
      */
     @Override
-    public BeforeAfterResponseForDetail getBeforeAfterContent(Long beforeAfterId) {
-        return beforeAfterMapper.findBeforeAfterContent(beforeAfterId);
+    public BeforeAfterDetailResponse getBeforeAfterContent(Long beforeAfterId) {
+        return beforeAfterMapper.findBeforeAfterContent(beforeAfterId)
+                .orElseThrow(() -> new CustomException(BEFORE_AFTER_NOT_FOUND));
     }
 
     /**
@@ -85,10 +87,10 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
             saveBeforeAfterContent(beforeAfterRequest, beforeAfterDTO);
             return CommonResponse.from(String.valueOf(beforeAfterDTO.getBeforeAfterId()));
         } catch (IOException e) {
-            throw new CustomException(ErrorCode.S3_UPLOAD_FAILED);
+            throw new CustomException(S3_UPLOAD_FAILED);
         } catch (Exception e) {
             deleteS3Files(beforeThumbnail.getOriginalFilename(), afterThumbnail.getOriginalFilename(), beforeContent.getOriginalFilename(), afterContent.getOriginalFilename(), beforeContentPath, afterContentPath);
-            throw new CustomException(ErrorCode.BEFORE_AFTER_CREATION_FAILED);
+            throw new CustomException(BEFORE_AFTER_CREATION_FAILED);
         }
     }
 
@@ -119,7 +121,7 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
         } else if (checkVideoFileType(contentType)) {
             return "bite/before-after/" + prefix + "/content/video";
         }
-        throw new CustomException(ErrorCode.UNSUPPORTED_CONTENT_TYPE);
+        throw new CustomException(UNSUPPORTED_CONTENT_TYPE);
     }
 
     private boolean checkImageFileType(String contentType) {

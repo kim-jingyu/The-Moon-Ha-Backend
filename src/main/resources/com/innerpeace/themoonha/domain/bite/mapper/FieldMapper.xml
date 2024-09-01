@@ -15,7 +15,7 @@
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.bite.mapper.FieldMapper">
     <!-- 분야별 한 입 리스트용 응답 정보 -->
-    <resultMap id="FieldListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.field.FieldResponseForList">
+    <resultMap id="FieldListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.field.FieldListResponse">
         <result property="thumbnailUrl" column="thumbnailUrl" />
         <result property="title" column="title" />
         <result property="profileImgUrl" column="profileImgUrl" />
@@ -23,7 +23,7 @@
     </resultMap>
 
     <!-- 분야별 한 입 상세보기용 응답 정보 -->
-    <resultMap id="FieldDetailResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.field.FieldResponseForDetail">
+    <resultMap id="FieldDetailResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.field.FieldDetailResponse">
         <result property="contentUrl" column="contentUrl" />
         <result property="contentIsImage" column="contentIsImage" />
         <result property="title" column="title" />
