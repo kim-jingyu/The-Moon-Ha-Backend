@@ -65,5 +65,5 @@ services:
       S3_SECRET_KEY: ${S3_SECRET_KEY}
       S3_BUCKET_NAME: ${S3_BUCKET_NAME}
     volumes:
-      - /Users/jingyu/TheMoonHa/Wallet_THEMOONHA:/app/config/wallet
+      - ${WALLET_PATH}:/app/config/wallet
     container_name: themoonha-backend
