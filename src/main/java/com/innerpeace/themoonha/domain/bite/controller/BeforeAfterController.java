@@ -1,8 +1,8 @@
 package com.innerpeace.themoonha.domain.bite.controller;
 
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterRequest;
-import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForDetail;
-import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForList;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDetailResponse;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterListResponse;
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse;
 import com.innerpeace.themoonha.domain.bite.service.beforeafter.BeforeAfterService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
@@ -41,7 +41,7 @@ public class BeforeAfterController {
      * @return 비포애프터 콘텐츠 목록
      */
     @GetMapping
-    public ResponseEntity<List<BeforeAfterResponseForList>> retrieveBeforeAfterList() {
+    public ResponseEntity<List<BeforeAfterListResponse>> retrieveBeforeAfterList() {
         return ResponseEntity.ok(beforeAfterService.getBeforeAfterList());
     }
 
@@ -51,7 +51,7 @@ public class BeforeAfterController {
      * @return 비포애프터 콘텐츠
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<BeforeAfterResponseForDetail> retrieveBeforeAfterContent(@PathVariable Long id) {
+    public ResponseEntity<BeforeAfterDetailResponse> retrieveBeforeAfterContent(@PathVariable Long id) {
         return ResponseEntity.ok(beforeAfterService.getBeforeAfterContent(id));
     }
 

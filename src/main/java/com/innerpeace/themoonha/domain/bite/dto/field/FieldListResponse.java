@@ -1,14 +1,12 @@
-package com.innerpeace.themoonha.domain.bite.dto.beforeafter;
+package com.innerpeace.themoonha.domain.bite.dto.field;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
- * 비포애프터 상세보기용 응답 DTO
+ * 분야별 한 입 리스트용 응답 DTO
  *
  * @author 김진규
  * @version 1.0
@@ -23,13 +21,9 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BeforeAfterResponseForDetail {
-    private String beforeUrl;
-    private int beforeIsImage;
-    private String afterUrl;
-    private int afterIsImage;
+public class FieldListResponse {
+    private String thumbnailUrl;
     private String title;
     private String profileImgUrl;
     private String memberName;
-    private List<String> hashtags;
 }

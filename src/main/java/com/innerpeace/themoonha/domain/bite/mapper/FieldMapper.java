@@ -1,12 +1,12 @@
 package com.innerpeace.themoonha.domain.bite.mapper;
 
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldDTO;
-import com.innerpeace.themoonha.domain.bite.dto.field.FieldResponseForDetail;
-import com.innerpeace.themoonha.domain.bite.dto.field.FieldResponseForList;
+import com.innerpeace.themoonha.domain.bite.dto.field.FieldDetailResponse;
+import com.innerpeace.themoonha.domain.bite.dto.field.FieldListResponse;
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldSearchResponse;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 분야별 한 입 매퍼
@@ -23,10 +23,10 @@ import java.util.List;
  * @since 2024.08.31
  */
 public interface FieldMapper {
-    List<FieldResponseForList> findFieldList();
+    List<FieldListResponse> findFieldList();
     void insertField(FieldDTO fieldDTO);
     List<FieldSearchResponse> findFieldListByTitle(String keyword);
-    void insertHashtagAndFieldHashtag(@Param("hashtags") List<String> hashtags, @Param("fieldId") Long fieldId);
-    List<FieldSearchResponse> findFieldListByHashtags(@Param("hashtags") List<String> hashtags);
-    FieldResponseForDetail findFieldContent(Long fieldId);
+    void insertHashtagAndFieldHashtag(List<String> hashtags, Long fieldId);
+    List<FieldSearchResponse> findFieldListByHashtags(List<String> hashtags);
+    Optional<FieldDetailResponse> findFieldContent(Long fieldId);
 }

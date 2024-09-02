@@ -4,7 +4,6 @@ import com.innerpeace.themoonha.domain.bite.dto.field.*;
 import com.innerpeace.themoonha.domain.bite.mapper.FieldMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;
-import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+
+import static com.innerpeace.themoonha.global.exception.ErrorCode.*;
 
 /**
  * 분야별 한 입 서비스 구현체
@@ -45,7 +46,7 @@ public class FieldServiceImpl implements FieldService {
      * @return 분야별 한 입 콘텐츠 목록
      */
     @Override
-    public List<FieldResponseForList> getFieldList() {
+    public List<FieldListResponse> getFieldList() {
         return fieldMapper.findFieldList();
     }
 
@@ -55,8 +56,9 @@ public class FieldServiceImpl implements FieldService {
      * @return 분야별 한 입 콘텐츠
      */
     @Override
-    public FieldResponseForDetail getFieldContent(Long beforeAfterId) {
-        return fieldMapper.findFieldContent(beforeAfterId);
+    public FieldDetailResponse getFieldContent(Long beforeAfterId) {
+        return fieldMapper.findFieldContent(beforeAfterId)
+                .orElseThrow(() -> new CustomException(FIELD_NOT_FOUND));
     }
 
     /**
@@ -76,10 +78,10 @@ public class FieldServiceImpl implements FieldService {
             saveFieldContent(fieldRequest, fieldDTO);
             return CommonResponse.from(String.valueOf(fieldDTO.getFieldId()));
         } catch (IOException e) {
-            throw new CustomException(ErrorCode.S3_UPLOAD_FAILED);
+            throw new CustomException(S3_UPLOAD_FAILED);
         } catch (Exception e) {
             deleteS3Files(thumbnail.getOriginalFilename(), content.getOriginalFilename(), contentPath);
-            throw new CustomException(ErrorCode.FIELD_CREATION_FAILED);
+            throw new CustomException(FIELD_CREATION_FAILED);
         }
     }
 
@@ -110,7 +112,7 @@ public class FieldServiceImpl implements FieldService {
         } else if (checkVideoFileType(contentType)) {
             return FIELD_CONTENT_VIDEO_PATH;
         }
-        throw new CustomException(ErrorCode.UNSUPPORTED_CONTENT_TYPE);
+        throw new CustomException(UNSUPPORTED_CONTENT_TYPE);
     }
 
     private boolean checkImageFileType(String contentType) {

@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FieldResponseForDetail {
+public class FieldDetailResponse {
     private String contentUrl;
     private int contentIsImage;
     private String title;

@@ -17,7 +17,7 @@
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.bite.mapper.BeforeAfterMapper">
     <!-- 비포애프터 리스트용 응답 정보 -->
-    <resultMap id="BeforeAfterListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForList">
+    <resultMap id="BeforeAfterListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterListResponse">
         <result property="beforeThumbnailUrl" column="beforeThumbnailUrl" />
         <result property="afterThumbnailUrl" column="afterThumbnailUrl" />
         <result property="title" column="title" />
@@ -26,7 +26,7 @@
     </resultMap>
 
     <!-- 비포애프터 상세보기용 응답 정보 -->
-    <resultMap id="BeforeAfterDetailResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterResponseForDetail">
+    <resultMap id="BeforeAfterDetailResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDetailResponse">
         <result property="beforeUrl" column="beforeUrl" />
         <result property="beforeIsImage" column="beforeIsImage" />
         <result property="afterUrl" column="afterUrl" />
