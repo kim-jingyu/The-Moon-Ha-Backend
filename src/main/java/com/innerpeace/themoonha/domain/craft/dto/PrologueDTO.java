@@ -21,6 +21,7 @@ import lombok.*;
 public class PrologueDTO {
     private Long prologueId;
     private Long prologueThemeId;
+    private String tutorName;
     private String themeName;
     private String themeDescription;
     private String title;
