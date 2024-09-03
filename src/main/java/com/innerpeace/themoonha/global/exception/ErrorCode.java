@@ -29,7 +29,18 @@ public enum ErrorCode {
     LOUNGE_COMMENT_DELETE_FAILED(400, "라운지 댓글 삭제에 실패했습니다."),
     LOUNGE_COMMENT_UPDATE_FAILED(400, "라운지 댓글 수정에 실패했습니다"),
     ATTENDANCE_START_FAILED(400, "출석 시작에 실패했습니다."),
-    ATTENDANCE_UPDATE_FAILED(400, "출석 정보 수정에 실패했습니다.");
+    ATTENDANCE_UPDATE_FAILED(400, "출석 정보 수정에 실패했습니다."),
+    UNSUPPORTED_CONTENT_TYPE(400, "지원되지 않는 콘텐츠 타입 정보입니다."),
+    S3_UPLOAD_FAILED(400, "콘텐츠 업로드에 실패하였습니다."),
+    FIELD_CREATION_FAILED(400, "분야별 한 입 콘텐츠 생성에 실패했습니다."),
+    BEFORE_AFTER_CREATION_FAILED(400, "Before&After 콘텐츠 생성에 실패했습니다."),
+    LIVE_STREAM_KEY_CREATION_FAILED(500, "Stream Key 생성에 실패했습니다."),
+    LIVE_LESSON_NOT_FOUND(404, "실시간 강좌 정보를 찾을 수 없습니다."),
+    BEFORE_AFTER_NOT_FOUND(404, "Before&After 콘텐츠 정보를 찾을 수 없습니다."),
+    FIELD_NOT_FOUND(404, "분야별 한 입 콘텐츠 정보를 찾을 수 없습니다."),
+    LIVE_STREAM_FAILED(500, "스트리밍 데이터 전송에 실패했습니다."),
+    LIVE_CHAT_MESSAGE_NOT_FOUND(404, "채팅 메시지를 찾을 수 없습니다.");
+
     private final int status;
     private final String message;
 

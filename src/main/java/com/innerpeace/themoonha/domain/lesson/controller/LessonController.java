@@ -56,17 +56,6 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.findLessonDetail(lessonId));
     }
 
-    /**
-     * 숏폼 상세 조회
-     *
-     * @param shortFormId
-     * @author 손승완
-     */
-    @GetMapping("/shortform/{shortFormId}")
-    public ResponseEntity<ShortFormDetailResponse> shortFormDetail(@PathVariable Long shortFormId) {
-        return ResponseEntity.ok(lessonService.findShortFormDetail(shortFormId));
-    }
-
     @GetMapping("/tutor/{tutorId}")
     public ResponseEntity<TutorDetailResponse> tutorDetail(@PathVariable Long tutorId) {
         return ResponseEntity.ok(lessonService.findTutorDetail(tutorId));

@@ -3,15 +3,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--
- * 어드민 강좌 매퍼 XML
+ * 어드민 숏폼 매퍼 XML
  * @author 최유경
- * @since 2024.08.28
+ * @since 2024.08.29
  * @version 1.0
  *
  * <pre>
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
- * 2024.08.28  	최유경        최초 생성
+ * 2024.08.29  	최유경        최초 생성
+ * 2024.08.30  	최유경        숏폼 조회
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminShortFormMapper">
@@ -27,4 +28,54 @@
                 #{registerRequest.expireDate})
         ]]>
     </insert>
+
+    <select id="selectShortFormList" resultType="com.innerpeace.themoonha.domain.admin.dto.ShortFormListAdminResponse">
+
+            SELECT
+                sf.short_form_id,
+                sf.lesson_id,
+                sf.name,
+                sf.video_url,
+                sf.start_date,
+                sf.expire_date,
+                sf.created_at,
+                l.branch_id,
+                b.name branch_name,
+                l.member_id,
+                m.name tutor_name,
+                l.title
+            FROM
+                short_form sf
+                JOIN
+                lesson l
+                ON sf.lesson_id = l.lesson_id
+                JOIN
+                branch b
+                ON
+                l.branch_id = b.branch_id
+                JOIN
+                member m
+                ON
+                l.member_id = m.member_id
+            <where>
+                sf.deleted_at IS NULL
+                AND l.deleted_at IS NULL
+                <if test="branchId != null">
+                    AND l.branch_id = #{branchId}
+                </if>
+
+                <if test="expiredYn != null">
+                    AND expire_date
+                    <choose>
+                        <when test="expiredYn == 0">
+                            > SYSDATE
+                        </when>
+                        <when test="expiredYn == 1">
+                            <![CDATA[<= SYSDATE]]>
+                        </when>
+                    </choose>
+                </if>
+            </where>
+
+    </select>
 </mapper>

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.26  	최유경       최초 생성
+ * 2024.08.28  	김진규       multipartResolver 메서드 추가
  * </pre>
  */
 @Configuration

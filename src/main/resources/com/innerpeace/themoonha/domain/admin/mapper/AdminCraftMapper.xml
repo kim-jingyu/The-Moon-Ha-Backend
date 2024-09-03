@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 어드민 문화 공방 관리 매퍼 XML
+ * @author 최유경
+ * @since 2024.08.30
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.08.30  	최유경        최초 생성
+ * 2024.08.31  	최유경        프롤로그 테마 기획 변경
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminCraftMapper">
+
+    <!-- 테마 등록 및 프롤로그 등록 -->
+    <insert id="insertPrologue">
+        CALL insert_prologue_theme_and_prologue(
+                #{registerRequest.memberId, mode=IN, jdbcType=NUMERIC},
+                #{registerRequest.name, mode=IN, jdbcType=VARCHAR},
+                #{registerRequest.description, mode=IN, jdbcType=VARCHAR},
+                #{registerRequest.videoCnt, mode=IN, jdbcType=NUMERIC},
+                #{registerRequest.startDate, mode=IN, jdbcType=DATE},
+                #{registerRequest.expireDate, mode=IN, jdbcType=DATE},
+                #{registerRequest.prologueList, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
+                #{thumbnailS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
+                #{prologueS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler}
+            )
+    </insert>
+
+    <!-- 테마 조회 -->
+    <select id="selectPrologueThemeList" resultType="com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse">
+        <![CDATA[
+        SELECT
+            pt.prologue_theme_id,
+            pt.member_id,
+            m.name AS writer,
+            pt.name,
+            pt.description,
+            pt.video_cnt,
+            TO_CHAR(pt.start_date, 'YYYY-MM-DD') || ' ~ ' ||  TO_CHAR(pt.expire_date, 'YYYY-MM-DD') AS period,
+            NVL2(pt.updated_at, pt.updated_at, pt.created_at) AS latest_update_date,
+            CASE
+                WHEN pt.start_date <= SYSDATE AND SYSDATE < pt.expire_date THEN '진행중'
+                WHEN pt.start_date > SYSDATE THEN '시작전'
+                ELSE '종료됨'
+            END AS theme_status
+        FROM
+            prologue_theme pt
+            JOIN
+            member m
+            ON pt.member_id = m.member_id
+        WHERE
+            pt.deleted_at IS NULL
+        ORDER BY
+            pt.created_at DESC
+        ]]>
+    </select>
+
+    <!-- 프롤로그 조회 -->
+    <select id="selectPrologueListByTheme" resultType="com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse">
+        SELECT
+            p.prologue_id,
+            p.prologue_theme_id,
+            p.title,
+            p.video_url,
+            NVL(p.updated_at,p.created_at) AS latest_update_date,
+            p.thumbnail_url,
+            NVL(lc.cnt,0) AS like_cnt
+        FROM
+            prologue p
+                LEFT JOIN
+            (SELECT
+                 COUNT(like_cnt_id) AS cnt,
+                 prologue_id
+             FROM like_cnt
+             WHERE prologue_id IS NOT NULL
+             GROUP BY prologue_id
+            ) lc
+            ON p.prologue_id = lc.prologue_id
+        WHERE
+            p.prologue_theme_id = #{prologueThemeId}
+    </select>
+</mapper>

@@ -27,12 +27,12 @@ public class LessonListResponse {
     private String memberName;
     private List<LessonDTO> lessonList;
 
-    public static LessonListResponse of(LessonListDTO lessonList, List<ShortFormDTO> shortFormList,
-                                        String memberName) {
+    public static LessonListResponse of(List<LessonDTO> lessonList, List<ShortFormDTO> shortFormList,
+                                        String memberName, Long branchId) {
 
         return LessonListResponse.builder()
-                .lessonList(lessonList.getLessonList())
-                .branchId(lessonList.getBranchId())
+                .branchId(branchId)
+                .lessonList(lessonList)
                 .shortFormList(shortFormList)
                 .memberName(memberName)
                 .build();

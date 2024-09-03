@@ -1,11 +1,7 @@
-package com.innerpeace.themoonha.domain.bite.dto;
+package com.innerpeace.themoonha.domain.bite.dto.beforeafter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 비포애프터 DTO
@@ -28,14 +24,18 @@ public class BeforeAfterDTO {
     private Long memberId;
     private Long lessonId;
     private String title;
+    private String beforeContentThumbnailUrl;
+    private String afterContentThumbnailUrl;
     private String beforeContentUrl;
     private String afterContentUrl;
 
-    public static BeforeAfterDTO of(Long memberId, BeforeAfterRequest beforeAfterRequest, String beforeContentUrl, String afterContentUrl) throws JsonProcessingException {
+    public static BeforeAfterDTO of(Long memberId, BeforeAfterRequest beforeAfterRequest, String beforeContentThumbnailUrl, String afterContentThumbnailUrl, String beforeContentUrl, String afterContentUrl) throws JsonProcessingException {
         return BeforeAfterDTO.builder()
                 .memberId(memberId)
                 .lessonId(beforeAfterRequest.getLessonId())
                 .title(beforeAfterRequest.getTitle())
+                .beforeContentThumbnailUrl(beforeContentThumbnailUrl)
+                .afterContentThumbnailUrl(afterContentThumbnailUrl)
                 .beforeContentUrl(beforeContentUrl)
                 .afterContentUrl(afterContentUrl)
                 .build();

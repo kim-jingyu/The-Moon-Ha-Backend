@@ -1,10 +1,11 @@
 package com.innerpeace.themoonha.domain.bite.mapper;
 
-import com.innerpeace.themoonha.domain.bite.dto.*;
-import org.apache.ibatis.annotations.Param;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDTO;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDetailResponse;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterListResponse;
+import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -19,15 +20,15 @@ import java.util.Optional;
  * 2024.08.27  김진규       최초 생성
  * 2024.08.27  김진규       findBeforeAfterList, insertBeforeAfter, findBeforeAfterListByTitle 메서드 추가
  * 2024.08.28  김진규       insertHashtag, insertBeforeAfterHashtag, findBeforeAfterListByHashtags 메서드 추가
+ * 2024.08.30  김진규       insertHashtag, insertBeforeAfterHashtag 삭제 및 insertHashtagAndBeforeAfterHashtag 메서드 추가
  * </pre>
  * @since 2024.08.27
  */
 public interface BeforeAfterMapper {
-    List<BeforeAfterResponse> findBeforeAfterList();
+    List<BeforeAfterListResponse> findBeforeAfterList();
     void insertBeforeAfter(BeforeAfterDTO beforeAfterDTO);
     List<BeforeAfterSearchResponse> findBeforeAfterListByTitle(String keyword);
-    void insertHashtag(Map<String, Object> params);
-    void insertBeforeAfterHashtag(@Param("beforeAfterId") Long beforeAfterId, @Param("hashtagId") Long hashtagId);
-    List<BeforeAfterSearchResponse> findBeforeAfterListByHashtags(@Param("hashtags") List<String> hashtags);
-    Optional<Hashtag> findHashtag(@Param("name") String name);
+    void insertHashtagAndBeforeAfterHashtag(List<String> hashtags, Long beforeAfterId);
+    List<BeforeAfterSearchResponse> findBeforeAfterListByHashtags(List<String> hashtags);
+    Optional<BeforeAfterDetailResponse> findBeforeAfterContent(Long beforeAfterId);
 }

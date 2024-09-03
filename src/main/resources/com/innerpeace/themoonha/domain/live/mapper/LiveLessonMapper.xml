@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 실시간 강좌 매퍼 XML
+ * @author 김진규
+ * @since 2024.09.01
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.09.01  김진규       최초 생성
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.live.mapper.LiveLessonMapper">
+    <!-- 실시간 강좌 응답 정보 -->
+    <resultMap id="LiveLessonResponseMap" type="com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse">
+        <result property="liveId" column="liveId" />
+        <result property="title" column="title" />
+        <result property="streamKey" column="streamKey" />
+        <result property="instructorName" column="instructorName" />
+        <result property="thumbnailUrl" column="thumbnailUrl" />
+        <result property="broadcastUrl" column="broadcastUrl" />
+        <result property="status" column="status" />
+        <result property="createdAt" column="createdAt" />
+        <result property="minutesAgo" column="minutesAgo" />
+    </resultMap>
+
+    <!-- 실시간 강좌 상세 응답 정보 -->
+    <resultMap id="LiveLessonDetailResponseMap" type="com.innerpeace.themoonha.domain.live.dto.LiveLessonDetailResponse">
+        <id property="liveId" column="liveId" />
+        <result property="title" column="title" />
+        <result property="description" column="description" />
+        <result property="streamKey" column="streamKey" />
+        <result property="instructorName" column="instructorName" />
+        <result property="thumbnailUrl" column="thumbnailUrl" />
+        <result property="broadcastUrl" column="broadcastUrl" />
+        <result property="status" column="status" />
+        <result property="createdAt" column="createdAt" />
+        <result property="minutesAgo" column="minutesAgo" />
+        <result property="isEnrolled" column="isEnrolled" />
+    </resultMap>
+
+    <!-- 실시간 강좌 정보 -->
+    <resultMap id="LiveLessonMap" type="com.innerpeace.themoonha.domain.live.vo.LiveLesson">
+        <id property="livedId" column="livedId" />
+        <result property="memberId" column="memberId" />
+        <result property="lessonId" column="lessonId" />
+        <result property="title" column="title" />
+        <result property="description" column="description" />
+        <result property="status" column="status" />
+        <result property="streamKey" column="streamKey" />
+        <result property="broadcastUrl" column="broadcastUrl" />
+        <result property="thumbnailUrl" column="thumbnailUrl" />
+        <result property="createdAt" column="createdAt" />
+        <result property="deletedAt" column="deletedAt" />
+        <result property="updatedAt" column="updatedAt" />
+    </resultMap>
+
+
+    <insert id="insertLiveLesson" parameterType="com.innerpeace.themoonha.domain.live.vo.LiveLesson">
+        <selectKey keyProperty="liveId" resultType="Long" order="BEFORE">
+            SELECT seq_live_lesson.nextval FROM dual
+        </selectKey>
+
+        INSERT INTO live_lesson (
+            lesson_id,
+            member_id,
+            title,
+            description,
+            status,
+            stream_key,
+            broadcast_url,
+            thumbnail_url,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{liveId},
+            #{lessonId},
+            #{memberId},
+            #{title},
+            #{description},
+            #{status},
+            #{streamKey},
+            #{broadcastUrl},
+            #{thumbnailUrl},
+            SYSDATE,
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateLiveLessonStatus">
+        UPDATE live_lesson
+        SET status = #{status}
+        WHERE live_id = #{liveId}
+    </update>
+
+    <select id="findLiveLessonsByMember" resultMap="LiveLessonResponseMap">
+        SELECT
+            l.lived_id AS liveId,
+            l.title AS title,
+            l.stream_key AS streamKey,
+            m.name AS instructorName,
+            l.thumbnail_url AS thumbnailUrl,
+            l.broadcast_url AS broadcastUrl,
+            l.status AS status,
+            TIMESTAMPDIFF(MINUTE, l.created_at, NOW()) AS minutesAgo
+        FROM live_lesson l
+        JOIN member m ON l.member_id = m.member_id
+        WHERE
+            l.status = 'ON_AIR'
+            AND l.member_id = #{memberId}
+    </select>
+
+    <select id="findLiveLessonsMemberDoesNotHave" resultMap="LiveLessonResponseMap">
+        SELECT
+            l.lived_id AS liveId,
+            l.title AS title,
+            l.stream_key AS streamKey,
+            m.name AS instructorName,
+            l.thumbnail_url AS thumbnailUrl,
+            l.broadcast_url AS broadcastUrl,
+            l.status AS status,
+            TIMESTAMPDIFF(MINUTE, l.created_at, NOW()) AS minutesAgo
+        FROM live_lesson l
+        JOIN member m ON l.member_id = m.member_id
+        WHERE
+            l.status = 'ON_AIR'
+            AND l.member_id != #{memberId}
+    </select>
+
+    <select id="findLiveLessonDetailById" resultMap="LiveLessonDetailResponseMap">
+        SELECT
+            l.lived_id AS liveId,
+            l.title AS title,
+            l.description AS description,
+            l.stream_key AS streamKey,
+            m.name AS instructorName,
+            l.thumbnail_url AS thumbnailUrl,
+            l.broadcast_url AS broadcastUrl,
+            l.status AS status,
+            l.created_at AS createdAt,
+            TIMESTAMPDIFF(MINUTE, l.created_at, NOW()) AS minutesAgo,
+            CASE
+                WHEN l.member_id = #{memberId} THEN 1
+                ELSE 0
+            END AS isEnrolled
+        FROM live_lesson l
+        JOIN member m ON l.member_id = m.member_id
+        WHERE l.live_id = #{liveId}
+    </select>
+
+    <select id="findLiveLessonById" resultMap="LiveLessonMap">
+        SELECT
+            lived_id AS liveId,
+            member_id AS memberId,
+            lesson_id AS lessonId,
+            title AS title,
+            description AS description,
+            stream_key AS streamKey,
+            thumbnail_url AS thumbnailUrl,
+            broadcast_url AS broadcastUrl,
+            status AS status
+        FROM live_lesson
+        WHERE live_id = #{liveId}
+    </select>
+
+    <select id="findActiveLiveLessonIdList" resultType="Long">
+        SELECT live_id
+        FROM live_lesson
+        WHERE status = 'ON_AIR'
+    </select>
+</mapper>

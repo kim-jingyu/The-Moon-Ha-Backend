@@ -12,11 +12,27 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
+/**
+ * 레디스 빈 설정
+ *
+ * @author 김진규
+ * @since 2024.08.27
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.08.27  김진규        최초 생성
+ * </pre>
+ * @since 2024.08.27
+ */
 @Configuration
 public class RedisConfig {
+    private static final String REDIS = "redis";
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory("localhost", 6379);
+        return new LettuceConnectionFactory(REDIS, 6379);
     }
 
     @Bean

@@ -1,29 +1,29 @@
-package com.innerpeace.themoonha.domain.lesson.dto;
+package com.innerpeace.themoonha.domain.bite.dto.field;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * 숏폼 상세 조회 DTO
- * @author 손승완
- * @since 2024.08.25
+ * 분야별 한 입 요청 DTO
+ * @author 김진규
+ * @since 2024.08.31
  * @version 1.0
  *
  * <pre>
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.08.25  	손승완       최초 생성
+ * 2024.08.27   김진규      최초 생성
  * </pre>
  */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ShortFormDetailResponse {
+public class FieldRequest {
     private Long lessonId;
-    private String tutorName;
-    private String shortFormName;
-    private String lessonTitle;
-    private String videoUrl;
+    private String title;
+    private List<String> hashtags;
 }

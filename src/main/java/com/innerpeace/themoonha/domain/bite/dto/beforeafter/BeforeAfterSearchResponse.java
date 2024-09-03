@@ -1,4 +1,4 @@
-package com.innerpeace.themoonha.domain.bite.dto;
+package com.innerpeace.themoonha.domain.bite.dto.beforeafter;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

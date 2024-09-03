@@ -1,15 +1,15 @@
-package com.innerpeace.themoonha.domain.bite.dto;
+package com.innerpeace.themoonha.domain.bite.dto.field;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PROTECTED;
 
 /**
- * 비포애프터 해시태그 DTO
+ * 분야별 한 입 해시태그 DTO
  * @author 김진규
- * @since 2024.08.28
+ * @since 2024.08.31
  * @version 1.0
  *
  * <pre>
@@ -21,8 +21,8 @@ import static lombok.AccessLevel.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class BeforeAfterHashtag {
-    private Long beforeAfterHashtagId;
-    private Long beforeAfterId;
+public class FieldHashtag {
+    private Long fieldHashtagId;
+    private Long fieldId;
     private Long hashtagId;
 }

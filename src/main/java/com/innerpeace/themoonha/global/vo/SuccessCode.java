@@ -23,7 +23,8 @@ public enum SuccessCode {
     LOUNGE_COMMENT_UPDATE_SUCCESS(200, "라운지 댓글이 수정되었습니다."),
     LOUNGE_COMMENT_DELETE_SUCCESS(200, "라운지 댓글이 삭제되었습니다."),
     ATTENDANCE_START_SUCCESS(200, "출석 시작에 성공하였습니다."),
-    ATTENDANCE_UPDATE_SUCCESS(200, "출석 정보 수정에 성공하였습니다.");
+    ATTENDANCE_UPDATE_SUCCESS(200, "출석 정보 수정에 성공하였습니다."),
+    ADMIN_PROLOGUE_REGISTER_SUCCESS(200, "프롤로그 등록에 성공하였습니다.");
 
     private final int status;
     private final String message;

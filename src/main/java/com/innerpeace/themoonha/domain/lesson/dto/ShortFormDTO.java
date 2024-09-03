@@ -20,8 +20,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ShortFormDTO {
+    private Long lessonId;
     private Long shortFormId;
-    private String name;
+    private String lessonTitle;
+    private String tutorName;
+    private String shortFormName;
     private String thumbnailUrl;
+    private String videoUrl;
     private String target;
 }

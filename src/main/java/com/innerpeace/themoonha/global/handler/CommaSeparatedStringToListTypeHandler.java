@@ -10,6 +10,18 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Comma로 된 문자열 -> List 타입 호환 핸들러
+ * @author 김진규
+ * @since 2024.08.28
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.08.28  	김진규       최초 생성
+ * </pre>
+ */
 public class CommaSeparatedStringToListTypeHandler extends BaseTypeHandler<List<String>> {
     @Override
     public void setNonNullParameter(PreparedStatement preparedStatement, int i, List<String> strings, JdbcType jdbcType) throws SQLException {
