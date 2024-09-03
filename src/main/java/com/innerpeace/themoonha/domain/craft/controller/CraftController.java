@@ -1,7 +1,6 @@
 package com.innerpeace.themoonha.domain.craft.controller;
 
 import com.innerpeace.themoonha.domain.craft.dto.CraftMainResponse;
-import com.innerpeace.themoonha.domain.craft.dto.PrologueDetailResponse;
 import com.innerpeace.themoonha.domain.craft.dto.SuggestionRequest;
 import com.innerpeace.themoonha.domain.craft.service.CraftService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
@@ -32,11 +31,6 @@ public class CraftController {
     @GetMapping("/list")
     public ResponseEntity<CraftMainResponse> craftMain(Criteria criteria) {
         return ResponseEntity.ok(craftService.findCraftMain(criteria));
-    }
-
-    @GetMapping("/prologue/{prologueId}")
-    public ResponseEntity<PrologueDetailResponse> prologueDetail(@PathVariable Long prologueId) {
-        return ResponseEntity.ok(craftService.findPrologueDetail(prologueId));
     }
 
     @PostMapping("/suggestion")

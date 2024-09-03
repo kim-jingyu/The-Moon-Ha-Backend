@@ -26,9 +26,6 @@ public interface CraftMapper {
 
     List<SuggestionDTO> selectSuggestionList(Criteria criteria);
 
-    PrologueDetailResponse selectPrologueDetail(@Param("prologueId") Long prologueId,
-                                                @Param("memberId") Long memberId);
-
     int insertSuggestion(@Param("suggestionRequest") SuggestionRequest suggestionRequest,
                          @Param("memberId") Long memberId);
 

@@ -45,14 +45,6 @@ public class CraftServiceImpl implements CraftService {
     }
 
     @Override
-    public PrologueDetailResponse findPrologueDetail(Long prologueId) {
-        Long memberId = 1L;
-        PrologueDetailResponse prologueDetailResponse = craftMapper.selectPrologueDetail(prologueId, memberId);
-        log.info("response = {}", prologueDetailResponse);
-        return prologueDetailResponse;
-    }
-
-    @Override
     @Transactional
     public CommonResponse addSuggestion(SuggestionRequest suggestionRequest, Long memberId) {
         if (craftMapper.insertSuggestion(suggestionRequest, memberId) != 1) {

@@ -19,24 +19,32 @@
 <mapper namespace="com.innerpeace.themoonha.domain.craft.mapper.CraftMapper">
     <select id="selectPrologueList"
             resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDTO">
-        select
+        SELECT
             p.prologue_id,
+            p.prologue_theme_id,
+            t.name theme_name,
+            t.description theme_description,
             p.title,
             p.thumbnail_url,
+            p.video_url,
             count(l.like_cnt_id) like_cnt,
-            p.type
-        from
+            nvl2(l.like_cnt_id, 1, 0) already_liked
+        FROM
             prologue p
-        left join
+        JOIN
+            prologue_theme t
+        ON
+            p.prologue_theme_id = t.prologue_theme_id
+        LEFT JOIN
             like_cnt l
-        on
-            p.prologue_id = l.prologue_id
-        where
+        ON
+            p.prologue_id = l.prologue_id and l.member_id = 1
+        WHERE
             p.deleted_at is null
-        group by
-            p.prologue_id, p.title, p.thumbnail_url, p.type
-        order by
-            p.type
+        GROUP BY
+            p.prologue_id, p.prologue_theme_id, p.title, p.thumbnail_url, p.video_url, l.like_cnt_id, t.name, t.description
+        ORDER BY
+            p.prologue_theme_id
     </select>
 
     <select id="selectWishLessonList"
@@ -88,23 +96,6 @@
         where
             rn > (#{pageNum} - 1) * #{size}
         ]]>
-    </select>
-    <select id="selectPrologueDetail"
-            resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDetailResponse">
-
-        select
-            p.prologue_id,
-            p.title,
-            p.video_url,
-            nvl2(lc.like_cnt_id, 1, 0) already_liked
-        from
-            prologue p
-        left join
-            like_cnt lc
-        on
-            p.prologue_id = lc.prologue_id and lc.member_id = #{memberId}
-        where
-            p.prologue_id = #{prologueId}
     </select>
 
     <insert id="insertSuggestion">

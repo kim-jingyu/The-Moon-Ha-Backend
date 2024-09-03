@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class CraftMainResponse {
-    private List<PrologueDTO> firstPrologueList;
-    private List<PrologueDTO> secondPrologueList;
+    private List<PrologueDTO> prologueList;
     private List<WishLessonDTO> firstWishLessonList;
     private List<WishLessonDTO> secondWishLessonList;
     private List<SuggestionDTO> suggestionList;
@@ -36,16 +35,12 @@ public class CraftMainResponse {
                                        List<WishLessonDTO> wishLessonList,
                                        List<SuggestionDTO> suggestionList) {
 
-        Map<Boolean, List<PrologueDTO>> prologueMap = prologueList.stream()
-                .collect(Collectors.partitioningBy(prologueDTO -> prologueDTO.getType() == 1));
-
         String theme = wishLessonList.get(0).getTheme();
         Map<Boolean, List<WishLessonDTO>> wishLessonMap = wishLessonList.stream()
                 .collect(Collectors.partitioningBy(wishLessonDTO -> wishLessonDTO.getTheme().equals(theme)));
 
         return CraftMainResponse.builder()
-                .firstPrologueList(prologueMap.get(true))
-                .secondPrologueList(prologueMap.get(false))
+                .prologueList(prologueList)
                 .firstWishLessonList(wishLessonMap.get(true))
                 .secondWishLessonList(wishLessonMap.get(false))
                 .suggestionList(suggestionList)
