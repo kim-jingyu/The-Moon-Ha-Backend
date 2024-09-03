@@ -20,6 +20,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BeforeAfterListResponse {
+    private Long beforeAfterId;
     private String beforeThumbnailUrl;
     private String afterThumbnailUrl;
     private String title;

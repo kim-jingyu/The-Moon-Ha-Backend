@@ -57,7 +57,7 @@ public class FieldServiceImpl implements FieldService {
      */
     @Override
     public FieldDetailResponse getFieldContent(Long beforeAfterId) {
-        return fieldMapper.findFieldContent(beforeAfterId)
+        return fieldMapper.findFieldDetail(beforeAfterId)
                 .orElseThrow(() -> new CustomException(FIELD_NOT_FOUND));
     }
 

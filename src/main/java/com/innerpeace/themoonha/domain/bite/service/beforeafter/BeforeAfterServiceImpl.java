@@ -61,7 +61,7 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
      */
     @Override
     public BeforeAfterDetailResponse getBeforeAfterContent(Long beforeAfterId) {
-        return beforeAfterMapper.findBeforeAfterContent(beforeAfterId)
+        return beforeAfterMapper.findBeforeAfterDetail(beforeAfterId)
                 .orElseThrow(() -> new CustomException(BEFORE_AFTER_NOT_FOUND));
     }
 
@@ -80,8 +80,8 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
     @Override
     @Transactional
     public CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeThumbnail, MultipartFile afterThumbnail, MultipartFile beforeContent, MultipartFile afterContent) {
-        String beforeContentPath = determineContentPath(beforeContent.getContentType(), determineContentPath(beforeContent.getContentType(), BEFORE));
-        String afterContentPath = determineContentPath(beforeContent.getContentType(), determineContentPath(beforeContent.getContentType(), AFTER));
+        String beforeContentPath = determineContentPath(beforeContent.getContentType(), BEFORE);
+        String afterContentPath = determineContentPath(beforeContent.getContentType(), AFTER);
         try {
             BeforeAfterDTO beforeAfterDTO = createBeforeAfterDTO(memberId, beforeAfterRequest, beforeThumbnail, afterThumbnail, beforeContent, afterContent, beforeContentPath, afterContentPath);
             saveBeforeAfterContent(beforeAfterRequest, beforeAfterDTO);
@@ -89,6 +89,7 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
         } catch (IOException e) {
             throw new CustomException(S3_UPLOAD_FAILED);
         } catch (Exception e) {
+            e.printStackTrace();
             deleteS3Files(beforeThumbnail.getOriginalFilename(), afterThumbnail.getOriginalFilename(), beforeContent.getOriginalFilename(), afterContent.getOriginalFilename(), beforeContentPath, afterContentPath);
             throw new CustomException(BEFORE_AFTER_CREATION_FAILED);
         }
