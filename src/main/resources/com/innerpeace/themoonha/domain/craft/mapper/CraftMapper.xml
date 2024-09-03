@@ -38,7 +38,7 @@
         LEFT JOIN
             like_cnt l
         ON
-            p.prologue_id = l.prologue_id and l.member_id = 1
+            p.prologue_id = l.prologue_id and l.member_id = #{memberId}
         WHERE
             p.deleted_at is null
         GROUP BY

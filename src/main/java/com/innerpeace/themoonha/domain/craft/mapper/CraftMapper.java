@@ -21,7 +21,7 @@ import java.util.List;
  * </pre>
  */
 public interface CraftMapper {
-    List<PrologueDTO> selectPrologueList();
+    List<PrologueDTO> selectPrologueList(Long memberId);
     List<WishLessonDTO> selectWishLessonList();
 
     List<SuggestionDTO> selectSuggestionList(Criteria criteria);

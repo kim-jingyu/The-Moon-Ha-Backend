@@ -37,7 +37,8 @@ public class CraftServiceImpl implements CraftService {
     @Override
     @Transactional(readOnly = true)
     public CraftMainResponse findCraftMain(Criteria criteria) {
-        List<PrologueDTO> prologueList = craftMapper.selectPrologueList();
+        Long memberId = 1L;
+        List<PrologueDTO> prologueList = craftMapper.selectPrologueList(memberId);
         List<WishLessonDTO> wishLessonList = craftMapper.selectWishLessonList();
         List<SuggestionDTO> suggestionList = craftMapper.selectSuggestionList(criteria);
 
