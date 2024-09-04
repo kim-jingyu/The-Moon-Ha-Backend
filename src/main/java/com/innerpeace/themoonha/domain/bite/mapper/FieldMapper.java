@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.bite.dto.field.FieldDTO;
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldDetailResponse;
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldListResponse;
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldSearchResponse;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public interface FieldMapper {
     List<FieldListResponse> findFieldList();
     void insertField(FieldDTO fieldDTO);
     List<FieldSearchResponse> findFieldListByTitle(String keyword);
-    void insertHashtagAndFieldHashtag(List<String> hashtags, Long fieldId);
-    List<FieldSearchResponse> findFieldListByHashtags(List<String> hashtags);
-    Optional<FieldDetailResponse> findFieldContent(Long fieldId);
+    void insertHashtagAndFieldHashtag(@Param("hashtags") List<String> hashtags, @Param("fieldId") Long fieldId);
+    List<FieldSearchResponse> findFieldListByHashtags(@Param("hashtags") List<String> hashtags);
+    Optional<FieldDetailResponse> findFieldDetail(Long fieldId);
 }

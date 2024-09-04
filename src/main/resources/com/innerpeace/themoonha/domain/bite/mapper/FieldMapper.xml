@@ -93,6 +93,7 @@
             field_hashtag fh ON f.field_id = fh.field_id
         LEFT JOIN
             hashtag h ON fh.hashtag_id = h.hashtag_id
+        WHERE field_id = #{fieldId}
         GROUP BY
             f.content_url,
             f.title,

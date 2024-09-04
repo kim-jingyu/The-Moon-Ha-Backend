@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDTO;
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterDetailResponse;
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterListResponse;
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public interface BeforeAfterMapper {
     List<BeforeAfterListResponse> findBeforeAfterList();
     void insertBeforeAfter(BeforeAfterDTO beforeAfterDTO);
     List<BeforeAfterSearchResponse> findBeforeAfterListByTitle(String keyword);
-    void insertHashtagAndBeforeAfterHashtag(List<String> hashtags, Long beforeAfterId);
-    List<BeforeAfterSearchResponse> findBeforeAfterListByHashtags(List<String> hashtags);
-    Optional<BeforeAfterDetailResponse> findBeforeAfterContent(Long beforeAfterId);
+    void insertHashtagAndBeforeAfterHashtag(@Param("hashtags") List<String> hashtags, @Param("beforeAfterId") Long beforeAfterId);
+    List<BeforeAfterSearchResponse> findBeforeAfterListByHashtags(@Param("hashtags") List<String> hashtags);
+    Optional<BeforeAfterDetailResponse> findBeforeAfterDetail(Long beforeAfterId);
 }
