@@ -28,4 +28,5 @@ public interface LessonService {
     List<CartResponse> findCartList(Long memberId);
     CommonResponse addCart(CartRequest cartRequest);
     CommonResponse payLesson(List<Long> cartIdList, Long memberId);
+    List<LessonEnrollResponse> findEnrollLessonList(Long memberId);
 }

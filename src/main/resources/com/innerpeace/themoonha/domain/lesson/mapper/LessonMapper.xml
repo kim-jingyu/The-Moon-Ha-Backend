@@ -255,4 +255,23 @@
                 #{cartId}
             </foreach>
     </update>
+
+
+    <select id="selectLessonEnrollList"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonEnrollResponse">
+        SELECT
+            s.lesson_id, l.title
+        FROM
+            sugang s
+        JOIN
+            lesson l on s.lesson_id = l.lesson_id
+        LEFT JOIN
+            before_after ba on l.lesson_id = ba.lesson_id
+        WHERE
+            s.member_id = #{memberId} and
+            to_char(sysdate, 'YYYY-MM-DD') > l.end_date and
+            ba.lesson_id is null
+        ORDER BY
+            s.lesson_id
+    </select>
 </mapper>
