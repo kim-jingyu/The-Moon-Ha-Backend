@@ -39,7 +39,7 @@ public class CraftServiceImpl implements CraftService {
     public CraftMainResponse findCraftMain(Criteria criteria) {
         Long memberId = 1L;
         List<PrologueDTO> prologueList = craftMapper.selectPrologueList(memberId);
-        List<WishLessonDTO> wishLessonList = craftMapper.selectWishLessonList();
+        List<WishLessonDTO> wishLessonList = craftMapper.selectWishLessonList(memberId);
         List<SuggestionDTO> suggestionList = craftMapper.selectSuggestionList(criteria);
 
         return CraftMainResponse.of(prologueList, wishLessonList, suggestionList);

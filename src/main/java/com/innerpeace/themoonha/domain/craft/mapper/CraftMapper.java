@@ -22,7 +22,7 @@ import java.util.List;
  */
 public interface CraftMapper {
     List<PrologueDTO> selectPrologueList(Long memberId);
-    List<WishLessonDTO> selectWishLessonList();
+    List<WishLessonDTO> selectWishLessonList(Long memberId);
 
     List<SuggestionDTO> selectSuggestionList(Criteria criteria);
 

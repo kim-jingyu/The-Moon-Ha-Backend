@@ -57,20 +57,21 @@
         select
             w.wish_lesson_id,
             w.title,
-            count(v.vote_id) vote_cnt,
-            w.theme
+            (select count(v2.vote_id) from vote v2 where v2.wish_lesson_id = w.wish_lesson_id) as vote_cnt,
+            w.theme,
+            nvl2(v.vote_id, 1, 0) already_voted
         from
             wish_lesson w
         left join
             vote v
         on
-            w.wish_lesson_id = v.wish_lesson_id
+            w.wish_lesson_id = v.wish_lesson_id and v.member_id = #{memberId}
         where
             w.deleted_at is null
         group by
-            w.wish_lesson_id, w.title, w.theme
+            w.wish_lesson_id, w.title, w.theme, v.vote_id
         order by
-            w.theme
+            w.theme, already_voted desc
     </select>
 
     <select id="selectSuggestionList"
