@@ -11,4 +11,5 @@ public class WishLessonDTO {
     private String title;
     private int voteCnt;
     private String theme;
+    private boolean alreadyVoted;
 }

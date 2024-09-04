@@ -19,24 +19,37 @@
 <mapper namespace="com.innerpeace.themoonha.domain.craft.mapper.CraftMapper">
     <select id="selectPrologueList"
             resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDTO">
-        select
+        SELECT
             p.prologue_id,
+            p.prologue_theme_id,
+            t.name theme_name,
+            t.description theme_description,
             p.title,
             p.thumbnail_url,
+            p.video_url,
             count(l.like_cnt_id) like_cnt,
-            p.type
-        from
+            nvl2(l.like_cnt_id, 1, 0) already_liked,
+            m.name tutor_name
+        FROM
             prologue p
-        left join
+        JOIN
+            prologue_theme t
+        ON
+            p.prologue_theme_id = t.prologue_theme_id
+        LEFT JOIN
             like_cnt l
-        on
-            p.prologue_id = l.prologue_id
-        where
+        ON
+            p.prologue_id = l.prologue_id and l.member_id = #{memberId}
+        JOIN
+            member m
+        ON
+            p.member_id = m.member_id
+        WHERE
             p.deleted_at is null
-        group by
-            p.prologue_id, p.title, p.thumbnail_url, p.type
-        order by
-            p.type
+        GROUP BY
+            p.prologue_id, p.prologue_theme_id, p.title, p.thumbnail_url, p.video_url, l.like_cnt_id, t.name, t.description, m.name
+        ORDER BY
+            p.prologue_theme_id
     </select>
 
     <select id="selectWishLessonList"
@@ -44,20 +57,21 @@
         select
             w.wish_lesson_id,
             w.title,
-            count(v.vote_id) vote_cnt,
-            w.theme
+            (select count(v2.vote_id) from vote v2 where v2.wish_lesson_id = w.wish_lesson_id) as vote_cnt,
+            w.theme,
+            nvl2(v.vote_id, 1, 0) already_voted
         from
             wish_lesson w
         left join
             vote v
         on
-            w.wish_lesson_id = v.wish_lesson_id
+            w.wish_lesson_id = v.wish_lesson_id and v.member_id = #{memberId}
         where
             w.deleted_at is null
         group by
-            w.wish_lesson_id, w.title, w.theme
+            w.wish_lesson_id, w.title, w.theme, v.vote_id
         order by
-            w.theme
+            w.theme, already_voted desc
     </select>
 
     <select id="selectSuggestionList"
@@ -89,22 +103,12 @@
             rn > (#{pageNum} - 1) * #{size}
         ]]>
     </select>
-    <select id="selectPrologueDetail"
-            resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDetailResponse">
 
-        select
-            p.prologue_id,
-            p.title,
-            p.video_url,
-            nvl2(lc.like_cnt_id, 1, 0) already_liked
-        from
-            prologue p
-        left join
-            like_cnt lc
-        on
-            p.prologue_id = lc.prologue_id and lc.member_id = #{memberId}
-        where
-            p.prologue_id = #{prologueId}
+    <select id="selectTotalSuggestion" resultType="java.lang.Integer">
+        SELECT
+            count(suggestion_id)
+        FROM
+            suggestion
     </select>
 
     <insert id="insertSuggestion">

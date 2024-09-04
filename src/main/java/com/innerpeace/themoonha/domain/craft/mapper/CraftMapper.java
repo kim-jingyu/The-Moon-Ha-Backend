@@ -21,13 +21,10 @@ import java.util.List;
  * </pre>
  */
 public interface CraftMapper {
-    List<PrologueDTO> selectPrologueList();
-    List<WishLessonDTO> selectWishLessonList();
+    List<PrologueDTO> selectPrologueList(Long memberId);
+    List<WishLessonDTO> selectWishLessonList(Long memberId);
 
     List<SuggestionDTO> selectSuggestionList(Criteria criteria);
-
-    PrologueDetailResponse selectPrologueDetail(@Param("prologueId") Long prologueId,
-                                                @Param("memberId") Long memberId);
 
     int insertSuggestion(@Param("suggestionRequest") SuggestionRequest suggestionRequest,
                          @Param("memberId") Long memberId);
@@ -37,4 +34,7 @@ public interface CraftMapper {
 
     int insertWishLessonVote(@Param("wishLessonId") Long wishLessonId,
                              @Param("memberId") Long memberId);
+
+    int selectTotalSuggestion();
+
 }

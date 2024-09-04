@@ -20,8 +20,13 @@ import lombok.*;
 @Builder
 public class PrologueDTO {
     private Long prologueId;
+    private Long prologueThemeId;
+    private String tutorName;
+    private String themeName;
+    private String themeDescription;
     private String title;
     private String thumbnailUrl;
+    private String videoUrl;
     private int likeCnt;
-    private int type;
+    private boolean alreadyLiked;
 }

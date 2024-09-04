@@ -1,5 +1,6 @@
 package com.innerpeace.themoonha.domain.craft.dto;
 
+import com.innerpeace.themoonha.global.dto.PageDTO;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -25,30 +26,28 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class CraftMainResponse {
-    private List<PrologueDTO> firstPrologueList;
-    private List<PrologueDTO> secondPrologueList;
+    private List<PrologueDTO> prologueList;
     private List<WishLessonDTO> firstWishLessonList;
     private List<WishLessonDTO> secondWishLessonList;
     private List<SuggestionDTO> suggestionList;
+    private PageDTO pageDTO;
 
 
     public static CraftMainResponse of(List<PrologueDTO> prologueList,
                                        List<WishLessonDTO> wishLessonList,
-                                       List<SuggestionDTO> suggestionList) {
-
-        Map<Boolean, List<PrologueDTO>> prologueMap = prologueList.stream()
-                .collect(Collectors.partitioningBy(prologueDTO -> prologueDTO.getType() == 1));
+                                       List<SuggestionDTO> suggestionList,
+                                       PageDTO pageDTO) {
 
         String theme = wishLessonList.get(0).getTheme();
         Map<Boolean, List<WishLessonDTO>> wishLessonMap = wishLessonList.stream()
                 .collect(Collectors.partitioningBy(wishLessonDTO -> wishLessonDTO.getTheme().equals(theme)));
 
         return CraftMainResponse.builder()
-                .firstPrologueList(prologueMap.get(true))
-                .secondPrologueList(prologueMap.get(false))
+                .prologueList(prologueList)
                 .firstWishLessonList(wishLessonMap.get(true))
                 .secondWishLessonList(wishLessonMap.get(false))
                 .suggestionList(suggestionList)
+                .pageDTO(pageDTO)
                 .build();
     }
 }
