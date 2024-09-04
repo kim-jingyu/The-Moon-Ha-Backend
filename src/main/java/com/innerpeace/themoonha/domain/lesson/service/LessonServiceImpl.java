@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,6 +92,11 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return CommonResponse.of(true, SuccessCode.SUGANG_APPLICATION_SUCCESS.getMessage());
+    }
+
+    @Override
+    public List<LessonEnrollResponse> findEnrollLessonList(Long memberId) {
+        return lessonMapper.selectLessonEnrollList(memberId);
     }
 
 }

@@ -79,4 +79,10 @@ public class LessonController {
         Long memberId = 1L;
         return ResponseEntity.ok(lessonService.payLesson(sugangRequest.getCartIdList(), memberId));
     }
+
+    @GetMapping("/enroll")
+    public ResponseEntity<List<LessonEnrollResponse>> lessonEnrollList() {
+        Long memberId = 1L;
+        return ResponseEntity.ok(lessonService.findEnrollLessonList(memberId));
+    }
 }
