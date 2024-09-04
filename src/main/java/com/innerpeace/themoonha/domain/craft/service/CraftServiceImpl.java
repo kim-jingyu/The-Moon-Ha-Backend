@@ -3,6 +3,7 @@ package com.innerpeace.themoonha.domain.craft.service;
 import com.innerpeace.themoonha.domain.craft.dto.*;
 import com.innerpeace.themoonha.domain.craft.mapper.CraftMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.dto.PageDTO;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.util.Criteria;
@@ -16,8 +17,8 @@ import java.util.List;
 
 /**
  * 문화공방 서비스 구현체
+ *
  * @author 손승완
- * @since 2024.08.25
  * @version 1.0
  *
  * <pre>
@@ -27,6 +28,7 @@ import java.util.List;
  * 2024.08.26   손승완       프롤로그 상세 조회 구현
  * 2024.08.27   손승완       제안합니다 댓글 작성 기능 추가
  * </pre>
+ * @since 2024.08.25
  */
 @Service
 @RequiredArgsConstructor
@@ -42,7 +44,10 @@ public class CraftServiceImpl implements CraftService {
         List<WishLessonDTO> wishLessonList = craftMapper.selectWishLessonList(memberId);
         List<SuggestionDTO> suggestionList = craftMapper.selectSuggestionList(criteria);
 
-        return CraftMainResponse.of(prologueList, wishLessonList, suggestionList);
+        return CraftMainResponse.of(prologueList,
+                wishLessonList,
+                suggestionList,
+                PageDTO.of(craftMapper.selectTotalSuggestion(), 5, criteria));
     }
 
     @Override
@@ -71,5 +76,11 @@ public class CraftServiceImpl implements CraftService {
         }
 
         return CommonResponse.from(SuccessCode.WISHLESSON_VOTE_SUCCESS.getMessage());
+    }
+
+    @Override
+    public SuggestionResponse findSuggestionList(Criteria criteria) {
+        List<SuggestionDTO> suggestionList = craftMapper.selectSuggestionList(criteria);
+        return SuggestionResponse.of(PageDTO.of(craftMapper.selectTotalSuggestion(), 5, criteria), suggestionList);
     }
 }

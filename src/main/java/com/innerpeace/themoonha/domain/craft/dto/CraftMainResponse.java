@@ -1,5 +1,6 @@
 package com.innerpeace.themoonha.domain.craft.dto;
 
+import com.innerpeace.themoonha.global.dto.PageDTO;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -29,11 +30,13 @@ public class CraftMainResponse {
     private List<WishLessonDTO> firstWishLessonList;
     private List<WishLessonDTO> secondWishLessonList;
     private List<SuggestionDTO> suggestionList;
+    private PageDTO pageDTO;
 
 
     public static CraftMainResponse of(List<PrologueDTO> prologueList,
                                        List<WishLessonDTO> wishLessonList,
-                                       List<SuggestionDTO> suggestionList) {
+                                       List<SuggestionDTO> suggestionList,
+                                       PageDTO pageDTO) {
 
         String theme = wishLessonList.get(0).getTheme();
         Map<Boolean, List<WishLessonDTO>> wishLessonMap = wishLessonList.stream()
@@ -44,6 +47,7 @@ public class CraftMainResponse {
                 .firstWishLessonList(wishLessonMap.get(true))
                 .secondWishLessonList(wishLessonMap.get(false))
                 .suggestionList(suggestionList)
+                .pageDTO(pageDTO)
                 .build();
     }
 }

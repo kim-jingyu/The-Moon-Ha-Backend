@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.craft.service;
 
 import com.innerpeace.themoonha.domain.craft.dto.CraftMainResponse;
 import com.innerpeace.themoonha.domain.craft.dto.SuggestionRequest;
+import com.innerpeace.themoonha.domain.craft.dto.SuggestionResponse;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.util.Criteria;
 
@@ -27,4 +28,6 @@ public interface CraftService {
     CommonResponse addPrologueLike(Long prologueId, Long memberId);
 
     CommonResponse addWishLessonVote(Long wishLessonId, Long memberId);
+
+    SuggestionResponse findSuggestionList(Criteria criteria);
 }
