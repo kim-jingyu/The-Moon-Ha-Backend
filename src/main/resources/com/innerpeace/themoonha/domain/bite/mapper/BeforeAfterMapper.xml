@@ -128,6 +128,21 @@
             m.name AS memberName
         FROM before_after ba
         JOIN member m ON ba.member_id = m.member_id
+        ORDER BY ba.before_after_id DESC
+    </select>
+
+    <!-- 비포애프터 콘텐츠 전체 목록 조회 -->
+    <select id="findBeforeAfterListOrderByTitle" resultMap="BeforeAfterListResponseMap">
+        SELECT
+            ba.before_after_id AS beforeAfterId,
+            ba.before_thumbnail_url AS beforeThumbnailUrl,
+            ba.after_thumbnail_url AS afterThumbnailUrl,
+            ba.title,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS memberName
+        FROM before_after ba
+        JOIN member m ON ba.member_id = m.member_id
+        ORDER BY ba.title ASC
     </select>
 
     <!-- 비포애프터 해시태그 기반 목록 검색 -->

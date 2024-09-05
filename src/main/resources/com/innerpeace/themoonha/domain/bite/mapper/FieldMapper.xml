@@ -104,7 +104,7 @@
             m.name
     </select>
 
-    <!-- 분야별 한 입 콘텐츠 전체 목록 조회 -->
+    <!-- 분야별 한 입 콘텐츠 전체 목록 조회(최신순) -->
     <select id="findFieldList" resultMap="FieldListResponseMap">
         SELECT
             l.category_id AS categoryId,
@@ -118,6 +118,24 @@
         JOIN member m ON f.member_id = m.member_id
         LEFT JOIN lesson l ON f.lesson_id = l.lesson_id
         JOIN category c ON l.category_id = c.category_id
+        ORDER BY f.field_id DESC
+    </select>
+
+    <!-- 분야별 한 입 콘텐츠 전체 목록 조회(제목순) -->
+    <select id="findFieldListOrderByTitle" resultMap="FieldListResponseMap">
+        SELECT
+            l.category_id AS categoryId,
+            c.category AS category,
+            f.field_id AS fieldId,
+            f.thumbnail_url AS thumbnailUrl,
+            f.title,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS memberName
+        FROM field f
+        JOIN member m ON f.member_id = m.member_id
+        LEFT JOIN lesson l ON f.lesson_id = l.lesson_id
+        JOIN category c ON l.category_id = c.category_id
+        ORDER BY f.title ASC
     </select>
 
     <!-- 분야별 한 입 해시태그 기반 목록 검색 -->

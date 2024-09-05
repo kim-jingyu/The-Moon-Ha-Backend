@@ -29,4 +29,5 @@ public interface FieldService {
     CommonResponse makeField(Long memberId, FieldRequest fieldRequest, MultipartFile thumbnail, MultipartFile content);
     List<FieldSearchResponse> findFieldByTitle(String keyword);
     List<FieldSearchResponse> findFieldByHashTags(List<String> hashtags);
+    List<FieldListResponse> getFieldListOrderByTitle();
 }

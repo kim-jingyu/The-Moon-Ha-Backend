@@ -27,6 +27,7 @@ import java.util.Optional;
  */
 public interface BeforeAfterMapper {
     List<BeforeAfterListResponse> findBeforeAfterList();
+    List<BeforeAfterListResponse> findBeforeAfterListOrderByTitle();
     void insertBeforeAfter(BeforeAfterDTO beforeAfterDTO);
     List<BeforeAfterSearchResponse> findBeforeAfterListByTitle(String keyword);
     void insertHashtagAndBeforeAfterHashtag(@Param("hashtags") List<String> hashtags, @Param("beforeAfterId") Long beforeAfterId);

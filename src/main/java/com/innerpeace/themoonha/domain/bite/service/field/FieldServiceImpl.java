@@ -42,12 +42,21 @@ public class FieldServiceImpl implements FieldService {
     private final S3Service s3Service;
 
     /**
-     * 분야별 한 입 전체 콘텐츠 목록 조회
+     * 분야별 한 입 전체 콘텐츠 목록 조회 (최신순)
      * @return 분야별 한 입 콘텐츠 목록
      */
     @Override
     public List<FieldListResponse> getFieldList() {
         return fieldMapper.findFieldList();
+    }
+
+    /**
+     * 분야별 한 입 전체 콘텐츠 목록 조회 (제목순)
+     * @return 분야별 한 입 콘텐츠 목록
+     */
+    @Override
+    public List<FieldListResponse> getFieldListOrderByTitle() {
+        return fieldMapper.findFieldListOrderByTitle();
     }
 
     /**

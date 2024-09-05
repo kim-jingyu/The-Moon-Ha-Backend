@@ -46,12 +46,21 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
     private final S3Service s3Service;
 
     /**
-     * 비포애프터 전체 콘텐츠 목록 조회
+     * 비포애프터 전체 콘텐츠 목록 조회 (최신순)
      * @return 비포애프터 콘텐츠 목록
      */
     @Override
     public List<BeforeAfterListResponse> getBeforeAfterList() {
         return beforeAfterMapper.findBeforeAfterList();
+    }
+
+    /**
+     * 비포애프터 전체 콘텐츠 목록 조회 (제목순)
+     * @return 비포애프터 콘텐츠 목록
+     */
+    @Override
+    public List<BeforeAfterListResponse> getBeforeAfterListOrderByTitle() {
+        return beforeAfterMapper.findBeforeAfterListOrderByTitle();
     }
 
     /**
