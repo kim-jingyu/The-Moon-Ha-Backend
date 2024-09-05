@@ -17,11 +17,13 @@ import org.apache.ibatis.annotations.Param;
  * ----------  --------    ---------------------------
  * 2024.08.29  	최유경       최초 생성
  * 2024.08.30   최유경       숏폼 조회
+ * 2024.09.05   최유경       숏폼 썸네일 등록
  * </pre>
  */
 @Mapper
 public interface AdminShortFormMapper {
     int insertShortForm(@Param("registerRequest") ShortFormRegisterAdminRequest registerAdminRequest,
+                        @Param("thumbnailS3Url") String thumbnailS3Url,
                         @Param("shortFormVideoS3Url") String shortFormVideoS3Url);
 
     List<ShortFormListAdminResponse> selectShortFormList(@Param("branchId") Long branchId,

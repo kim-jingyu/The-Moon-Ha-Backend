@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
  * ----------  --------    ---------------------------
  * 2024.08.29  	최유경       최초 생성
  * 2024.08.30   최유경       숏폼 조회
+ * 2024.09.05   최유경       숏폼 썸네일 등록
  * </pre>
  */
 @Service
@@ -37,15 +38,19 @@ public class AdminShortFormServiceImpl implements AdminShortFormService {
 
     @Override
     @Transactional
-    public void addShortForm(ShortFormRegisterAdminRequest shortFormRegisterAdminRequest, MultipartFile shortFormVideoFile) {
+    public void addShortForm(ShortFormRegisterAdminRequest shortFormRegisterAdminRequest, MultipartFile thumbnailFile, MultipartFile shortFormVideoFile) {
         try{
             // S3에 업로드
+            String thumbnailS3Url = null;
             String shortFormVideoS3Url = null;
+            if(shortFormVideoFile!=null)
+                thumbnailS3Url = s3Service.saveFile(shortFormVideoFile, "shortform");
+
             if(shortFormVideoFile!=null)
                 shortFormVideoS3Url = s3Service.saveFile(shortFormVideoFile, "shortform");
 
             // 데이터베이스 저장
-            if(adminShortFormMapper.insertShortForm(shortFormRegisterAdminRequest, shortFormVideoS3Url)!=1)
+            if(adminShortFormMapper.insertShortForm(shortFormRegisterAdminRequest, thumbnailS3Url, shortFormVideoS3Url)!=1)
                 throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
         } catch (IOException e){

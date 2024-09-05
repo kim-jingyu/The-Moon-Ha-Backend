@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
  * ----------  --------    ---------------------------
  * 2024.08.29  	최유경       최초 생성
  * 2024.08.30   최유경       어드민 숏폼 조회
+ * 2024.09.05   최유경       숏폼 썸네일 등록
  * </pre>
  */
 @RestController
@@ -39,9 +40,10 @@ public class AdminShortFormController {
 
     @PostMapping("/register")
     public ResponseEntity<CommonResponse> ShortFormAdd(@RequestPart("registerRequest") ShortFormRegisterAdminRequest registerRequest,
-                                                    @RequestPart(value="shortFormVideoFile", required=false) MultipartFile shortFormVideoFile){
+                                                       @RequestPart(value="thumbnailFile", required=false) MultipartFile thumbnailFile,
+                                                       @RequestPart(value="shortFormVideoFile", required=false) MultipartFile shortFormVideoFile){
         log.info("/admin/shortform/register : {}", registerRequest.toString());
-        adminShortFormService.addShortForm(registerRequest, shortFormVideoFile);
+        adminShortFormService.addShortForm(registerRequest, thumbnailFile, shortFormVideoFile);
 
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_SHORTFROM_REGISTER_SUCCESS.getMessage()));
     }
