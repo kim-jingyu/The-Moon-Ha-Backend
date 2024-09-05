@@ -45,12 +45,12 @@ public class FieldController {
 
     /**
      * 분야별 한 입 콘텐츠 상세 조회 API
-     * @param id
+     * @param fieldId
      * @return 분야별 한 입 콘텐츠
      */
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<FieldDetailResponse> retrieveFieldContent(@PathVariable Long id) {
-        return ResponseEntity.ok(fieldService.getFieldContent(id));
+    @GetMapping(value = "/{fieldId}")
+    public ResponseEntity<FieldDetailResponse> retrieveFieldContent(@PathVariable Long fieldId) {
+        return ResponseEntity.ok(fieldService.getFieldContent(fieldId));
     }
 
     /**

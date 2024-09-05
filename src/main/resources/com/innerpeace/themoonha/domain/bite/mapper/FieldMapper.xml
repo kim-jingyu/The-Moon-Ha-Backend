@@ -84,19 +84,19 @@
                 WHEN f.content_url LIKE '%/image/%' THEN 1
                 ELSE 0
             END as contentIsImage,
-            ba.title as title,
+            f.title as title,
             m.profile_img_url AS profileImageUrl,
             m.name AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             field f
         JOIN
-            member m ON ba.member_id = m.member_id
+            member m ON f.member_id = m.member_id
         LEFT JOIN
             field_hashtag fh ON f.field_id = fh.field_id
         LEFT JOIN
             hashtag h ON fh.hashtag_id = h.hashtag_id
-        WHERE field_id = #{fieldId}
+        WHERE f.field_id = #{fieldId}
         GROUP BY
             f.content_url,
             f.title,
