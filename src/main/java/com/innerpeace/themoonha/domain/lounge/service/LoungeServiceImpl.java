@@ -108,7 +108,7 @@ public class LoungeServiceImpl implements LoungeService {
     }
 
     /**
-     * 라운지 게시물 수정
+     * 라운지 게시물 등록
      * @param loungePostRequest
      * @param memberId
      * @param loungePostImgs

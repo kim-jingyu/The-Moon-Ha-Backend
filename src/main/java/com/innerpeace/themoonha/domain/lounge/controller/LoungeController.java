@@ -44,7 +44,7 @@ public class LoungeController {
     @GetMapping("/list")
     public ResponseEntity<List<LoungeListResponse>> loungeList() {
         Long memberId = 1L; // 임시 memberId
-        String role = "ROLE_MEMBER";
+        String role = "ROLE_TUTOR";
         return ResponseEntity.ok(loungeService.findLoungeList(memberId, role));
     }
 

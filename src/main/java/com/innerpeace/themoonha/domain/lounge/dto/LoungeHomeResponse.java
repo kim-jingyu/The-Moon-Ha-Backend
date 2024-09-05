@@ -32,8 +32,10 @@ public class LoungeHomeResponse {
     public static LoungeHomeResponse of(LoungeInfoDTO loungeInfo,List<LoungePostDTO> loungePostList,
                                         List<AttendanceDTO> attendanceList, List<LoungeMemberDTO> loungeMemberList) {
 
+        // 공지 게시글 리스트 생성
         List<LoungePostDTO> loungeNoticePostList = loungePostList.stream()
                 .filter(LoungePostDTO::isNoticeYn)
+                .map(post -> LoungePostDTO.of(post, null))
                 .collect(Collectors.toList());
 
         return LoungeHomeResponse.builder()
