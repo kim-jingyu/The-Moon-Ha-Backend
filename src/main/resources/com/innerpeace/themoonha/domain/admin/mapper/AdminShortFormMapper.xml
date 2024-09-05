@@ -13,19 +13,21 @@
  * ==========  =========    =========
  * 2024.08.29  	최유경        최초 생성
  * 2024.08.30  	최유경        숏폼 조회
+ * 2024.09.05   최유경       숏폼 썸네일 등록
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminShortFormMapper">
 
     <insert id="insertShortForm" >
         <![CDATA[
-        INSERT INTO short_form (short_form_id, lesson_id, name, video_url, start_date, expire_date)
+        INSERT INTO short_form (short_form_id, lesson_id, name, video_url, start_date, expire_date, thumbnail_url)
         VALUES (short_form_seq.nextval,
                 #{registerRequest.lessonId},
                 #{registerRequest.name},
                 #{shortFormVideoS3Url},
                 #{registerRequest.startDate},
-                #{registerRequest.expireDate})
+                #{registerRequest.expireDate},
+                #{thumbnailS3Url})
         ]]>
     </insert>
 
