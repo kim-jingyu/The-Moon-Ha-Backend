@@ -22,6 +22,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FieldListResponse {
+    private Long categoryId;
+    private String category;
+    private Long fieldId;
     private String thumbnailUrl;
     private String title;
     private String profileImgUrl;

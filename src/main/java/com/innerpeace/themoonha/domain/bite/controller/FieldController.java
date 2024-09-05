@@ -45,12 +45,12 @@ public class FieldController {
 
     /**
      * 분야별 한 입 콘텐츠 상세 조회 API
-     * @param id
+     * @param fieldId
      * @return 분야별 한 입 콘텐츠
      */
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<FieldDetailResponse> retrieveFieldContent(@PathVariable Long id) {
-        return ResponseEntity.ok(fieldService.getFieldContent(id));
+    @GetMapping(value = "/{fieldId}")
+    public ResponseEntity<FieldDetailResponse> retrieveFieldContent(@PathVariable Long fieldId) {
+        return ResponseEntity.ok(fieldService.getFieldContent(fieldId));
     }
 
     /**
@@ -62,7 +62,7 @@ public class FieldController {
      * @throws IOException
      */
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<CommonResponse> makeBeforeAfter(@RequestPart FieldRequest fieldRequest,
+    public ResponseEntity<CommonResponse> makeField(@RequestPart FieldRequest fieldRequest,
                                                           @RequestPart MultipartFile thumbnail,
                                                           @RequestPart MultipartFile content) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -75,7 +75,7 @@ public class FieldController {
      * @return 타이틀 기반으로 검색된 분야별 한 입 콘텐츠 목록
      */
     @GetMapping("/search/title")
-    public ResponseEntity<List<FieldSearchResponse>> searchBeforeAfterByTitle(@RequestParam String keyword) {
+    public ResponseEntity<List<FieldSearchResponse>> searchFieldByTitle(@RequestParam String keyword) {
         return ResponseEntity.ok(fieldService.findFieldByTitle(keyword));
     }
 
@@ -85,7 +85,7 @@ public class FieldController {
      * @return 해시태그 기반으로 검색된 분야별 한 입 콘텐츠 목록
      */
     @GetMapping("/search/hashtag")
-    public ResponseEntity<List<FieldSearchResponse>> searchBeforeAfterByHashtag(@RequestParam(value = "tag") List<String> hashtags) {
+    public ResponseEntity<List<FieldSearchResponse>> searchFieldByHashtag(@RequestParam(value = "tag") List<String> hashtags) {
         return ResponseEntity.ok(fieldService.findFieldByHashTags(hashtags));
     }
 }

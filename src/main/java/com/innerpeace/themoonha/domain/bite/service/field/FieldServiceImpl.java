@@ -52,12 +52,12 @@ public class FieldServiceImpl implements FieldService {
 
     /**
      * 분야별 한 입 콘텐츠 상세 조회
-     * @param beforeAfterId
+     * @param fieldId
      * @return 분야별 한 입 콘텐츠
      */
     @Override
-    public FieldDetailResponse getFieldContent(Long beforeAfterId) {
-        return fieldMapper.findFieldDetail(beforeAfterId)
+    public FieldDetailResponse getFieldContent(Long fieldId) {
+        return fieldMapper.findFieldDetail(fieldId)
                 .orElseThrow(() -> new CustomException(FIELD_NOT_FOUND));
     }
 
