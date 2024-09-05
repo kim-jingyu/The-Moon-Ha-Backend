@@ -52,8 +52,8 @@ public class DateTimeUtil {
     }
 
     private static String formatDate(LocalDateTime time) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 a hh시 mm분", Locale.KOREAN);
-        return time.format(dateFormatter).replace("AM", "오전").replace("PM", "오후");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm", Locale.KOREAN);
+        return time.format(dateFormatter);
     }
 }
 
