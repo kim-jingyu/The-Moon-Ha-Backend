@@ -55,9 +55,9 @@ public class AdminLessonServiceImpl implements AdminLessonService {
         String thumbnailS3Url = null;
         String previewS3Url = null;
         try{
-            if(!thumbnailFile.isEmpty())
+            if(thumbnailFile!=null && !thumbnailFile.isEmpty())
                 thumbnailS3Url = s3Service.saveFile(thumbnailFile, "lesson/image");
-            if(!previewVideoFile.isEmpty())
+            if(previewVideoFile!=null && !previewVideoFile.isEmpty())
                 previewS3Url = s3Service.saveFile(previewVideoFile, "lesson/preview");
         } catch (IOException e){
             throw  new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
