@@ -3,16 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--
- * 어드민 문화 공방 관리 매퍼 XML
+ * 어드민 세팅 데이터 매퍼 XML
  * @author 최유경
- * @since 2024.08.30
+ * @since 2024.09.05
  * @version 1.0
  *
  * <pre>
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
- * 2024.08.30  	최유경        최초 생성
- * 2024.08.31  	최유경        프롤로그 테마 기획 변경
+ * 2024.09.05  	최유경        최초 생성
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminMapper">
@@ -27,7 +26,7 @@
         <collection property="items" ofType="com.innerpeace.themoonha.domain.admin.dto.LessonBranchDTO$LessonIndexDTO" resultMap="lessonIndexResultMap"/>
     </resultMap>
 
-    <!-- 강좌 조회 -->
+    <!-- 지점별 강좌 조회 -->
     <select id="selectLessonAndBranchList" resultMap="lessonBranchResultMap">
         <![CDATA[
         SELECT
@@ -41,30 +40,5 @@
         ORDER BY
             l.title ASC
         ]]>
-    </select>
-
-    <!-- 프롤로그 조회 -->
-    <select id="selectPrologueListByTheme" resultType="com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse">
-        SELECT
-            p.prologue_id,
-            p.prologue_theme_id,
-            p.title,
-            p.video_url,
-            NVL(p.updated_at,p.created_at) AS latest_update_date,
-            p.thumbnail_url,
-            NVL(lc.cnt,0) AS like_cnt
-        FROM
-            prologue p
-                LEFT JOIN
-            (SELECT
-                 COUNT(like_cnt_id) AS cnt,
-                 prologue_id
-             FROM like_cnt
-             WHERE prologue_id IS NOT NULL
-             GROUP BY prologue_id
-            ) lc
-            ON p.prologue_id = lc.prologue_id
-        WHERE
-            p.prologue_theme_id = #{prologueThemeId}
     </select>
 </mapper>
