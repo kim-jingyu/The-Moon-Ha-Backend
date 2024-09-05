@@ -43,12 +43,13 @@ public class AdminShortFormServiceImpl implements AdminShortFormService {
             // S3에 업로드
             String thumbnailS3Url = null;
             String shortFormVideoS3Url = null;
-            if(shortFormVideoFile!=null)
-                thumbnailS3Url = s3Service.saveFile(shortFormVideoFile, "shortform");
+            if(thumbnailFile!=null  && !thumbnailFile.isEmpty())
+                thumbnailS3Url = s3Service.saveFile(thumbnailFile, "shortform");
 
-            if(shortFormVideoFile!=null)
+            if(shortFormVideoFile!=null && !shortFormVideoFile.isEmpty())
                 shortFormVideoS3Url = s3Service.saveFile(shortFormVideoFile, "shortform");
-
+            log.info("thumbnailS3Url : ", thumbnailS3Url);
+            log.info("shortFormVideoS3Url : ", shortFormVideoS3Url);
             // 데이터베이스 저장
             if(adminShortFormMapper.insertShortForm(shortFormRegisterAdminRequest, thumbnailS3Url, shortFormVideoS3Url)!=1)
                 throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
