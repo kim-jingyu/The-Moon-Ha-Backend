@@ -6,7 +6,7 @@ import org.aspectj.lang.reflect.DeclareErrorOrWarning;
 
 @Getter
 @RequiredArgsConstructor
-public enum SuccessCode {
+public enum SuccessCode implements StatusCode {
     CART_LESSON_ADDED_SUCCESS(200, "강좌가 성공적으로 장바구니에 담겼습니다"),
     SUGANG_APPLICATION_SUCCESS(200, "수강신청이 완료되었습니다"),
     SUGGESTION_WRITE_SUCCESS(200, "제안합니다 댓글 작성에 성공했습니다"),
@@ -24,7 +24,8 @@ public enum SuccessCode {
     LOUNGE_COMMENT_DELETE_SUCCESS(200, "라운지 댓글이 삭제되었습니다."),
     ATTENDANCE_START_SUCCESS(200, "출석 시작에 성공하였습니다."),
     ATTENDANCE_UPDATE_SUCCESS(200, "출석 정보 수정에 성공하였습니다."),
-    ADMIN_PROLOGUE_REGISTER_SUCCESS(200, "프롤로그 등록에 성공하였습니다.");
+    ADMIN_PROLOGUE_REGISTER_SUCCESS(200, "프롤로그 등록에 성공하였습니다."),
+    LIVE_LESSON_END_SUCCESS(200, "실시간 강좌 종료에 성공하였습니다");
 
     private final int status;
     private final String message;

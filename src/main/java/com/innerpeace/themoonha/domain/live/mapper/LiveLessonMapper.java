@@ -23,7 +23,9 @@ import java.util.Optional;
  */
 public interface LiveLessonMapper {
     List<LiveLessonResponse> findLiveLessonsByMember(Long memberId);
+    List<LiveLessonResponse> findLiveLessonsByMemberOrderByTitle(Long memberId);
     List<LiveLessonResponse> findLiveLessonsMemberDoesNotHave(Long memberId);
+    List<LiveLessonResponse> findLiveLessonsMemberDoesNotHaveOrderByTitle(Long memberId);
     Optional<LiveLessonDetailResponse> findLiveLessonDetailById(Long liveId, Long memberId);
     void insertLiveLesson(LiveLesson liveLesson);
     Optional<LiveLesson> findLiveLessonById(Long liveId);

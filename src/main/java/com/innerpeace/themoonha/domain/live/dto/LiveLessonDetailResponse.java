@@ -30,6 +30,7 @@ public class LiveLessonDetailResponse {
     private String title;
     private String description;
     private String streamKey;
+    private String profileImgUrl;
     private String instructorName;
     private String thumbnailUrl;
     private String broadcastUrl;

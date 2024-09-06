@@ -18,6 +18,7 @@
         <result property="liveId" column="liveId" />
         <result property="title" column="title" />
         <result property="streamKey" column="streamKey" />
+        <result property="profileImgUrl" column="profileImgUrl" />
         <result property="instructorName" column="instructorName" />
         <result property="thumbnailUrl" column="thumbnailUrl" />
         <result property="broadcastUrl" column="broadcastUrl" />
@@ -32,6 +33,7 @@
         <result property="title" column="title" />
         <result property="description" column="description" />
         <result property="streamKey" column="streamKey" />
+        <result property="profileImgUrl" column="profileImgUrl" />
         <result property="instructorName" column="instructorName" />
         <result property="thumbnailUrl" column="thumbnailUrl" />
         <result property="broadcastUrl" column="broadcastUrl" />
@@ -43,27 +45,27 @@
 
     <!-- 실시간 강좌 정보 -->
     <resultMap id="LiveLessonMap" type="com.innerpeace.themoonha.domain.live.vo.LiveLesson">
-        <id property="livedId" column="livedId" />
-        <result property="memberId" column="memberId" />
-        <result property="lessonId" column="lessonId" />
+        <id property="liveId" column="live_id" />
+        <result property="memberId" column="member_id" />
+        <result property="lessonId" column="lesson_id" />
         <result property="title" column="title" />
         <result property="description" column="description" />
         <result property="status" column="status" />
-        <result property="streamKey" column="streamKey" />
-        <result property="broadcastUrl" column="broadcastUrl" />
-        <result property="thumbnailUrl" column="thumbnailUrl" />
-        <result property="createdAt" column="createdAt" />
-        <result property="deletedAt" column="deletedAt" />
-        <result property="updatedAt" column="updatedAt" />
+        <result property="streamKey" column="stream_key" />
+        <result property="broadcastUrl" column="broadcast_url" />
+        <result property="thumbnailUrl" column="thumbnail_url" />
+        <result property="createdAt" column="created_at" />
+        <result property="deletedAt" column="deleted_at" />
+        <result property="updatedAt" column="updated_at" />
     </resultMap>
-
 
     <insert id="insertLiveLesson" parameterType="com.innerpeace.themoonha.domain.live.vo.LiveLesson">
         <selectKey keyProperty="liveId" resultType="Long" order="BEFORE">
-            SELECT seq_live_lesson.nextval FROM dual
+            SELECT live_lesson_seq.nextval FROM dual
         </selectKey>
 
         INSERT INTO live_lesson (
+            live_id,
             lesson_id,
             member_id,
             title,
@@ -84,8 +86,8 @@
             #{streamKey},
             #{broadcastUrl},
             #{thumbnailUrl},
-            SYSDATE,
-            SYSDATE
+            #{createdAt},
+            #{updatedAt}
         )
     </insert>
 
@@ -97,50 +99,93 @@
 
     <select id="findLiveLessonsByMember" resultMap="LiveLessonResponseMap">
         SELECT
-            l.lived_id AS liveId,
+            l.live_id AS liveId,
             l.title AS title,
             l.stream_key AS streamKey,
+            m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
-            TIMESTAMPDIFF(MINUTE, l.created_at, NOW()) AS minutesAgo
+            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
         WHERE
             l.status = 'ON_AIR'
             AND l.member_id = #{memberId}
+        ORDER BY l.lesson_id DESC
     </select>
 
-    <select id="findLiveLessonsMemberDoesNotHave" resultMap="LiveLessonResponseMap">
+    <select id="findLiveLessonsByMemberOrderByTitle" resultMap="LiveLessonResponseMap">
         SELECT
-            l.lived_id AS liveId,
+            l.live_id AS liveId,
             l.title AS title,
             l.stream_key AS streamKey,
+            m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
-            TIMESTAMPDIFF(MINUTE, l.created_at, NOW()) AS minutesAgo
+            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
+        FROM live_lesson l
+        JOIN member m ON l.member_id = m.member_id
+        WHERE
+            l.status = 'ON_AIR'
+            AND l.member_id = #{memberId}
+        ORDER BY l.title ASC
+    </select>
+
+    <select id="findLiveLessonsMemberDoesNotHave" resultMap="LiveLessonResponseMap">
+        SELECT
+            l.live_id AS liveId,
+            l.title AS title,
+            l.stream_key AS streamKey,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS instructorName,
+            l.thumbnail_url AS thumbnailUrl,
+            l.broadcast_url AS broadcastUrl,
+            l.status AS status,
+            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
         WHERE
             l.status = 'ON_AIR'
             AND l.member_id != #{memberId}
+        ORDER BY l.lesson_id DESC
+    </select>
+
+    <select id="findLiveLessonsMemberDoesNotHaveOrderByTitle" resultMap="LiveLessonResponseMap">
+        SELECT
+            l.live_id AS liveId,
+            l.title AS title,
+            l.stream_key AS streamKey,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS instructorName,
+            l.thumbnail_url AS thumbnailUrl,
+            l.broadcast_url AS broadcastUrl,
+            l.status AS status,
+            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
+        FROM live_lesson l
+        JOIN member m ON l.member_id = m.member_id
+        WHERE
+            l.status = 'ON_AIR'
+            AND l.member_id != #{memberId}
+        ORDER BY l.title ASC
     </select>
 
     <select id="findLiveLessonDetailById" resultMap="LiveLessonDetailResponseMap">
         SELECT
-            l.lived_id AS liveId,
+            l.live_id AS liveId,
             l.title AS title,
             l.description AS description,
             l.stream_key AS streamKey,
+            m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
             l.created_at AS createdAt,
-            TIMESTAMPDIFF(MINUTE, l.created_at, NOW()) AS minutesAgo,
+            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo,
             CASE
                 WHEN l.member_id = #{memberId} THEN 1
                 ELSE 0
@@ -152,7 +197,7 @@
 
     <select id="findLiveLessonById" resultMap="LiveLessonMap">
         SELECT
-            lived_id AS liveId,
+            live_id AS liveId,
             member_id AS memberId,
             lesson_id AS lessonId,
             title AS title,

@@ -49,10 +49,10 @@ public class LiveLesson {
 
     private static final String SHA_256 = "sha-256";
 
-    public static LiveLesson createLiveLesson(LiveLessonRequest request, String thumbnailUrl) {
+    public static LiveLesson createLiveLesson(Long memberId, LiveLessonRequest request, String thumbnailUrl) {
         String generatedStreamKey = generateStreamKey();
         return LiveLesson.builder()
-                .memberId(request.getMemberId())
+                .memberId(memberId)
                 .lessonId(request.getLessonId())
                 .title(request.getTitle())
                 .description(request.getDescription())
@@ -60,6 +60,8 @@ public class LiveLesson {
                 .streamKey(generatedStreamKey)
                 .broadcastUrl("/hls/" + generatedStreamKey +".m3u8")
                 .thumbnailUrl(thumbnailUrl)
+                .createdAt(new Date())
+                .updatedAt(new Date())
                 .build();
     }
 

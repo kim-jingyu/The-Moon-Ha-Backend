@@ -87,9 +87,9 @@ public class FieldServiceImpl implements FieldService {
             saveFieldContent(fieldRequest, fieldDTO);
             return CommonResponse.from(String.valueOf(fieldDTO.getFieldId()));
         } catch (IOException e) {
+            deleteS3Files(thumbnail.getOriginalFilename(), content.getOriginalFilename(), contentPath);
             throw new CustomException(S3_UPLOAD_FAILED);
         } catch (Exception e) {
-            deleteS3Files(thumbnail.getOriginalFilename(), content.getOriginalFilename(), contentPath);
             throw new CustomException(FIELD_CREATION_FAILED);
         }
     }

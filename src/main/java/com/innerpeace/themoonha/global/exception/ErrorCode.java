@@ -1,11 +1,12 @@
 package com.innerpeace.themoonha.global.exception;
 
+import com.innerpeace.themoonha.global.vo.StatusCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum ErrorCode implements StatusCode {
     MEMBER_NOT_FOUND(404, "존재하지 않은 유저입니다."),
     LESSON_NOT_FOUND(404, "강좌가 존재하지 않습니다."),
     SHORTFORM_NOT_FOUND(404, "숏폼이 존재하지 않습니다."),
@@ -39,9 +40,10 @@ public enum ErrorCode {
     BEFORE_AFTER_NOT_FOUND(404, "Before&After 콘텐츠 정보를 찾을 수 없습니다."),
     FIELD_NOT_FOUND(404, "분야별 한 입 콘텐츠 정보를 찾을 수 없습니다."),
     LIVE_STREAM_FAILED(500, "스트리밍 데이터 전송에 실패했습니다."),
-    LIVE_CHAT_MESSAGE_NOT_FOUND(404, "채팅 메시지를 찾을 수 없습니다.");
+    LIVE_CHAT_MESSAGE_NOT_FOUND(404, "채팅 메시지를 찾을 수 없습니다."),
+    LIVE_LESSON_END_FAILED(400, "실시간 강좌 종료에 실패했습니다."),
+    LIVE_LESSON_CREATION_FAILED(400, "실시간 강좌 열기에 실패했습니다.");
 
     private final int status;
     private final String message;
-
 }
