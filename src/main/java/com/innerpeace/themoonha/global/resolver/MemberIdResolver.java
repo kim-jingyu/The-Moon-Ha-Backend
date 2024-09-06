@@ -10,6 +10,18 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+/**
+ * 어노테이션 resolver
+ * @author 최유경
+ * @since 2024.09.06
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.06  	최유경       최초 생성
+ * </pre>
+ */
 @Component
 @Slf4j
 public class MemberIdResolver implements HandlerMethodArgumentResolver {

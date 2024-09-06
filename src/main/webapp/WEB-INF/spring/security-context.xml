@@ -21,7 +21,7 @@
     <beans:bean id="corsFilter" class="com.innerpeace.themoonha.global.config.CORSFilter"/>
 
     <http pattern="/auth/**" security="none"></http>
-<!--    <http pattern="/lounge/**" security="none"></http>-->
+    <http pattern="/lounge/**" security="none"></http>
     <http pattern="/lesson/**" security="none"></http>
     <http pattern="/bite/**" security="none"></http>
     <http pattern="/craft/**" security="none"></http>

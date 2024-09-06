@@ -31,6 +31,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * ----------  --------    ---------------------------
  * 2024.08.26  	최유경       최초 생성
  * 2024.08.27   최유경       만료된 토큰 재발급 로직
+ * 2024.09.06   최유경       MemberId 어노테이션 추가
  * </pre>
  */
 
