@@ -187,7 +187,7 @@ public class JwtTokenProvider {
      * @param token accessToken
      * @return boolean
      */
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         try{
             log.info("validateToken : {}", token);
             Jwts.parserBuilder()
@@ -221,18 +221,21 @@ public class JwtTokenProvider {
         String accessToken = null;
         String refreshToken = null;
 
-        // AccessToken 추출
-        String bearerToken = request.getHeader("Authorization");
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer"))
-             accessToken = bearerToken.substring(7);
+//        // AccessToken 추출
+//        String bearerToken = request.getHeader("Authorization");
+//        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer"))
+//             accessToken = bearerToken.substring(7);
 
         // RefreshToken 추출
         for(Cookie cookie : request.getCookies()){
+            if("accessToken".equals(cookie.getName())) {
+                accessToken = cookie.getValue();
+            }
             if ("refreshToken".equals(cookie.getName())) {
                 refreshToken = cookie.getValue();
             }
         }
-
+        log.info("resolveToken : {}, {}" , accessToken, refreshToken);
         return JwtDTO.of(accessToken,refreshToken);
     }
 

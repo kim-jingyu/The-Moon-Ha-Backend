@@ -82,16 +82,19 @@ public class AuthServiceImpl implements AuthService{
         // 1. 회원인지 확인하기
         Claims claims = jwtTokenProvider.parseClaims(refreshToken);
         String memberId = claims.getSubject();
-
+        log.info("regenerateToken : memberId : {}", memberId);
         Member member =  authMapper.selectByMemberId(Long.valueOf(memberId))
                 .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 2. AccessToken 재발급하기
+        log.info("regenerateToken : AccessToken 재발급하기" );
+        log.info("regenerateToken : {}", member.toString());
         JwtDTO jwtDTO = jwtTokenProvider.generateToken(member);
 
         if(jwtDTO==null)
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
+        log.info("regenerateToken 발급 완료");
         return jwtDTO;
     }
 }

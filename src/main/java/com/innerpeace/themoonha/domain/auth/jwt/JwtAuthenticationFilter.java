@@ -75,20 +75,23 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 filterChain.doFilter(request,response);
             }
-        } catch (ExpiredJwtException e){ // accessToken, refreshToken 재발급
+        } catch (Exception e){ // accessToken, refreshToken 재발급
+            log.info("만료만료만료");
             String refreshToken = jwtDTO.getRefreshToken();
             if(refreshToken != null && jwtTokenProvider.validateToken(refreshToken)){
                 JwtDTO reDTO = authService.regenerateToken(refreshToken);
 
                 // 새로운 AccessToken 을 헤더에 추가
-                ((HttpServletResponse) response).setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + reDTO.getAccessToken());
+//                ((HttpServletResponse) response).setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + reDTO.getAccessToken());
+                Cookie accessTokenCookie = AuthUtil.createJwtTokenCookie("accessToken", reDTO.getAccessToken());
 
                 // RefreshToken Cookie 추가
                 Cookie refreshTokenCookie = AuthUtil.createJwtTokenCookie("refreshToken", reDTO.getRefreshToken());
+                ((HttpServletResponse) response).addCookie(accessTokenCookie);
                 ((HttpServletResponse) response).addCookie(refreshTokenCookie);
 
                 // Security Context 에 저장
-                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                Authentication authentication = jwtTokenProvider.getAuthentication(reDTO.getAccessToken());
 
                 log.info("[][] JwtAuthenticationFilter : {}", authentication.getAuthorities());
                 // 인증 정보를 컨텍스트에 저장

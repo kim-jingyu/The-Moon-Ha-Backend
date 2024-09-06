@@ -50,16 +50,16 @@ public class AuthController {
         JwtDTO jwtDTO = authService.login(loginRequest);
 
         // 2. AccessToken Header 추가
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwtDTO.getAccessToken());
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwtDTO.getAccessToken());
+        Cookie accessTokenCookie = AuthUtil.createJwtTokenCookie("accessToken", jwtDTO.getAccessToken());
+        response.addCookie(accessTokenCookie);
 
         // 3. RefreshToken Cookie 추가
         Cookie refreshTokenCookie = AuthUtil.createJwtTokenCookie("refreshToken", jwtDTO.getRefreshToken());
         response.addCookie(refreshTokenCookie);
 
         return ResponseEntity
-                .ok()
-                .headers(headers)
-                .body(CommonResponse.from(SuccessCode.AUTH_LOGIN_SUCCESS.getMessage()));
+                .ok(CommonResponse.from(SuccessCode.AUTH_LOGIN_SUCCESS.getMessage()));
     }
 }

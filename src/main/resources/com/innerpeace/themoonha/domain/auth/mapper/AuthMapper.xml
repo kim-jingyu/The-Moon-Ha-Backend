@@ -44,4 +44,21 @@
                 username=#{username}
         ]]>
     </select>
+
+    <select id="selectByMemberId" resultType="com.innerpeace.themoonha.global.entity.Member">
+        <![CDATA[
+        select
+            member_id,
+            username,
+            password,
+            name,
+            member_role,
+            created_at,
+            deleted_at
+        from
+            member
+        where
+            member_id=#{memberId}
+        ]]>
+    </select>
 </mapper>
