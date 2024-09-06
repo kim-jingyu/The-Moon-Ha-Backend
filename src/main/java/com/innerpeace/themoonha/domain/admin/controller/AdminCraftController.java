@@ -7,6 +7,7 @@ import com.innerpeace.themoonha.domain.admin.service.AdminCraftService;
 import com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.util.Criteria;
+import com.innerpeace.themoonha.global.util.MemberId;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +53,9 @@ public class AdminCraftController {
     @PostMapping("/prologue/register")
     public ResponseEntity<CommonResponse> PrologueAdd(@RequestPart("registerRequest") PrologueRegisterAdminRequest registerAdminRequest,
                                                       @RequestPart("thumbnailFile") List<MultipartFile> thumbnailFile,
-                                                      @RequestPart("prologueVideoFile")List<MultipartFile> prologueVideoFile){
-        adminCraftService.addPrologue(registerAdminRequest, thumbnailFile, prologueVideoFile);
+                                                      @RequestPart("prologueVideoFile")List<MultipartFile> prologueVideoFile,
+                                                      @MemberId Long memberId){
+        adminCraftService.addPrologue(memberId, registerAdminRequest, thumbnailFile, prologueVideoFile);
 
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_PROLOGUE_REGISTER_SUCCESS.getMessage()));
     }

@@ -47,7 +47,7 @@
 
     <select id="selectByMemberId" resultType="com.innerpeace.themoonha.global.entity.Member">
         <![CDATA[
-        select
+        SELECT
             member_id,
             username,
             password,
@@ -55,10 +55,11 @@
             member_role,
             created_at,
             deleted_at
-        from
+        FROM
             member
-        where
+        WHERE
             member_id=#{memberId}
+            AND deleted_at IS NULL
         ]]>
     </select>
 </mapper>

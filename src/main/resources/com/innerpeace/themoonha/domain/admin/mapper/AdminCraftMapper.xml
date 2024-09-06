@@ -20,7 +20,7 @@
     <!-- 테마 등록 및 프롤로그 등록 -->
     <insert id="insertPrologue">
         CALL insert_prologue_theme_and_prologue(
-                #{registerRequest.memberId, mode=IN, jdbcType=NUMERIC},
+                #{memberId, mode=IN, jdbcType=NUMERIC},
                 #{registerRequest.name, mode=IN, jdbcType=VARCHAR},
                 #{registerRequest.description, mode=IN, jdbcType=VARCHAR},
                 #{registerRequest.videoCnt, mode=IN, jdbcType=NUMERIC},
