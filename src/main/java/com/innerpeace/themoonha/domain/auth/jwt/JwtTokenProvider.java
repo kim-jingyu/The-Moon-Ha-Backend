@@ -163,6 +163,25 @@ public class JwtTokenProvider {
     }
 
     /**
+     * JWT Claim 추출
+     *
+     * @apiNote JWT 토큰 안의 Claim 정보를 추출
+     * @param token
+     * @return
+     */
+    public Claims parseMemberId(String token){
+        try{
+            return Jwts.parserBuilder()
+                    .setSigningKey(this.getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e){
+            return e.getClaims();
+        }
+    }
+
+    /**
      * JWT 검증
      *
      * @param token accessToken
