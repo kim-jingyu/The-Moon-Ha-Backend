@@ -26,7 +26,7 @@
     <http pattern="/bite/**" security="none"></http>
     <http pattern="/craft/**" security="none"></http>
     <http pattern="/live/**" security="none"></http>
-    <http pattern="/admin/**" security="none"></http>
+<!--    <http pattern="/admin/**" security="none"></http>-->
 
     <!-- HTTP 보안 설정 -->
     <http auto-config="true" use-expressions="true">
@@ -37,7 +37,7 @@
         <custom-filter ref="jwtAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
 
         <!-- 인터셉트 URL 설정 -->
-<!--        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>-->
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/tutor/**" access="hasRole('ROLE_TUTOR')"/>
         <intercept-url pattern="/**" access="permitAll"/>
 

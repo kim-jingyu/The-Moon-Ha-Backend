@@ -24,7 +24,8 @@ import org.springframework.security.core.parameters.P;
 @Mapper
 public interface AdminCraftMapper {
 
-    void insertPrologue(@Param("registerRequest")PrologueRegisterAdminRequest registerAdminRequest,
+    void insertPrologue(@Param("memberId") Long memberId,
+                        @Param("registerRequest")PrologueRegisterAdminRequest registerAdminRequest,
                         @Param("thumbnailS3Url") List<String> thumbnailS3Url,
                         @Param("prologueS3Url") List<String> prologueS3Url);
 

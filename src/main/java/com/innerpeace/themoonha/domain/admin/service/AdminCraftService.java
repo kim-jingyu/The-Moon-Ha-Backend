@@ -31,7 +31,8 @@ public interface AdminCraftService {
      * @param thumbnailFile 썸네일 사진 리스트
      * @param prologueVideoFil 영상 파일 리스트
      */
-    void addPrologue(PrologueRegisterAdminRequest prologueRegisterAdminRequest,
+    void addPrologue(Long memberId,
+                     PrologueRegisterAdminRequest prologueRegisterAdminRequest,
                      List<MultipartFile> thumbnailFile,
                      List<MultipartFile> prologueVideoFil);
 

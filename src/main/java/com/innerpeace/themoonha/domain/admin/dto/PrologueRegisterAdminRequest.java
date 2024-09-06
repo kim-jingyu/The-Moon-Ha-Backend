@@ -27,7 +27,7 @@ import lombok.ToString;
 @ToString
 public class PrologueRegisterAdminRequest {
     private String name;
-    private Long memberId;
+//    private Long memberId;
     private String description;
     private int videoCnt;
     private Date startDate;

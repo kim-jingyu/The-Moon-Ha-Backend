@@ -31,6 +31,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * ----------  --------    ---------------------------
  * 2024.08.26  	최유경       최초 생성
  * 2024.08.27   최유경       만료된 토큰 재발급 로직
+ * 2024.09.06   최유경       MemberId 어노테이션 추가
  * </pre>
  */
 
@@ -54,6 +55,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         // 1. Request Header 에서 JWT 토큰 추출
+        log.info("[][] JwtAuthenticationFilter - Before setting memberId");
         JwtDTO jwtDTO = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         String accessToken = jwtDTO.getAccessToken();
 
@@ -63,29 +65,41 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 Security Context 에 저장
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
-                log.info("JwtAuthenticationFilter : {}", authentication.getAuthorities());
+                log.info("[][] JwtAuthenticationFilter : {}", authentication.getAuthorities());
                 // 해당 요청에 대한 인증 성공 / 실패 및 사용자 정보를 포함한 인증 정보를 컨텍스트에 저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                request.setAttribute("memberId", Long.parseLong(authentication.getName()));
+
+                log.info("[][] JwtAuthenticationFilter - memberId set to: {}", authentication.getName());
+
+                filterChain.doFilter(request,response);
             }
-            filterChain.doFilter(request,response);
-        } catch (ExpiredJwtException e){ // accessToken, refreshToken 재발급
+        } catch (Exception e){ // accessToken, refreshToken 재발급
+            log.info("만료만료만료");
             String refreshToken = jwtDTO.getRefreshToken();
             if(refreshToken != null && jwtTokenProvider.validateToken(refreshToken)){
                 JwtDTO reDTO = authService.regenerateToken(refreshToken);
 
                 // 새로운 AccessToken 을 헤더에 추가
-                ((HttpServletResponse) response).setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + reDTO.getAccessToken());
+//                ((HttpServletResponse) response).setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + reDTO.getAccessToken());
+                Cookie accessTokenCookie = AuthUtil.createJwtTokenCookie("accessToken", reDTO.getAccessToken());
 
                 // RefreshToken Cookie 추가
                 Cookie refreshTokenCookie = AuthUtil.createJwtTokenCookie("refreshToken", reDTO.getRefreshToken());
+                ((HttpServletResponse) response).addCookie(accessTokenCookie);
                 ((HttpServletResponse) response).addCookie(refreshTokenCookie);
 
                 // Security Context 에 저장
-                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                Authentication authentication = jwtTokenProvider.getAuthentication(reDTO.getAccessToken());
 
-                log.info("JwtAuthenticationFilter : {}", authentication.getAuthorities());
+                log.info("[][] JwtAuthenticationFilter : {}", authentication.getAuthorities());
                 // 인증 정보를 컨텍스트에 저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                request.setAttribute("memberId", Long.parseLong(authentication.getName()));
+
+                log.info("[][] JwtAuthenticationFilter - memberId set to: {}", authentication.getName());
 
                 filterChain.doFilter(request,response);
             }
