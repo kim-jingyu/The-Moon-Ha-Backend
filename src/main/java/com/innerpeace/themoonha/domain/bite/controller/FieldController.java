@@ -38,9 +38,18 @@ public class FieldController {
      * 분야별 한 입 전체 콘텐츠 목록 조회 API
      * @return 분야별 한 입 콘텐츠 목록
      */
-    @GetMapping
+    @GetMapping(value = "/by-latest")
     public ResponseEntity<List<FieldListResponse>> retrieveFieldList() {
         return ResponseEntity.ok(fieldService.getFieldList());
+    }
+
+    /**
+     * 분야별 한 입 전체 콘텐츠 목록 조회 API
+     * @return 분야별 한 입 콘텐츠 목록
+     */
+    @GetMapping(value = "/by-title")
+    public ResponseEntity<List<FieldListResponse>> retrieveFieldListOrderByTitle() {
+        return ResponseEntity.ok(fieldService.getFieldListOrderByTitle());
     }
 
     /**

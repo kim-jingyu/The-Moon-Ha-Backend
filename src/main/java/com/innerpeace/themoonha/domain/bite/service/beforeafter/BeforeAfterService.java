@@ -30,4 +30,5 @@ public interface BeforeAfterService {
     CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeThumbnail, MultipartFile afterThumbnail, MultipartFile beforeContent, MultipartFile afterContent);
     List<BeforeAfterSearchResponse> findBeforeAfterByTitle(String keyword);
     List<BeforeAfterSearchResponse> findBeforeAfterByHashTags(List<String> hashtags);
+    List<BeforeAfterListResponse> getBeforeAfterListOrderByTitle();
 }
