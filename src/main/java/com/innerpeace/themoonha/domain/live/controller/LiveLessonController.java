@@ -4,8 +4,6 @@ import com.innerpeace.themoonha.domain.live.dto.LiveLessonDetailResponse;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonRequest;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonStatusResponse;
-import com.innerpeace.themoonha.domain.live.service.LiveLessonEventConsumer;
-import com.innerpeace.themoonha.domain.live.service.LiveLessonEventService;
 import com.innerpeace.themoonha.domain.live.service.LiveLessonService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +33,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class LiveLessonController {
     private final LiveLessonService liveLessonService;
-    private final LiveLessonEventConsumer liveLessonEventConsumer;
-    private final LiveLessonEventService liveLessonEventService;
-
     @GetMapping("/enrolled/by-latest")
     public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithMember() {
         return ResponseEntity.ok(liveLessonService.getLiveLessonsByMember(1L));
@@ -81,29 +76,29 @@ public class LiveLessonController {
 
     @GetMapping("/{liveId}/viewers")
     public ResponseEntity<Integer> getViewersCount(@PathVariable Long liveId) {
-        return ResponseEntity.ok(liveLessonEventConsumer.getViewersCount(liveId));
+        return ResponseEntity.ok(liveLessonService.getViewsCount(liveId));
     }
 
     @GetMapping("/{liveId}/likes")
     public ResponseEntity<Integer> getLLikesCount(@PathVariable Long liveId) {
-        return ResponseEntity.ok(liveLessonEventConsumer.getLikesCount(liveId));
+        return ResponseEntity.ok(liveLessonService.getLikesCount(liveId));
     }
 
     @PostMapping("/{liveId}/join")
     public ResponseEntity<Void> joinLiveLesson(@PathVariable Long liveId) {
-        liveLessonEventService.sendViewerJoinedEvent(liveId, 1L);
+        liveLessonService.joinLiveLesson(liveId, 1L);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{liveId}/leave")
     public ResponseEntity<Void> leaveLiveLesson(@PathVariable Long liveId) {
-        liveLessonEventService.sendViewerLeftEvent(liveId, 1L);
+        liveLessonService.leaveLiveLesson(liveId, 1L);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{liveId}/like")
     public ResponseEntity<Void> likeLiveLesson(@PathVariable Long liveId) {
-        liveLessonEventService.sendLikeEvent(liveId, 1L);
+        liveLessonService.likeLiveLesson(liveId, 1L);
         return ResponseEntity.ok().build();
     }
 

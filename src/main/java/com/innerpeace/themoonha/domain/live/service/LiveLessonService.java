@@ -31,5 +31,10 @@ public interface LiveLessonService {
     LiveLessonResponse createLiveLesson(Long memberId, LiveLessonRequest liveLessonRequest, MultipartFile thumbnail);
     CommonResponse endLiveLesson(Long liveId);
     LiveLessonStatusResponse getLiveLessonStatus(Long liveId);
+    int getViewsCount(Long liveId);
+    int getLikesCount(Long liveId);
     String getShareLink(Long liveId);
+    void joinLiveLesson(Long liveId, Long memberId);
+    void leaveLiveLesson(Long liveId, Long memberId);
+    void likeLiveLesson(Long liveId, Long memberId);
 }

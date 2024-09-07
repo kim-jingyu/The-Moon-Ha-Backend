@@ -46,8 +46,8 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     private final AuthMapper authMapper;
     private final S3Service s3Service;
     private final LiveLessonEventService liveLessonEventService;
+    private final LiveLessonEventConsumer liveLessonEventConsumer;
 
-    private static final String FRONT_DOMAIN = "http://localhost:3000/live/";
     private static final String LIVE_CONTENT_PATH = "live/content";
     private static final String LIVE_THUMBNAIL_PATH = "live/thumbnail";
 
@@ -95,11 +95,6 @@ public class LiveLessonServiceImpl implements LiveLessonService {
         }
     }
 
-    private void deleteS3Files(String thumbnailFilename) {
-        s3Service.deleteFile(LIVE_THUMBNAIL_PATH, thumbnailFilename);
-//        s3Service.deleteFile(LIVE_CONTENT_PATH, contentFilename);
-    }
-
     @Override
     public CommonResponse endLiveLesson(Long liveId) {
         try {
@@ -108,6 +103,8 @@ public class LiveLessonServiceImpl implements LiveLessonService {
             if (liveLesson.getStatus() != ON_AIR) throw new CustomException(LIVE_LESSON_NOT_FOUND);
             liveLesson.endLiveLesson();
             liveLessonMapper.updateLiveLessonStatus(liveId, ENDED);
+            liveLessonEventConsumer.removeViewers(liveId);
+            liveLessonEventConsumer.removeLikes(liveId);
             liveLessonEventService.sendStatusEvent(liveId, liveLesson.getStatus().name());
             return new CommonResponse(LIVE_LESSON_END_SUCCESS);
         } catch (Exception e) {
@@ -122,7 +119,37 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     }
 
     @Override
+    public int getViewsCount(Long liveId) {
+        return liveLessonEventConsumer.getViewersCount(liveId);
+    }
+
+    @Override
+    public int getLikesCount(Long liveId) {
+        return liveLessonEventConsumer.getLikesCount(liveId);
+    }
+
+    @Override
     public String getShareLink(Long liveId) {
-        return FRONT_DOMAIN + liveId;
+        return liveLessonMapper.findLiveLessonById(liveId)
+                .orElseThrow(() -> new CustomException(LIVE_LESSON_NOT_FOUND)).getBroadcastUrl();
+    }
+
+    @Override
+    public void joinLiveLesson(Long liveId, Long memberId) {
+        liveLessonEventService.sendViewerJoinedEvent(liveId, memberId);
+    }
+
+    @Override
+    public void leaveLiveLesson(Long liveId, Long memberId) {
+        liveLessonEventService.sendViewerLeftEvent(liveId, memberId);
+    }
+
+    @Override
+    public void likeLiveLesson(Long liveId, Long memberId) {
+        liveLessonEventService.sendLikeEvent(liveId, memberId);
+    }
+
+    private void deleteS3Files(String thumbnailFilename) {
+        s3Service.deleteFile(LIVE_THUMBNAIL_PATH, thumbnailFilename);
     }
 }

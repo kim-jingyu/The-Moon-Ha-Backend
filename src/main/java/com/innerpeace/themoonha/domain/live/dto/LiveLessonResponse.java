@@ -45,6 +45,7 @@ public class LiveLessonResponse {
                 .liveId(liveLesson.getLiveId())
                 .title(liveLesson.getTitle())
                 .streamKey(liveLesson.getStreamKey())
+                .description(liveLesson.getDescription())
                 .profileImgUrl(profileImgUrl)
                 .instructorName(instructorName)
                 .thumbnailUrl(liveLesson.getThumbnailUrl())
