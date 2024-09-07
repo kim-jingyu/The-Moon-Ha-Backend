@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.live.dto.LiveLessonDetailResponse;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse;
 import com.innerpeace.themoonha.domain.live.vo.LiveLesson;
 import com.innerpeace.themoonha.domain.live.vo.LiveStatus;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public interface LiveLessonMapper {
     List<LiveLessonResponse> findLiveLessonsByMemberOrderByTitle(Long memberId);
     List<LiveLessonResponse> findLiveLessonsMemberDoesNotHave(Long memberId);
     List<LiveLessonResponse> findLiveLessonsMemberDoesNotHaveOrderByTitle(Long memberId);
-    Optional<LiveLessonDetailResponse> findLiveLessonDetailById(Long liveId, Long memberId);
+    Optional<LiveLessonDetailResponse> findLiveLessonDetailById(@Param("liveId") Long liveId,@Param("memberId") Long memberId);
     void insertLiveLesson(LiveLesson liveLesson);
     Optional<LiveLesson> findLiveLessonById(Long liveId);
     void updateLiveLessonStatus(Long liveId, LiveStatus status);

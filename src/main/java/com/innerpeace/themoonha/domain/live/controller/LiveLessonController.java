@@ -45,7 +45,7 @@ public class LiveLessonController {
 
     @GetMapping("/enrolled/by-title")
     public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithMemberOrderByTitle() {
-        return ResponseEntity.ok(liveLessonService.getLiveLessonsByMember(1L));
+        return ResponseEntity.ok(liveLessonService.getLiveLessonsByMemberOrderByTitle(1L));
     }
 
     @GetMapping("/not-enrolled/by-latest")
@@ -55,7 +55,7 @@ public class LiveLessonController {
 
     @GetMapping("/not-enrolled/by-title")
     public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithoutMemberOrderByTitle() {
-        return ResponseEntity.ok(liveLessonService.getLiveLessonsMemberDoesNotHave(1L));
+        return ResponseEntity.ok(liveLessonService.getLiveLessonsMemberDoesNotHaveOrderByTitle(1L));
     }
 
     @GetMapping("/{liveId}")
