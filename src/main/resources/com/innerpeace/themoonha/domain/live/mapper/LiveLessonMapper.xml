@@ -45,18 +45,18 @@
 
     <!-- 실시간 강좌 정보 -->
     <resultMap id="LiveLessonMap" type="com.innerpeace.themoonha.domain.live.vo.LiveLesson">
-        <id property="liveId" column="live_id" />
-        <result property="memberId" column="member_id" />
-        <result property="lessonId" column="lesson_id" />
+        <id property="liveId" column="liveId" />
+        <result property="memberId" column="memberId" />
+        <result property="lessonId" column="lessonId" />
         <result property="title" column="title" />
         <result property="description" column="description" />
         <result property="status" column="status" />
-        <result property="streamKey" column="stream_key" />
-        <result property="broadcastUrl" column="broadcast_url" />
-        <result property="thumbnailUrl" column="thumbnail_url" />
-        <result property="createdAt" column="created_at" />
-        <result property="deletedAt" column="deleted_at" />
-        <result property="updatedAt" column="updated_at" />
+        <result property="streamKey" column="streamKey" />
+        <result property="broadcastUrl" column="broadcastUrl" />
+        <result property="thumbnailUrl" column="thumbnailUrl" />
+        <result property="createdAt" column="createdAt" />
+        <result property="deletedAt" column="deletedAt" />
+        <result property="updatedAt" column="updatedAt" />
     </resultMap>
 
     <insert id="insertLiveLesson" parameterType="com.innerpeace.themoonha.domain.live.vo.LiveLesson">
@@ -107,7 +107,9 @@
             l.thumbnail_url AS thumbnailUrl,
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
-            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
+            EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
+            EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
+            EXTRACT(DAY FROM (SYSTIMESTAMP - l.created_at)) * 24 * 60 AS minutesAgo
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
         WHERE
@@ -126,7 +128,9 @@
             l.thumbnail_url AS thumbnailUrl,
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
-            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
+            EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
+            EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
+            EXTRACT(DAY FROM (SYSTIMESTAMP - l.created_at)) * 24 * 60 AS minutesAgo
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
         WHERE
@@ -145,7 +149,9 @@
             l.thumbnail_url AS thumbnailUrl,
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
-            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
+            EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
+            EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
+            EXTRACT(DAY FROM (SYSTIMESTAMP - l.created_at)) * 24 * 60 AS minutesAgo
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
         WHERE
@@ -164,7 +170,9 @@
             l.thumbnail_url AS thumbnailUrl,
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
-            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo
+            EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
+            EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
+            EXTRACT(DAY FROM (SYSTIMESTAMP - l.created_at)) * 24 * 60 AS minutesAgo
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
         WHERE
@@ -185,7 +193,9 @@
             l.broadcast_url AS broadcastUrl,
             l.status AS status,
             l.created_at AS createdAt,
-            ROUND((SYSDATE - l.created_at) * 24 * 60) AS minutesAgo,
+            EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
+            EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
+            EXTRACT(DAY FROM (SYSTIMESTAMP - l.created_at)) * 24 * 60 AS minutesAgo,
             CASE
                 WHEN l.member_id = #{memberId} THEN 1
                 ELSE 0
