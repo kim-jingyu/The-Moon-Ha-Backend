@@ -18,18 +18,6 @@
 
 <mapper namespace="com.innerpeace.themoonha.domain.schedule.mapper.ScheduleMapper">
 
-    <!-- 한 주 단위 스케줄 정보 -->
-    <resultMap id="scheduleResultMap" type="com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse">
-        <result property="lessonId" column="lesson_id" />
-        <result property="day" column="day" />
-        <result property="startHour" column="start_hour" />
-        <result property="startMinute" column="start_minute" />
-        <result property="endHour" column="end_hour" />
-        <result property="endMinute" column="end_minute" />
-        <result property="title" column="title" />
-        <result property="standardDate" column="standard_date" />
-    </resultMap>
-
     <!-- 주별 스케줄 가져오기 -->
     <select id="selectWeeklySchedules" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse">
         <foreach collection="standardDates" item="standardDate" separator="UNION ALL">
