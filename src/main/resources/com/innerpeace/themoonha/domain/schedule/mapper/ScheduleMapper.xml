@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 라운지 매퍼 XML
+ * @author 조희정
+ * @since 2024.09.07
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.09.07  	조희정        최초 생성
+ * 2024.09.07  	조희정        스케줄 주간 보기 기능 구현
+ * </pre>
+ -->
+
+<mapper namespace="com.innerpeace.themoonha.domain.schedule.mapper.ScheduleMapper">
+
+    <!-- 한 주 단위 스케줄 정보 -->
+    <resultMap id="scheduleResultMap" type="com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse">
+        <result property="lessonId" column="lesson_id" />
+        <result property="day" column="day" />
+        <result property="startHour" column="start_hour" />
+        <result property="startMinute" column="start_minute" />
+        <result property="endHour" column="end_hour" />
+        <result property="endMinute" column="end_minute" />
+        <result property="title" column="title" />
+        <result property="standardDate" column="standard_date" />
+    </resultMap>
+
+    <!-- 주별 스케줄 가져오기 -->
+    <select id="selectWeeklySchedules" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse">
+        <foreach collection="standardDates" item="standardDate" separator="UNION ALL">
+            <![CDATA[
+                SELECT
+                    l.lesson_id,
+                    l.day,
+                    SUBSTR(l.start_time, 1, 2) AS start_hour,
+                    SUBSTR(l.start_time, 4, 2) AS start_minute,
+                    SUBSTR(l.end_time, 1, 2) AS end_hour,
+                    SUBSTR(l.end_time, 4, 2) AS end_minute,
+                    l.title,
+                    #{standardDate} AS standard_date
+                FROM
+                    lesson l
+                WHERE
+                    l.lesson_id IN (
+                        SELECT s.lesson_id
+                        FROM sugang s
+                        WHERE s.member_id = #{memberId}
+                        AND s.deleted_at IS NULL
+                    )
+                    AND l.deleted_at IS NULL
+                    AND (
+                        TO_DATE(l.start_date, 'YYYY-MM-DD') <= TO_DATE(#{standardDate}, 'YYYY-MM-DD') + INTERVAL '6' DAY
+                        AND TO_DATE(l.end_date, 'YYYY-MM-DD') >= TO_DATE(#{standardDate}, 'YYYY-MM-DD')
+                    )
+            ]]>
+        </foreach>
+    </select>
+
+</mapper>
