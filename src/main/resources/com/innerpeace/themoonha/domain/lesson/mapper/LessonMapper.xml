@@ -36,10 +36,7 @@
             END AS  lesson_time
         FROM
             lesson l
-        JOIN
-            member m
-        ON
-            l.member_id = m.member_id
+        JOIN member m ON l.member_id = m.member_id
         <where>
             <if test="branchId != null">
                 l.branch_id = #{branchId}
@@ -87,6 +84,8 @@
                 </choose>
             </if>
         </where>
+        ORDER BY
+            l.lesson_id desc
     </select>
 
     <select id="selectShortFormList"
@@ -102,14 +101,8 @@
             l.target
         FROM
             short_form s
-                JOIN
-            lesson l
-            ON
-                s.lesson_id = l.lesson_id
-                JOIN
-            member m
-            ON
-                l.member_id = m.member_id
+        JOIN lesson l ON s.lesson_id = l.lesson_id
+        JOIN member m ON l.member_id = m.member_id
         WHERE
             s.deleted_at IS NULL AND
             s.expire_date > sysdate
@@ -117,7 +110,7 @@
 
     <select id="selectLessonDetail"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonDetailResponse">
-        select
+        SELECT
             l.lesson_id,
             l.title,
             b.name branch_name,
@@ -129,6 +122,7 @@
             l.place,
             m.name tutor_name,
             l.cost,
+            l.online_cost,
             l.summary,
             l.curriculum,
             l.supply,
@@ -136,23 +130,17 @@
             l.preview_video_url,
             m.member_id tutor_id,
             m.profile_img_url tutor_profile_img_url
-        from
+        FROM
             lesson l
-        join
-            branch b
-        on
-            l.branch_id = b.branch_id
-        join
-            member m
-        on
-            l.member_id = m.member_id
-        where
+        JOIN branch b ON l.branch_id = b.branch_id
+        JOIN member m ON l.member_id = m.member_id
+        WHERE
             l.lesson_id = #{lessonId}
     </select>
 
     <select id="selectTutorDetail"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.TutorLessonDetailDTO">
-        select
+        SELECT
             m.name,
             m.profile_img_url,
             l.lesson_id,
@@ -163,18 +151,15 @@
             CASE
                 WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
                 ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time END AS lesson_time
-        from
+        FROM
             member m
-        join
-            lesson l
-        on
-            m.member_id = l.member_id
-        where
+        JOIN lesson l ON m.member_id = l.member_id
+        WHERE
             m.member_id = #{tutorId}
     </select>
     <select id="selectCartList"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.CartResponse">
-        select
+        SELECT
             b.name branch_name,
             c.cart_id,
             l.title lesson_title,
@@ -187,54 +172,45 @@
             l.cost,
             l.online_cost,
             online_yn
-        from
+        FROM
             member m
-        join
-            cart c
-        on
-            m.member_id = c.member_id
-        join
-            lesson l
-        on
-            c.lesson_id = l.lesson_id
-        join
-            branch b
-        on
-            l.branch_id = b.branch_id
-        where
+        JOIN cart c ON m.member_id = c.member_id
+        JOIN lesson l ON c.lesson_id = l.lesson_id
+        JOIN branch b ON l.branch_id = b.branch_id
+        WHERE
             m.member_id = #{memberId} and c.deleted_at is null
-        order by
-            b.branch_id
+        ORDER BY
+            b.branch_id, c.cart_id desc
     </select>
 
     <insert id="insertCart">
-        insert into
+        INSERT INTO
             cart (cart_id, member_id, lesson_id, online_yn)
-        select
+        SELECT
             cart_seq.nextval, #{memberId}, #{lessonId}, #{onlineYn}
-        from
+        FROM
             dual
-        where
+        WHERE
             not exists (
-                    select 1
-                    from cart
-                    where lesson_id = #{lessonId}
-                      and member_id = #{memberId}
+                    SELECT 1
+                    FROM cart
+                    WHERE lesson_id = #{lessonId}
+                      AND member_id = #{memberId}
             )
     </insert>
 
     <insert id="insertSugang" parameterType="java.util.List">
-        insert into
+        INSERT INTO
             sugang(sugang_id, lesson_id, member_id, online_yn, lounge_yn)
-        select
+        SELECT
             sugang_seq.nextval,
             lesson_id,
             member_id,
             online_yn,
             case when online_yn = 1 then 0 else 1 end as lounge_yn
-        from
+        FROM
             cart
-        where
+        WHERE
             member_id = #{memberId} and
             cart_id in
             <foreach item="cartId" collection="cartIdList" open="(" separator="," close=")">
@@ -243,11 +219,11 @@
     </insert>
 
     <update id="deleteCart">
-        update
+        UPDATE
             cart
-        set
+        SET
             deleted_at = current_date
-        where
+        WHERE
             member_id = #{memberId} and
             deleted_at is null and
             cart_id in

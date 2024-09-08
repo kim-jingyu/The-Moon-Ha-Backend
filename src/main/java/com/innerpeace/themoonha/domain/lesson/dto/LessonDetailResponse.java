@@ -30,6 +30,7 @@ public class LessonDetailResponse {
     private String place;
     private String tutorName;
     private int cost;
+    private Integer onlineCost;
     private String summary;
     private String curriculum;
     private String supply;

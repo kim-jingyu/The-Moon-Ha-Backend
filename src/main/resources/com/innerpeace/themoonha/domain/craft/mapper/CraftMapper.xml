@@ -32,18 +32,9 @@
             m.name tutor_name
         FROM
             prologue p
-        JOIN
-            prologue_theme t
-        ON
-            p.prologue_theme_id = t.prologue_theme_id
-        LEFT JOIN
-            like_cnt l
-        ON
-            p.prologue_id = l.prologue_id and l.member_id = #{memberId}
-        JOIN
-            member m
-        ON
-            p.member_id = m.member_id
+        JOIN prologue_theme t ON p.prologue_theme_id = t.prologue_theme_id
+        LEFT JOIN like_cnt l ON p.prologue_id = l.prologue_id and l.member_id = #{memberId}
+        JOIN member m ON p.member_id = m.member_id
         WHERE
             p.deleted_at is null
         GROUP BY
@@ -54,52 +45,46 @@
 
     <select id="selectWishLessonList"
             resultType="com.innerpeace.themoonha.domain.craft.dto.WishLessonDTO">
-        select
+        SELECT
             w.wish_lesson_id,
             w.title,
-            (select count(v2.vote_id) from vote v2 where v2.wish_lesson_id = w.wish_lesson_id) as vote_cnt,
+            (SELECT count(v2.vote_id) FROM vote v2 WHERE v2.wish_lesson_id = w.wish_lesson_id) as vote_cnt,
             w.theme,
             nvl2(v.vote_id, 1, 0) already_voted
-        from
+        FROM
             wish_lesson w
-        left join
-            vote v
-        on
-            w.wish_lesson_id = v.wish_lesson_id and v.member_id = #{memberId}
-        where
+        LEFT JOIN vote v ON w.wish_lesson_id = v.wish_lesson_id and v.member_id = #{memberId}
+        WHERE
             w.deleted_at is null
-        group by
+        GROUP BY
             w.wish_lesson_id, w.title, w.theme, v.vote_id
-        order by
+        ORDER BY
             w.theme, already_voted desc
     </select>
 
     <select id="selectSuggestionList"
             resultType="com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO">
         <![CDATA[
-        select
+        SELECT
             member_name,
             member_profile_img_url,
             content,
             created_at
-        from
+        FROM
             (
-             select /*+INDEX_DESC(s pk_suggestion)*/
+             SELECT /*+INDEX_DESC(s pk_suggestion)*/
                  rownum rn,
                  m.name member_name,
                  m.profile_img_url member_profile_img_url,
                  s.content,
                  s.created_at
-             from
+             FROM
                  suggestion s
-             join
-                 member m
-             on
-                 s.member_id = m.member_id
-             where
+             JOIN member m on s.member_id = m.member_id
+             WHERE
                  rownum <= #{pageNum} * #{size}
             )
-        where
+        WHERE
             rn > (#{pageNum} - 1) * #{size}
         ]]>
     </select>
@@ -145,10 +130,7 @@
                 1
             FROM
                 vote v
-            JOIN
-                wish_lesson w
-            ON
-                v.wish_lesson_id = w.wish_lesson_id
+            JOIN wish_lesson w ON v.wish_lesson_id = w.wish_lesson_id
             WHERE
                 v.member_id = #{memberId}
               AND w.theme = (SELECT theme FROM wish_lesson WHERE wish_lesson_id = #{wishLessonId})
