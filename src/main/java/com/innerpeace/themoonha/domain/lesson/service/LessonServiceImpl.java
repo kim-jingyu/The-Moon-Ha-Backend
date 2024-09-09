@@ -99,4 +99,9 @@ public class LessonServiceImpl implements LessonService {
         return lessonMapper.selectLessonEnrollList(memberId);
     }
 
+    @Override
+    public List<TutorLessonResponse> findTutorLessonList(Long memberId) {
+        return lessonMapper.selectTutorLessonList(memberId);
+    }
+
 }

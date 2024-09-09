@@ -250,4 +250,19 @@
         ORDER BY
             s.lesson_id
     </select>
+
+    <select id="selectTutorLessonList"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.TutorLessonResponse">
+        SELECT
+            l.lesson_id,
+            l.title lesson_title
+        FROM
+            lesson l
+        WHERE
+            l.member_id = 1 and
+            l.end_date >= sysdate and
+            l.online_cost is not null
+        ORDER BY
+            l.lesson_id desc
+    </select>
 </mapper>

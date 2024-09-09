@@ -85,4 +85,11 @@ public class LessonController {
         Long memberId = 1L;
         return ResponseEntity.ok(lessonService.findEnrollLessonList(memberId));
     }
+
+    @GetMapping("/by-tutor")
+    public ResponseEntity<List<TutorLessonResponse>> tutorLessonList() {
+        Long memberId = 1L;
+        return ResponseEntity.ok(lessonService.findTutorLessonList(memberId));
+    }
+
 }
