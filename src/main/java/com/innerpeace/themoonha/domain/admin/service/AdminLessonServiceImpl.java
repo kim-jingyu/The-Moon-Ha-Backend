@@ -1,6 +1,6 @@
 package com.innerpeace.themoonha.domain.admin.service;
 
-import com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse;
+import com.innerpeace.themoonha.domain.admin.dto.LessonDetailAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper;
@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
  * ----------  --------    ---------------------------
  * 2024.08.28  	최유경       최초 생성
  * 2024.08.28   최유경       강좌 조희 기능
+ * 2024.09.09  	최유경        강좌 상세 조회
  * </pre>
  */
 @Service
@@ -76,7 +77,18 @@ public class AdminLessonServiceImpl implements AdminLessonService {
      * @return 조회 결과 dto
      */
     @Override
-    public List<LessonAdminResponse> findLessonList(LessonListAdminRequest lessonListAdminRequest) {
+    public List<LessonDetailAdminResponse> findLessonList(LessonListAdminRequest lessonListAdminRequest) {
         return adminLessonMapper.selectLessonList(lessonListAdminRequest);
+    }
+
+    /**
+     * 강좌 상세 조회 메서드
+     *
+     * @param lessonId 강좌 조회 아이디
+     * @return 상세 조회 dto
+     */
+    @Override
+    public LessonDetailAdminResponse findLesson(Long lessonId) {
+        return adminLessonMapper.selectLessonDetail(lessonId);
     }
 }
