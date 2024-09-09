@@ -82,7 +82,7 @@ public class LoungeController {
         Long memberId = 1L;
         return ResponseEntity.ok(loungeService.addLoungePost(loungePostRequest, memberId, loungePostImgs));
     }
-
+        
 
     /**
      * 라운지 댓글 등록
