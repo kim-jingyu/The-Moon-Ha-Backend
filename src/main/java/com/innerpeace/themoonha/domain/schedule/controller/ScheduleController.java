@@ -1,6 +1,7 @@
 package com.innerpeace.themoonha.domain.schedule.controller;
 
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleMonthlyResponse;
+import com.innerpeace.themoonha.domain.schedule.dto.ScheduleNextResponse;
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse;
 import com.innerpeace.themoonha.domain.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.List;
  * 2024.09.07  	조희정       최초 생성
  * 2024.09.07  	조희정       스케줄 주간 보기 기능 구현
  * 2024.09.09  	조희정       스케줄 월간 보기 기능 구현
+ * 2024.09.09  	조희정       다음 스케줄 보기 기능 구현
  * </pre>
  */
 @RestController
@@ -55,5 +57,15 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleMonthlyResponse>>scheduleMonthly(@RequestParam String yearMonth) {
         Long memberId = 1L;
         return ResponseEntity.ok(scheduleService.findMonthlySchedules(memberId, yearMonth));
+    }
+
+    /**
+     * 다음 스케줄 보기
+     * @return
+     */
+    @GetMapping("/next")
+    public ResponseEntity<ScheduleNextResponse>scheduleNext() {
+        Long memberId = 1L;
+        return ResponseEntity.ok(scheduleService.findNextSchedule(memberId));
     }
 }
