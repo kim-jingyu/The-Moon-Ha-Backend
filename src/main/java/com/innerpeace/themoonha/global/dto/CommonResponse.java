@@ -1,5 +1,7 @@
 package com.innerpeace.themoonha.global.dto;
 
+import com.innerpeace.themoonha.global.vo.StatusCode;
+import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +24,11 @@ import lombok.Getter;
 public class CommonResponse {
     private boolean success;
     private String message;
+
+    public CommonResponse(StatusCode statusCode) {
+        this.success = statusCode.getStatus() == 200;
+        this.message = statusCode.getMessage();
+    }
 
     public static CommonResponse from(String message){
         return CommonResponse.builder()

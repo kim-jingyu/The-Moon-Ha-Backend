@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.live.dto.LiveLessonDetailResponse;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonRequest;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonStatusResponse;
+import com.innerpeace.themoonha.global.dto.CommonResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,10 +24,17 @@ import java.util.List;
  */
 public interface LiveLessonService {
     List<LiveLessonResponse> getLiveLessonsByMember(Long memberId);
+    List<LiveLessonResponse> getLiveLessonsByMemberOrderByTitle(Long memberId);
     List<LiveLessonResponse> getLiveLessonsMemberDoesNotHave(Long memberId);
+    List<LiveLessonResponse> getLiveLessonsMemberDoesNotHaveOrderByTitle(Long memberId);
     LiveLessonDetailResponse getLiveLessonDetails(Long livedId, Long memberId);
-    LiveLessonResponse createLiveLesson(LiveLessonRequest liveLessonRequest, MultipartFile thumbnail);
-    void endLiveLesson(Long liveId);
+    LiveLessonResponse createLiveLesson(Long memberId, LiveLessonRequest liveLessonRequest, MultipartFile thumbnail);
+    CommonResponse endLiveLesson(Long liveId);
     LiveLessonStatusResponse getLiveLessonStatus(Long liveId);
+    int getViewsCount(Long liveId);
+    int getLikesCount(Long liveId);
     String getShareLink(Long liveId);
+    void joinLiveLesson(Long liveId, Long memberId);
+    void leaveLiveLesson(Long liveId, Long memberId);
+    void likeLiveLesson(Long liveId, Long memberId);
 }

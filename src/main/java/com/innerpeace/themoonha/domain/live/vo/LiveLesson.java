@@ -47,19 +47,22 @@ public class LiveLesson {
     private Date deletedAt;
     private Date updatedAt;
 
+    private static final String STREAM_DOMAIN = "http://localhost:8081/live/";
     private static final String SHA_256 = "sha-256";
 
-    public static LiveLesson createLiveLesson(LiveLessonRequest request, String thumbnailUrl) {
+    public static LiveLesson createLiveLesson(Long memberId, LiveLessonRequest request, String thumbnailUrl) {
         String generatedStreamKey = generateStreamKey();
         return LiveLesson.builder()
-                .memberId(request.getMemberId())
+                .memberId(memberId)
                 .lessonId(request.getLessonId())
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .status(UPCOMING)
                 .streamKey(generatedStreamKey)
-                .broadcastUrl("/hls/" + generatedStreamKey +".m3u8")
+                .broadcastUrl(STREAM_DOMAIN + generatedStreamKey +".m3u8")
                 .thumbnailUrl(thumbnailUrl)
+                .createdAt(new Date())
+                .updatedAt(new Date())
                 .build();
     }
 

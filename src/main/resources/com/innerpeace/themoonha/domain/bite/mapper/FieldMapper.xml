@@ -53,18 +53,14 @@
             lesson_id,
             title,
             thumbnail_url,
-            content_url,
-            created_at,
-            deleted_at
+            content_url
         ) VALUES (
             #{fieldId},
             #{memberId},
             #{lessonId},
             #{title},
             #{thumbnailUrl},
-            #{contentUrl},
-            sysdate,
-            null
+            #{contentUrl}
         )
     </insert>
 
@@ -86,7 +82,7 @@
             END as contentIsImage,
             f.title as title,
             m.profile_img_url AS profileImageUrl,
-            m.name AS memberName,
+            m.username AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             field f
@@ -101,7 +97,7 @@
             f.content_url,
             f.title,
             m.profile_img_url,
-            m.name
+            m.username
     </select>
 
     <!-- 분야별 한 입 콘텐츠 전체 목록 조회(최신순) -->
@@ -113,7 +109,7 @@
             f.thumbnail_url AS thumbnailUrl,
             f.title,
             m.profile_img_url AS profileImgUrl,
-            m.name AS memberName
+            m.username AS memberName
         FROM field f
         JOIN member m ON f.member_id = m.member_id
         LEFT JOIN lesson l ON f.lesson_id = l.lesson_id
@@ -130,7 +126,7 @@
             f.thumbnail_url AS thumbnailUrl,
             f.title,
             m.profile_img_url AS profileImgUrl,
-            m.name AS memberName
+            m.username AS memberName
         FROM field f
         JOIN member m ON f.member_id = m.member_id
         LEFT JOIN lesson l ON f.lesson_id = l.lesson_id

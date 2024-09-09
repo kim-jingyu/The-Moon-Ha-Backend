@@ -96,10 +96,9 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
             saveBeforeAfterContent(beforeAfterRequest, beforeAfterDTO);
             return CommonResponse.from(String.valueOf(beforeAfterDTO.getBeforeAfterId()));
         } catch (IOException e) {
+            deleteS3Files(beforeThumbnail.getOriginalFilename(), afterThumbnail.getOriginalFilename(), beforeContent.getOriginalFilename(), afterContent.getOriginalFilename(), beforeContentPath, afterContentPath);
             throw new CustomException(S3_UPLOAD_FAILED);
         } catch (Exception e) {
-            e.printStackTrace();
-            deleteS3Files(beforeThumbnail.getOriginalFilename(), afterThumbnail.getOriginalFilename(), beforeContent.getOriginalFilename(), afterContent.getOriginalFilename(), beforeContentPath, afterContentPath);
             throw new CustomException(BEFORE_AFTER_CREATION_FAILED);
         }
     }

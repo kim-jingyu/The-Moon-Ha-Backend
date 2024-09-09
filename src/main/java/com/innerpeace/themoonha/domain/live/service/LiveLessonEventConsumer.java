@@ -61,6 +61,14 @@ public class LiveLessonEventConsumer {
         return count != null ? count : 0;
     }
 
+    public void removeViewers(Long liveId) {
+        redisTemplate.delete(getViewersKey(liveId));
+    }
+
+    public void removeLikes(Long liveId) {
+        redisTemplate.delete(getLikesKey(liveId));
+    }
+
     private String[] getSplitMessage(String message) {
         return message.split(":");
     }

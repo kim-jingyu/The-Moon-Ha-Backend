@@ -33,17 +33,20 @@ public class LiveLessonResponse {
     private String title;
     private String streamKey;
     private String description;
+    private String profileImgUrl;
     private String instructorName;
     private String thumbnailUrl;
     private String broadcastUrl;
     private LiveStatus status;
     private Long minutesAgo;
 
-    public static LiveLessonResponse of(LiveLesson liveLesson, String instructorName) {
+    public static LiveLessonResponse of(LiveLesson liveLesson, String instructorName, String profileImgUrl) {
         return LiveLessonResponse.builder()
                 .liveId(liveLesson.getLiveId())
                 .title(liveLesson.getTitle())
                 .streamKey(liveLesson.getStreamKey())
+                .description(liveLesson.getDescription())
+                .profileImgUrl(profileImgUrl)
                 .instructorName(instructorName)
                 .thumbnailUrl(liveLesson.getThumbnailUrl())
                 .broadcastUrl(liveLesson.getBroadcastUrl())

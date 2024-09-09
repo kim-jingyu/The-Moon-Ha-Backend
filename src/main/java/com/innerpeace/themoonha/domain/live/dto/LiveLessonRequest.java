@@ -1,6 +1,5 @@
 package com.innerpeace.themoonha.domain.live.dto;
 
-import com.innerpeace.themoonha.domain.live.vo.LiveStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,11 +24,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class LiveLessonRequest {
-    private Long memberId;
     private Long lessonId;
     private String title;
     private String description;
-    private LiveStatus status;
-    private String streamKey;
-    private String thumbnailUrl;
 }
