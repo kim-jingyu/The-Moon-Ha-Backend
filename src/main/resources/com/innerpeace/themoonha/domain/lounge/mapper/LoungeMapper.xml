@@ -77,16 +77,16 @@
             lo.deleted_at IS NULL
           AND le.deleted_at IS NULL
           AND (
-            (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 2
-                AND le.member_id = #{memberId}
+                (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 2
+                    AND le.member_id = #{memberId}
                 OR
-            (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 1
-                AND lo.lesson_id IN (
-                SELECT s.lesson_id
-                FROM sugang s
-                WHERE s.member_id = #{memberId}
-                  AND s.lounge_yn = 1
-                  AND s.deleted_at IS NULL
+                (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 1
+                    AND lo.lesson_id IN (
+                    SELECT s.lesson_id
+                    FROM sugang s
+                    WHERE s.member_id = #{memberId}
+                      AND s.lounge_yn = 1
+                      AND s.deleted_at IS NULL
                 )
             )
            OR (
