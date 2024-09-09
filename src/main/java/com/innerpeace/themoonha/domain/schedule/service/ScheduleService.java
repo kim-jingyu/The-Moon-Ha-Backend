@@ -1,9 +1,11 @@
 package com.innerpeace.themoonha.domain.schedule.service;
 
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleMonthlyResponse;
+import com.innerpeace.themoonha.domain.schedule.dto.ScheduleNextResponse;
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 스케줄 서비스 인터페이스
@@ -17,6 +19,7 @@ import java.util.List;
  * 2024.09.07  	조희정       최초 생성
  * 2024.09.07  	조희정       스케줄 주간 보기 구현
  * 2024.09.09  	조희정       스케줄 월간 보기 구현
+ * 2024.09.09  	조희정       댜음 강좌 보기 구현
  * </pre>
  */
 public interface ScheduleService {
@@ -36,4 +39,11 @@ public interface ScheduleService {
      * @return
      */
     List<ScheduleMonthlyResponse> findMonthlySchedules(Long memberId, String yearMonth);
+
+    /**
+     * 다음 스케줄 조회
+     * @param memberId
+     * @return
+     */
+    ScheduleNextResponse findNextSchedule(Long memberId);
 }

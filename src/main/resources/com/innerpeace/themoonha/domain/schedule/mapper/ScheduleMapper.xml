@@ -78,4 +78,37 @@
             ORDER BY l.start_date, l.start_time
         ]]>
     </select>
+
+    <select id="selectNextSchedule" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleNextResponse">
+        SELECT /*+ FIRST_ROWS(1) */
+            l.lesson_id,
+            b.name AS branch_name,
+            l.title AS lesson_title,
+            l.cnt,
+            l.start_date || '~' || l.end_date AS period,
+            CASE
+                WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
+                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
+                END AS lesson_time,
+            m.name AS tutor_name,
+            l.target,
+            lo.lounge_id,
+            l.online_yn
+        FROM (
+                 SELECT l.lesson_id, l.title, l.branch_id, l.member_id, l.cnt, l.start_date, l.end_date, l.start_time, l.end_time, l.day, l.target, s.online_yn
+                 FROM lesson l
+                          JOIN sugang s ON l.lesson_id = s.lesson_id
+                 WHERE s.member_id = #{memberId}
+                   AND s.deleted_at IS NULL
+                   AND l.deleted_at IS NULL
+                   AND TRUNC(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul') BETWEEN l.start_date AND l.end_date
+                   AND INSTR(l.day, TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'DY', 'NLS_DATE_LANGUAGE=KOREAN')) > 0
+                   AND l.start_time > TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'HH24:MI')
+                 ORDER BY l.start_date, l.start_time
+                     FETCH FIRST 1 ROWS ONLY
+             ) l
+                 JOIN member m ON l.member_id = m.member_id
+                 JOIN branch b ON l.branch_id = b.branch_id
+                 LEFT JOIN lounge lo ON l.lesson_id = lo.lesson_id
+    </select>
 </mapper>
