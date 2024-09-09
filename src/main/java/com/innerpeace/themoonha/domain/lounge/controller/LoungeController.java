@@ -44,7 +44,7 @@ public class LoungeController {
     @GetMapping("/list")
     public ResponseEntity<List<LoungeListResponse>> loungeList() {
         Long memberId = 1L; // 임시 memberId
-        String role = "ROLE_MEMBER";
+        String role = "ROLE_TUTOR";
         return ResponseEntity.ok(loungeService.findLoungeList(memberId, role));
     }
 
@@ -68,7 +68,8 @@ public class LoungeController {
      */
     @GetMapping("/{loungeId}/post/{loungePostId}")
     public ResponseEntity<LoungePostDetailDTO> loungePostDetails(@PathVariable Long loungeId, @PathVariable Long loungePostId) {
-        return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId));
+        Long memberId = 1L;
+        return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId, memberId));
     }
 
     /**

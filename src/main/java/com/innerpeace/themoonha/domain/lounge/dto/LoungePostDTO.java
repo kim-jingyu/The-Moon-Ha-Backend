@@ -34,6 +34,8 @@ public class LoungePostDTO {
     // 작성자 정보
     private LoungeMemberDTO loungeMember;
 
+    private boolean permissionYn;
+
 
     public static LoungePostDTO of(LoungePostDTO loungePostDTO, List<String> loungePostImgList) {
         return LoungePostDTO.builder()
@@ -43,6 +45,7 @@ public class LoungePostDTO {
                 .loungePostImgList(loungePostImgList != null ? loungePostImgList : new ArrayList<>())
                 .createdAt(DateTimeUtil.timeAgo(loungePostDTO.getCreatedAt()))
                 .loungeMember(loungePostDTO.getLoungeMember())
+                .permissionYn(loungePostDTO.permissionYn)
                 .build();
     }
 

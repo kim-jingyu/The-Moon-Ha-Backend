@@ -24,8 +24,10 @@ public class LoungeCommentDTO {
     private String content;
     private String createdAt;
     private LoungeMemberDTO loungeMember;
+    private boolean permissionYn;
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = DateTimeUtil.timeAgo(createdAt);
     }
+
 }

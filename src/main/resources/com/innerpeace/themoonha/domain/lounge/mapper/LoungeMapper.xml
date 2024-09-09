@@ -34,6 +34,7 @@
         <id property="loungeCommentId" column="lounge_comment_id"/>
         <result property="content" column="content"/>
         <result property="createdAt" column="created_at"/>
+        <result property="permissionYn" column="permission_yn" javaType="boolean"/>
         <association property="loungeMember" resultMap="LoungeMemberMap"/>
     </resultMap>
 
@@ -43,6 +44,7 @@
         <result property="content" column="content"/>
         <result property="noticeYn" column="notice_yn"/>
         <result property="createdAt" column="created_at"/>
+        <result property="permissionYn" column="permission_yn" javaType="boolean"/>
         <association property="loungeMember" resultMap="LoungeMemberMap"/>
     </resultMap>
 
@@ -62,31 +64,36 @@
             lp.created_at AS latest_post_time
         FROM
             lounge lo
-            JOIN lesson le ON lo.lesson_id = le.lesson_id
-            LEFT JOIN lounge_post lp ON lo.lounge_id = lp.lounge_id
-            AND lp.created_at = (
-                SELECT /*+ INDEX_DESC(lp PK_LOUNGE_POST) */
-                    MAX(created_at)
-                FROM lounge_post
-                WHERE lounge_id = lo.lounge_id
-                    AND deleted_at IS NULL
-            )
+                JOIN lesson le ON lo.lesson_id = le.lesson_id
+                LEFT JOIN lounge_post lp ON lo.lounge_id = lp.lounge_id
+                AND lp.created_at = (
+                    SELECT /*+ INDEX_DESC(lp PK_LOUNGE_POST) */
+                        MAX(created_at)
+                    FROM lounge_post
+                    WHERE lounge_id = lo.lounge_id
+                      AND deleted_at IS NULL
+                )
         WHERE
             lo.deleted_at IS NULL
-            AND le.deleted_at IS NULL
-            <if test="role == 'ROLE_MEMBER'">
-                AND lo.lesson_id IN (
+          AND le.deleted_at IS NULL
+          AND (
+                (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 2
+                    AND le.member_id = #{memberId}
+                OR
+                (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 1
+                    AND lo.lesson_id IN (
                     SELECT s.lesson_id
                     FROM sugang s
                     WHERE s.member_id = #{memberId}
-                        AND s.lounge_yn = 1
-                        AND s.deleted_at IS NULL
+                      AND s.lounge_yn = 1
+                      AND s.deleted_at IS NULL
                 )
-            </if>
-            <if test="role == 'ROLE_TUTOR'">
-                AND le.member_id = #{memberId}
-            </if>
-            AND (lp.lounge_post_id IS NULL OR lp.deleted_at IS NULL)
+            )
+           OR (
+               (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 0
+                   AND (1 = 1)
+                )
+          AND (lp.lounge_post_id IS NULL OR lp.deleted_at IS NULL)
         ORDER BY
             lo.lounge_id DESC
     </select>
@@ -100,7 +107,13 @@
             lo.lounge_img_url,
             m.member_id AS tutor_id,
             m.name AS tutor_name,
-            le.summary
+            m.profile_img_url AS tutorImgUrl,
+            le.summary,
+            CASE
+                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (0) THEN 1
+                WHEN le.member_id = #{memberId} THEN 1
+                ELSE 0
+            END AS permission_yn
         FROM
             lesson le
                 JOIN member m ON le.member_id = m.member_id
@@ -119,7 +132,12 @@
             lp.created_at,
             lm.member_id,
             lm.name,
-            lm.profile_img_url
+            lm.profile_img_url,
+            CASE
+                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (2, 0) THEN 1
+                WHEN lp.member_id = #{memberId} THEN 1
+                ELSE 0
+            END AS permission_yn
         FROM
             lounge_post lp
                 LEFT JOIN member lm ON lp.member_id = lm.member_id
@@ -201,7 +219,12 @@
             lp.created_at,
             lm.member_id,
             lm.name,
-            lm.profile_img_url
+            lm.profile_img_url,
+            CASE
+                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (2, 0) THEN 1
+                WHEN lp.member_id = #{memberId} THEN 1
+                ELSE 0
+            END AS permission_yn
         FROM
             lounge_post lp
                 LEFT JOIN member lm ON lp.member_id = lm.member_id
@@ -219,7 +242,12 @@
             lc.created_at,
             lcm.member_id,
             lcm.name,
-            lcm.profile_img_url
+            lcm.profile_img_url,
+            CASE
+                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (2, 0) THEN 1
+                WHEN lc.member_id = #{memberId} THEN 1
+                ELSE 0
+            END AS permission_yn
         FROM
             lounge_comment lc
                 LEFT JOIN member lcm ON lc.member_id = lcm.member_id

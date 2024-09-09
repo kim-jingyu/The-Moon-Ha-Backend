@@ -37,14 +37,14 @@ public interface LoungeMapper {
      * @param loungeId
      * @return
      */
-    Optional<LoungeInfoDTO> selectLoungeInfo(Long loungeId);
+    Optional<LoungeInfoDTO> selectLoungeInfo(@Param("loungeId") Long loungeId, @Param("memberId") Long memberId);
 
     /**
      * 라운지 게시글 목록 조회
      * @param loungeId
      * @return
      */
-    List<LoungePostDTO> selectLoungePostList(Long loungeId);
+    List<LoungePostDTO> selectLoungePostList(@Param("loungeId") Long loungeId, @Param("memberId") Long memberId);
 
     /**
      * 라운지 게시글 이미지 목록 조회
@@ -76,14 +76,14 @@ public interface LoungeMapper {
      * @param loungePostId
      * @return
      */
-    Optional<LoungePostDTO> selectLoungePostDetail(Long loungePostId);
+    Optional<LoungePostDTO> selectLoungePostDetail(@Param("loungePostId") Long loungePostId, @Param("memberId") Long memberId);
 
     /**
      * 라운지 게시글 한 건의 댓글 조회
      * @param loungePostId
      * @return
      */
-    List<LoungeCommentDTO> selectLoungeCommentList(Long loungePostId);
+    List<LoungeCommentDTO> selectLoungeCommentList(@Param("loungePostId") Long loungePostId, @Param("memberId") Long memberId);
 
     /**
      * 라운지 게시물 등록

@@ -24,8 +24,18 @@ public class DateTimeUtil {
             return "";
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime timeObj = LocalDateTime.parse(timeString, formatter);
+        DateTimeFormatter[] formatters = {
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault()),  // yyyy-MM-dd 형식
+                DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm", Locale.getDefault())     // yyyy.MM.dd 형식
+        };
+
+        LocalDateTime timeObj = null;
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                timeObj = LocalDateTime.parse(timeString.trim(), formatter);
+            } catch (Exception e) {}
+        }
+
         LocalDateTime now = LocalDateTime.now();
 
         Duration duration = Duration.between(timeObj, now);
@@ -52,8 +62,8 @@ public class DateTimeUtil {
     }
 
     private static String formatDate(LocalDateTime time) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 a hh시 mm분", Locale.KOREAN);
-        return time.format(dateFormatter).replace("AM", "오전").replace("PM", "오후");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm", Locale.KOREAN);
+        return time.format(dateFormatter);
     }
 }
 
