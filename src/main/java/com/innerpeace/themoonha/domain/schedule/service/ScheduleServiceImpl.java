@@ -1,5 +1,6 @@
 package com.innerpeace.themoonha.domain.schedule.service;
 
+import com.innerpeace.themoonha.domain.schedule.dto.ScheduleMonthlyResponse;
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse;
 import com.innerpeace.themoonha.domain.schedule.mapper.ScheduleMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
  * ----------  --------    ---------------------------
  * 2024.09.07  	조희정       최초 생성
  * 2024.09.07  	조희정       스케줄 주간 보기 구현
+ * 2024.09.09  	조희정       스케줄 월간 보기 구현
  * </pre>
  */
 @Service
@@ -52,4 +54,17 @@ public class ScheduleServiceImpl implements ScheduleService{
                 .map(standard -> groupedSchedules.getOrDefault(standard, new ArrayList<>()))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * 월간 스케줄 가져오기
+     * @param memberId
+     * @param yearMonth
+     * @return
+     */
+    @Override
+    public List<ScheduleMonthlyResponse> findMonthlySchedules(Long memberId, String yearMonth) {
+        return scheduleMapper.selectMonthlySchedules(memberId, yearMonth);
+    }
+
+
 }
