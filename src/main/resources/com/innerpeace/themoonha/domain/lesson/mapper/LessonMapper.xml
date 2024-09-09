@@ -106,6 +106,8 @@
         WHERE
             s.deleted_at IS NULL AND
             s.expire_date > sysdate
+        ORDER BY
+            s.short_form_id desc
     </select>
 
     <select id="selectLessonDetail"
