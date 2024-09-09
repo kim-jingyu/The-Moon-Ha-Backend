@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -32,11 +33,14 @@ import java.util.UUID;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class S3Service {
     private final AmazonS3 s3Client;
 
     @Value("${aws.bucket}")
     private String bucket;
+    @Value("${aws.cloudfront.url}")
+    private String cloudFrontUrl;
 
     public String saveFile(MultipartFile multipartFile, String folderName) throws IOException {
         String originalFilename = getFileNameServer(multipartFile);
@@ -45,9 +49,9 @@ public class S3Service {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
-
         s3Client.putObject(bucket, fullPath, multipartFile.getInputStream(), metadata);
-        return s3Client.getUrl(bucket, fullPath).toString();
+        log.info("url = {} ", cloudFrontUrl + " " + s3Client.getUrl(bucket, fullPath).getPath());
+        return cloudFrontUrl + s3Client.getUrl(bucket, fullPath).getPath();
     }
 
     public List<String> saveFiles(List<MultipartFile> files, String path) {
