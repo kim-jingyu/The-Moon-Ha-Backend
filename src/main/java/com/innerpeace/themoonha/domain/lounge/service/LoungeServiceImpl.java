@@ -66,9 +66,9 @@ public class LoungeServiceImpl implements LoungeService {
      */
     @Override
     public LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role) {
-        LoungeInfoDTO loungeInfo = loungeMapper.selectLoungeInfo(loungeId)
+        LoungeInfoDTO loungeInfo = loungeMapper.selectLoungeInfo(loungeId, memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_NOT_FOUND));
-        List<LoungePostDTO> loungePostList = loungeMapper.selectLoungePostList(loungeId)
+        List<LoungePostDTO> loungePostList = loungeMapper.selectLoungePostList(loungeId, memberId)
                 .stream()
                 .map(loungePost -> {
                     List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePost.getLoungePostId());
@@ -92,15 +92,15 @@ public class LoungeServiceImpl implements LoungeService {
      * @return
      */
     @Override
-    public LoungePostDetailDTO findLoungePostDetail(Long loungePostId) {
+    public LoungePostDetailDTO findLoungePostDetail(Long loungePostId, Long memberId) {
 
-        LoungePostDTO loungePost = loungeMapper.selectLoungePostDetail(loungePostId)
+        LoungePostDTO loungePost = loungeMapper.selectLoungePostDetail(loungePostId, memberId)
                 .map(loungePostDTO -> {
                     List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePostDTO.getLoungePostId());
                     return LoungePostDTO.of(loungePostDTO, postImgUrl);
                 })
                 .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_POST_NOT_FOUND));
-        List<LoungeCommentDTO> loungeCommentList = loungeMapper.selectLoungeCommentList(loungePostId);
+        List<LoungeCommentDTO> loungeCommentList = loungeMapper.selectLoungeCommentList(loungePostId, memberId);
         return LoungePostDetailDTO.of(
                 loungePost,
                 loungeCommentList

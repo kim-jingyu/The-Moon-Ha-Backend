@@ -26,4 +26,5 @@ public class LoungeInfoDTO {
     private String tutorName;
     private String tutorImgUrl;
     private String summary;
+    private boolean permissionYn;
 }

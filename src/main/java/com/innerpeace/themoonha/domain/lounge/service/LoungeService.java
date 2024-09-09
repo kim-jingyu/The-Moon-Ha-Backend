@@ -46,7 +46,7 @@ public interface LoungeService {
      * @param loungePostId
      * @return
      */
-    LoungePostDetailDTO findLoungePostDetail(Long loungePostId);
+    LoungePostDetailDTO findLoungePostDetail(Long loungePostId, Long memberId);
 
     /**
      * 라운지 게시글 등록

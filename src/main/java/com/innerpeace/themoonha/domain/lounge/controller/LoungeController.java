@@ -68,7 +68,8 @@ public class LoungeController {
      */
     @GetMapping("/{loungeId}/post/{loungePostId}")
     public ResponseEntity<LoungePostDetailDTO> loungePostDetails(@PathVariable Long loungeId, @PathVariable Long loungePostId) {
-        return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId));
+        Long memberId = 1L;
+        return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId, memberId));
     }
 
     /**
