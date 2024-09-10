@@ -1,6 +1,6 @@
 package com.innerpeace.themoonha.domain.admin.controller;
 
-import com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse;
+import com.innerpeace.themoonha.domain.admin.dto.LessonDetailAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest;
 import com.innerpeace.themoonha.domain.admin.service.AdminLessonService;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
  * ----------  --------    ---------------------------
  * 2024.08.28  	최유경       최초 생성
  * 2024.08.28   최유경       강좌 조희 기능
+ * 2024.09.09  	최유경        강좌 상세 조회
  * </pre>
  */
 @RestController
@@ -48,10 +50,17 @@ public class AdminLessonController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<LessonAdminResponse>> LessonList(LessonListAdminRequest lessonListAdminRequest){
+    public ResponseEntity<List<LessonDetailAdminResponse>> LessonList(LessonListAdminRequest lessonListAdminRequest){
         log.info("LessonList : {}", lessonListAdminRequest.toString());
-        List<LessonAdminResponse> lessonDTOList = adminLessonService.findLessonList(lessonListAdminRequest);
+        List<LessonDetailAdminResponse> lessonDTOList = adminLessonService.findLessonList(lessonListAdminRequest);
         return ResponseEntity.ok(lessonDTOList);
+    }
+
+    @GetMapping("/detail/{lessonId}")
+    public ResponseEntity<LessonDetailAdminResponse> LessonDetail(@PathVariable("lessonId") Long lessonId){
+        log.info("LessonDetail : {}", lessonId);
+        LessonDetailAdminResponse lessonDetailAdminResponse = adminLessonService.findLesson(lessonId);
+        return ResponseEntity.ok(lessonDetailAdminResponse);
     }
 
 

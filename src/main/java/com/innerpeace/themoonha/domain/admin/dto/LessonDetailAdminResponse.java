@@ -18,6 +18,7 @@ import lombok.ToString;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.28  	최유경       최초 생성
+ * 2024.09.09  	최유경       강좌 상세 조회
  * </pre>
  */
 @Getter
@@ -25,7 +26,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class LessonAdminResponse {
+public class LessonDetailAdminResponse {
     private Long lessonId;
     private Long branchId;
     private String branchName;
@@ -34,16 +35,22 @@ public class LessonAdminResponse {
     private Long memberId;
     private String tutorName;
     private String title;
-    private int cnt;
-    private int cost;
-    private String previewVideoUrl;
-    private String thumbnailUrl;
     private String startDate;
     private String endDate;
-    private String lessonTime;
-    private String day;
+    private String startTime;
+    private String endTime;
+    private String summary;
+    private int cnt;
+    private int cost;
+    private String curriculum;
+    private String supply;
+    private String previewVideoUrl;
+    private String thumbnailUrl;
     private String place;
+    private String day;
     private int target;
+    private int isOnline;
     private int onlineCost;
     private Date createdAt;
 }
+

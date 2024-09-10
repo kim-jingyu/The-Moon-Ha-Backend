@@ -12,12 +12,12 @@
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
  * 2024.08.28  	최유경        최초 생성
+ * 2024.09.09  	최유경        강좌 상세 조회
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.admin.mapper.AdminLessonMapper">
 
     <select id="selectLessonByTutorSchedule"
-            parameterType="com.innerpeace.themoonha.domain.admin.dto.LessonRegisterAdminRequest"
             resultType="int">
         <![CDATA[
         SELECT COUNT(DISTINCT lesson_id)
@@ -60,8 +60,7 @@
     </insert>
 
     <select id="selectLessonList"
-            parameterType="com.innerpeace.themoonha.domain.admin.dto.LessonListAdminRequest"
-            resultType="com.innerpeace.themoonha.domain.admin.dto.LessonAdminResponse">
+            resultType="com.innerpeace.themoonha.domain.admin.dto.LessonDetailAdminResponse">
         SELECT
             l.lesson_id,
             l.branch_id,
@@ -71,19 +70,21 @@
             l.member_id,
             m.name tutor_name,
             l.title,
-            l.cnt,
-            l.cost,
-            l.thumbnail_url,
-            l.preview_video_url,
             l.start_date,
             l.end_date,
-            CASE
-                WHEN l.cnt = 1 THEN l.start_date || ' ' || l.start_time || '~' || l.end_time
-                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
-            END AS  lesson_time,
-            l.day || '요일' day,
+            l.start_time,
+            l.end_time,
+            l.summary,
+            l.cnt,
+            l.cost,
+            l.curriculum,
+            l.supply,
+            l.preview_video_url,
+            l.thumbnail_url,
             l.place,
+            l.day,
             l.target,
+            nvl2(l.online_cost,1,0) as is_online,
             l.online_cost,
             l.created_at
         FROM
@@ -126,5 +127,52 @@
             </if>
             AND l.deleted_at IS NULL
         </where>
+    </select>
+
+
+    <select id="selectLessonDetail"
+            resultType="com.innerpeace.themoonha.domain.admin.dto.LessonDetailAdminResponse">
+        SELECT
+            l.lesson_id,
+            l.branch_id,
+            b.name branch_name,
+            l.category_id,
+            c.category,
+            l.member_id,
+            m.name tutor_name,
+            l.title,
+            l.start_date,
+            l.end_date,
+            l.start_time,
+            l.end_time,
+            l.summary,
+            l.cnt,
+            l.cost,
+            l.curriculum,
+            l.supply,
+            l.preview_video_url,
+            l.thumbnail_url,
+            l.place,
+            l.day,
+            l.target,
+            l.online_cost,
+            l.created_at
+        FROM
+            lesson l
+            JOIN
+            branch b
+            ON
+            l.branch_id = b.branch_id
+            JOIN
+            member m
+            ON
+            l.member_id = m.member_id
+            JOIN
+            category c
+            ON
+            l.category_id = c.category_id
+        WHERE
+            l.lesson_id = #{lessonId}
+            AND l.deleted_at IS NULL
     </select>
 </mapper>
