@@ -20,7 +20,7 @@ import java.util.Locale;
 public class DateTimeUtil {
 
     public static String timeAgo(String timeString) {
-        if (timeString == null) {
+        if (timeString == null || timeString.trim().isEmpty()) {
             return "";
         }
 
@@ -33,11 +33,16 @@ public class DateTimeUtil {
         for (DateTimeFormatter formatter : formatters) {
             try {
                 timeObj = LocalDateTime.parse(timeString.trim(), formatter);
-            } catch (Exception e) {}
+                break;
+            } catch (Exception e) {
+            }
+        }
+
+        if (timeObj == null) {
+            return "";
         }
 
         LocalDateTime now = LocalDateTime.now();
-
         Duration duration = Duration.between(timeObj, now);
 
         // 오늘 이전이라면 날짜 그대로 반환

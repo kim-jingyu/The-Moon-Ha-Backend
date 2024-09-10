@@ -22,6 +22,7 @@ import java.util.List;
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * 2024.08.29  	조희정       출석 시작 구현
  * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
+ * 2024.09.10  	조희정       출석 현황 조회 구현
  * </pre>
  */
 public interface LoungeService {
@@ -110,4 +111,13 @@ public interface LoungeService {
      * @return
      */
     CommonResponse modifyAttendanceYn(Long attendanceId);
+
+    /**
+     * 출석 현황 조회
+     * @param lessonId
+     * @param memberId
+     * @return
+     */
+    AttendanceMembersResponse findAllMemberAttendance(Long lessonId, Long memberId);
+
 }

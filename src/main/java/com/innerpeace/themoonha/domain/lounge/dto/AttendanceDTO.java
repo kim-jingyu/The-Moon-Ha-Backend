@@ -26,6 +26,7 @@ public class AttendanceDTO {
     private Long attendanceId;
     private Long memberId;
     private String name;
+    private String profileImgUrl;
     private String attendanceDate;
     private Boolean attendanceYn;
 

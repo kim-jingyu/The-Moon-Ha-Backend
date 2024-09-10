@@ -161,12 +161,12 @@ public interface LoungeMapper {
     int insertAttendanceList(@Param("lessonId") Long lessonId, @Param("currentTime") String currentTime);
 
     /**
-     * 출석 시작 리스트 조회
+     * 출석 리스트 조회
      * @param lessonId
      * @param currentTime
      * @return
      */
-    List<AttendanceDTO> selectAttendanceStartedList(@Param("lessonId") Long lessonId, @Param("currentTime") String currentTime);
+    List<AttendanceDTO> selectAttendanceStartedList(@Param("lessonId") Long lessonId, @Param("currentTime") String currentTime, @Param("memberId") Long memebrId);
 
     /**
      * 수강생 출석 여부 수정
