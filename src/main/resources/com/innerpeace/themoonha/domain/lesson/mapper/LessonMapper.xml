@@ -106,6 +106,9 @@
         WHERE
             s.deleted_at IS NULL AND
             s.expire_date > sysdate
+            <if test="branchId != null">
+                AND l.branchId = #{branchId}
+            </if>
         ORDER BY
             s.short_form_id desc
     </select>

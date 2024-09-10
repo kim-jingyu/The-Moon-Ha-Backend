@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 public interface LessonMapper {
     List<LessonDTO> selectLessonList(LessonListRequest lessonListRequest);
-    List<ShortFormDTO> selectShortFormList();
+    List<ShortFormDTO> selectShortFormList(Long branchId);
     Optional<LessonDetailResponse> selectLessonDetail(Long lessonId);
     List<TutorLessonDetailDTO> selectTutorDetail(Long tutorId);
     List<CartResponse> selectCartList(Long memberId);

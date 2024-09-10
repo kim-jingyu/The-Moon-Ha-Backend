@@ -45,7 +45,7 @@ public class LessonServiceImpl implements LessonService {
         String memberName = "고객1"; // 임시값
 
         List<LessonDTO> lessonList = lessonMapper.selectLessonList(lessonListRequest);
-        List<ShortFormDTO> shortFormList = lessonMapper.selectShortFormList();
+        List<ShortFormDTO> shortFormList = lessonMapper.selectShortFormList(lessonListRequest.getBranchId());
         return LessonListResponse.of(lessonList, shortFormList, memberName, lessonListRequest.getBranchId());
     }
 
