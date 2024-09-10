@@ -9,14 +9,14 @@ import com.innerpeace.themoonha.global.service.S3Service;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cursor.Cursor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * 2024.08.29  	조희정       출석 시작 구현
  * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
+ * 2024.09.10  	조희정       출석 현황 조회 구현
  * </pre>
  */
 @Service
@@ -66,6 +67,8 @@ public class LoungeServiceImpl implements LoungeService {
      */
     @Override
     public LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role) {
+        AttendanceMembersResponse attendanceList;
+
         LoungeInfoDTO loungeInfo = loungeMapper.selectLoungeInfo(loungeId, memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_NOT_FOUND));
         List<LoungePostDTO> loungePostList = loungeMapper.selectLoungePostList(loungeId, memberId)
@@ -75,7 +78,12 @@ public class LoungeServiceImpl implements LoungeService {
                     return LoungePostDTO.of(loungePost, postImgUrl);
                 })
                 .collect(Collectors.toList());
-        List<AttendanceDTO> attendanceList = loungeMapper.selectAttendanceList(loungeId, memberId, role);
+        if (role.equals("ROLE_TUTOR")) {
+            attendanceList = findAllMemberAttendance(loungeId, null);
+        } else {
+            attendanceList = findAllMemberAttendance(loungeId, memberId);
+
+        }
         List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeInfo.getLessonId());
 
         return LoungeHomeResponse.of(
@@ -244,7 +252,7 @@ public class LoungeServiceImpl implements LoungeService {
             throw new CustomException(ErrorCode.ATTENDANCE_START_FAILED);
         }
 
-        return loungeMapper.selectAttendanceStartedList(lessonId, formattedDate);
+        return loungeMapper.selectAttendanceStartedList(lessonId, formattedDate, null);
     }
 
     /**
@@ -258,6 +266,60 @@ public class LoungeServiceImpl implements LoungeService {
             throw new CustomException(ErrorCode.ATTENDANCE_UPDATE_FAILED);
         }
         return CommonResponse.of(true, SuccessCode.ATTENDANCE_UPDATE_SUCCESS.getMessage());
+    }
+
+    /**
+     * 출석 현황 조회
+     * @param lessonId
+     * @param memberId
+     * @return
+     */
+    @Override
+    public AttendanceMembersResponse findAllMemberAttendance(Long lessonId, Long memberId) {
+        List<AttendanceDTO> attendanceDTOList = loungeMapper.selectAttendanceStartedList(lessonId, null, memberId);
+
+        List<String> attendanceDates = attendanceDTOList.stream()
+                .map(AttendanceDTO::getAttendanceDate)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+        Map<String, AttendanceMembersDTO> studentAttendanceMap = new HashMap<>();
+
+        // 출석 데이터 가공
+        for (AttendanceDTO dto : attendanceDTOList) {
+            studentAttendanceMap.computeIfAbsent(dto.getName(), name ->
+                    AttendanceMembersDTO.builder()
+                            .name(name)
+                            .attendanceCnt(0)
+                            .attendance(new ArrayList<>(Collections.nCopies(attendanceDates.size(), false)))
+                            .build());
+
+            AttendanceMembersDTO student = studentAttendanceMap.get(dto.getName());
+
+            // 해당 날짜에 출석 여부를 기록
+            int index = attendanceDates.indexOf(dto.getAttendanceDate());
+            if (index != -1) {
+                List<Boolean> updatedAttendance = new ArrayList<>(student.getAttendance());
+                updatedAttendance.set(index, dto.getAttendanceYn());
+
+                long updatedAttendanceCnt = student.getAttendanceCnt();
+                if (dto.getAttendanceYn()) {
+                    updatedAttendanceCnt++;
+                }
+
+                studentAttendanceMap.put(dto.getName(), AttendanceMembersDTO.builder()
+                        .name(student.getName())
+                        .attendanceCnt(updatedAttendanceCnt)
+                        .attendance(updatedAttendance)
+                        .build());
+            }
+        }
+
+        return AttendanceMembersResponse.builder()
+                .attendanceDates(attendanceDates)
+                .students(new ArrayList<>(studentAttendanceMap.values()))
+                .build();
     }
 }
 

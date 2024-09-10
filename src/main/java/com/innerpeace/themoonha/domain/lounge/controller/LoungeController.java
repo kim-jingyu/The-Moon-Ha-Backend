@@ -27,6 +27,7 @@ import java.util.List;
  * 2024.08.28  	조희정       게시글 수정, 댓글 삭제, 댓글 수정 구현
  * 2024.08.29  	조희정       출석 시작 구현
  * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
+ * 2024.09.10  	조희정       출석 현황 조회 구현
  * </pre>
  */
 @RestController
@@ -146,8 +147,8 @@ public class LoungeController {
      * @param lessonId
      * @return
      */
-    @PostMapping("/attendance")
-    public ResponseEntity<List<AttendanceDTO>> loungeAttendanceList(@RequestBody Long lessonId) {
+    @PostMapping("/attendance/{lessonId}")
+    public ResponseEntity<List<AttendanceDTO>> loungeAttendanceList(@PathVariable Long lessonId) {
         return ResponseEntity.ok(loungeService.saveAttendanceList(lessonId));
     }
 
@@ -156,8 +157,8 @@ public class LoungeController {
      * @param attendanceId
      * @return
      */
-    @PostMapping("/attendance/update")
-    public ResponseEntity<CommonResponse> loungeAttendanceUpdate(@RequestBody Long attendanceId) {
+    @PostMapping("/attendance/update/{attendanceId}")
+    public ResponseEntity<CommonResponse> loungeAttendanceUpdate(@PathVariable Long attendanceId) {
         return ResponseEntity.ok(loungeService.modifyAttendanceYn(attendanceId));
     }
 

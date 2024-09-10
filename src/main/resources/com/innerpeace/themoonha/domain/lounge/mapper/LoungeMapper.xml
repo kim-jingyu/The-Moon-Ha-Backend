@@ -385,6 +385,7 @@
             a.attendance_id,
             s.member_id,
             m.name,
+            m.profile_img_url,
             a.attendance_date,
             a.attendance_yn
         FROM
@@ -395,7 +396,12 @@
             member m ON s.member_id = m.member_id
         WHERE
             s.lesson_id = #{lessonId}
+            <if test="memberId != null">
+                AND s.member_id = #{memberId}
+            </if>
+            <if test="currentTime != null">
                 AND a.attendance_date = TO_DATE(#{currentTime}, 'YYYY-MM-DD')
+            </if>
     </select>
 
     <!-- 수강생 출석 여부 수정 -->

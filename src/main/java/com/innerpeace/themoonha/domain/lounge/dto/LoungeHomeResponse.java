@@ -26,11 +26,11 @@ public class LoungeHomeResponse {
     private LoungeInfoDTO loungeInfo;
     private List<LoungePostDTO> loungeNoticePostList;
     private List<LoungePostDTO> loungePostList;
-    private List<AttendanceDTO> attendanceList;
+    private AttendanceMembersResponse attendanceList;
     private List<LoungeMemberDTO> loungeMemberList;
 
     public static LoungeHomeResponse of(LoungeInfoDTO loungeInfo,List<LoungePostDTO> loungePostList,
-                                        List<AttendanceDTO> attendanceList, List<LoungeMemberDTO> loungeMemberList) {
+                                        AttendanceMembersResponse attendanceList, List<LoungeMemberDTO> loungeMemberList) {
 
         // 공지 게시글 리스트 생성
         List<LoungePostDTO> loungeNoticePostList = loungePostList.stream()
