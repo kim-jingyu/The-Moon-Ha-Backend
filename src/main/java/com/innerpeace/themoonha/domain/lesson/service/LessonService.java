@@ -22,7 +22,7 @@ import java.util.List;
  * </pre>
  */
 public interface LessonService {
-    LessonListResponse findLessonList(LessonListRequest lessonListRequest);
+    LessonListResponse findLessonList(LessonListRequest lessonListRequest, Long memberId);
     LessonDetailResponse findLessonDetail(Long lessonId);
     TutorDetailResponse findTutorDetail(Long tutorId);
     List<CartResponse> findCartList(Long memberId);

@@ -1,8 +1,11 @@
 package com.innerpeace.themoonha.domain.lesson.service;
 
+import com.innerpeace.themoonha.domain.auth.mapper.AuthMapper;
+import com.innerpeace.themoonha.domain.auth.service.AuthServiceImpl;
 import com.innerpeace.themoonha.domain.lesson.dto.*;
 import com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.entity.Member;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
@@ -19,8 +22,8 @@ import java.util.Optional;
  * 강좌 서비스 구현체
  *
  * @author 손승완
- * @since 2024.08.24
  * @version 1.0
+ * @since 2024.08.24
  * @since 2024.08.24
  *
  * <pre>
@@ -38,15 +41,15 @@ import java.util.Optional;
 @Slf4j
 public class LessonServiceImpl implements LessonService {
     private final LessonMapper lessonMapper;
+    private final AuthMapper authMapper;
 
     @Override
     @Transactional(readOnly = true)
-    public LessonListResponse findLessonList(LessonListRequest lessonListRequest) {
-        String memberName = "고객1"; // 임시값
-
+    public LessonListResponse findLessonList(LessonListRequest lessonListRequest, Long memberId) {
+        Member member = authMapper.selectByMemberId(memberId).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         List<LessonDTO> lessonList = lessonMapper.selectLessonList(lessonListRequest);
         List<ShortFormDTO> shortFormList = lessonMapper.selectShortFormList(lessonListRequest.getBranchId());
-        return LessonListResponse.of(lessonList, shortFormList, memberName, lessonListRequest.getBranchId());
+        return LessonListResponse.of(lessonList, shortFormList, member.getUsername(), lessonListRequest.getBranchId());
     }
 
     @Override
