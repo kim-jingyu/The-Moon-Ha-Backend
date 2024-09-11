@@ -33,4 +33,5 @@ public interface BeforeAfterMapper {
     void insertHashtagAndBeforeAfterHashtag(@Param("hashtags") List<String> hashtags, @Param("beforeAfterId") Long beforeAfterId);
     List<BeforeAfterSearchResponse> findBeforeAfterListByHashtags(@Param("hashtags") List<String> hashtags);
     Optional<BeforeAfterDetailResponse> findBeforeAfterDetail(Long beforeAfterId);
+    List<BeforeAfterDetailResponse> findBeforeAfterDetailList();
 }

@@ -100,6 +100,33 @@
             m.username
     </select>
 
+    <!-- 분야별 한 입 콘텐츠 상세 리스트 조회 -->
+    <select id="findFieldDetails" resultMap="FieldDetailResponseMap">
+        SELECT
+            f.content_url AS contentUrl,
+            CASE
+                WHEN f.content_url LIKE '%/image/%' THEN 1
+                ELSE 0
+            END as contentIsImage,
+            f.title as title,
+            m.profile_img_url AS profileImageUrl,
+            m.username AS memberName,
+            LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
+        FROM
+            field f
+        JOIN
+            member m ON f.member_id = m.member_id
+        LEFT JOIN
+            field_hashtag fh ON f.field_id = fh.field_id
+        LEFT JOIN
+            hashtag h ON fh.hashtag_id = h.hashtag_id
+        GROUP BY
+            f.content_url,
+            f.title,
+            m.profile_img_url,
+            m.username
+    </select>
+
     <!-- 분야별 한 입 콘텐츠 전체 목록 조회(최신순) -->
     <select id="findFieldList" resultMap="FieldListResponseMap">
         SELECT

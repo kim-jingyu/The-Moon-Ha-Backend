@@ -74,6 +74,11 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
                 .orElseThrow(() -> new CustomException(BEFORE_AFTER_NOT_FOUND));
     }
 
+    @Override
+    public List<BeforeAfterDetailResponse> getBeforeAfterContents() {
+        return beforeAfterMapper.findBeforeAfterDetailList();
+    }
+
     /**
      * 비포애프터 콘텐츠 등록
      *
