@@ -29,9 +29,6 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
     # S3 버킷에 업로드
-     - name: Build project
-       run: mvn clean package
-
      - name: Zip files for deployment
        run: |
           zip -r deployment.zip .
