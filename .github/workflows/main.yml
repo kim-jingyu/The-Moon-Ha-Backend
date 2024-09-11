@@ -32,9 +32,13 @@ jobs:
      - name: Build project
        run: mvn clean package
 
+     - name: Zip files for deployment
+       run: |
+          zip -r deployment.zip .
+
      - name: Upload to AWS S3
        run: |
-          aws s3 cp . s3://${{ secrets.S3_BUCKET }}/$GITHUB_SHA/ --recursive
+          aws s3 cp deployment.zip s3://${{ secrets.S3_BUCKET }}/$GITHUB_SHA.zip
 
      - name: Deploy to EC2
        run: |
