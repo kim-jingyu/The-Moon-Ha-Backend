@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.lesson.dto.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -34,4 +35,5 @@ public interface LessonMapper {
                      @Param("memberId") Long memberId);
     List<LessonEnrollResponse> selectLessonEnrollList(Long memberId);
     List<TutorLessonResponse> selectTutorLessonList(Long memberId);
+    int updateShortFormViewCount(ShortFormViewCountDTO viewCountDTO);
 }

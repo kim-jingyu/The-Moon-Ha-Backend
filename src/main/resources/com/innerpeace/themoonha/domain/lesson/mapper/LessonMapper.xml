@@ -110,7 +110,7 @@
                 AND l.branchId = #{branchId}
             </if>
         ORDER BY
-            s.short_form_id DESC
+            s.view_count DESC
     </select>
 
     <select id="selectLessonDetail"
@@ -237,7 +237,6 @@
             </foreach>
     </update>
 
-
     <select id="selectLessonEnrollList"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonEnrollResponse">
         SELECT
@@ -270,4 +269,13 @@
         ORDER BY
             l.lesson_id DESC
     </select>
+
+    <update id="updateShortFormViewCount">
+        UPDATE
+            short_form
+        SET
+            view_count = view_count + #{viewCount}
+        WHERE
+            short_form_id = #{shortFormId}
+    </update>
 </mapper>

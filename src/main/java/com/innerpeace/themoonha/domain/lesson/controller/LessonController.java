@@ -94,7 +94,7 @@ public class LessonController {
     @GetMapping("/shortform/{shortFormId}")
     public void shortFormDetail(@PathVariable Long shortFormId,
                                 @MemberId Long memberId) {
-        lessonService.addShortFormViewCount(shortFormId, memberId);
+        lessonService.increaseShortFormViewCountCache(shortFormId, memberId);
     }
 
 }

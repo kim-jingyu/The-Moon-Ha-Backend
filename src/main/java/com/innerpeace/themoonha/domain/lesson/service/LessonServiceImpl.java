@@ -11,10 +11,14 @@ import com.innerpeace.themoonha.global.service.RedisViewService;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -43,6 +47,7 @@ public class LessonServiceImpl implements LessonService {
     private final LessonMapper lessonMapper;
     private final AuthMapper authMapper;
     private final RedisViewService redisViewService;
+    private final SqlSessionFactory sqlSessionFactory;
 
     @Override
     @Transactional(readOnly = true)
@@ -109,11 +114,29 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public void addShortFormViewCount(Long shortFormId, Long memberId) {
-        increaseShortFormViewCount(memberId, shortFormId, SHORTFORM);
+    public void increaseShortFormViewCountCache(Long shortFormId, Long memberId) {
+        redisViewService.incrementViewCount(memberId, shortFormId, SHORTFORM);
     }
 
-    private void increaseShortFormViewCount(Long memberId, Long shortFormId, String shortForm) {
-        redisViewService.incrementViewCount(memberId, shortFormId, shortForm);
+    @Override
+    @Transactional
+    public void increaseShortFormViewCountDB(List<ShortFormViewCountDTO> viewCountList) {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+            int resultCnt = 0;
+            for (ShortFormViewCountDTO viewCountDTO : viewCountList) {
+                resultCnt += lessonMapper.updateShortFormViewCount(viewCountDTO);
+            }
+
+            if (resultCnt != viewCountList.size()) {
+                throw new CustomException(ErrorCode.SHORTFORM_VIEW_COUNT_INCREASE_FAILED);
+            }
+
+            sqlSession.commit();
+            log.info("배치 작업 완료: 업데이트된 레코드 수 = {}", resultCnt);
+
+        } catch (Exception e) {
+            log.error("배치 작업 중 오류 발생", e);
+            throw e;
+        }
     }
 }
