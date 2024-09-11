@@ -45,4 +45,4 @@ jobs:
           aws deploy create-deployment \
             --application-name ${{ secrets.AWS_CODE_DEPLOY_APPLICATION }} \
             --deployment-group-name ${{ secrets.AWS_CODE_DEPLOY_GROUP }} \
-            --s3-location bucket=${{ secrets.S3_BUCKET }},key=$GITHUB_SHA/,bundleType=zip
+            --s3-location bucket=${{ secrets.S3_BUCKET }},key=$GITHUB_SHA.zip,bundleType=zip
