@@ -1,20 +1,19 @@
 package com.innerpeace.themoonha.domain.lesson.service;
 
 import com.innerpeace.themoonha.domain.auth.mapper.AuthMapper;
-import com.innerpeace.themoonha.domain.auth.service.AuthServiceImpl;
 import com.innerpeace.themoonha.domain.lesson.dto.*;
 import com.innerpeace.themoonha.domain.lesson.mapper.LessonMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.entity.Member;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import com.innerpeace.themoonha.global.service.RedisViewService;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +39,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class LessonServiceImpl implements LessonService {
+    private static final String SHORTFORM = "shortForm";
     private final LessonMapper lessonMapper;
     private final AuthMapper authMapper;
+    private final RedisViewService redisViewService;
 
     @Override
     @Transactional(readOnly = true)
@@ -107,4 +108,12 @@ public class LessonServiceImpl implements LessonService {
         return lessonMapper.selectTutorLessonList(memberId);
     }
 
+    @Override
+    public void addShortFormViewCount(Long shortFormId, Long memberId) {
+        increaseShortFormViewCount(memberId, shortFormId, SHORTFORM);
+    }
+
+    private void increaseShortFormViewCount(Long memberId, Long shortFormId, String shortForm) {
+        redisViewService.incrementViewCount(memberId, shortFormId, shortForm);
+    }
 }

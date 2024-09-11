@@ -91,4 +91,10 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.findTutorLessonList(memberId));
     }
 
+    @GetMapping("/shortform/{shortFormId}")
+    public void shortFormDetail(@PathVariable Long shortFormId,
+                                @MemberId Long memberId) {
+        lessonService.addShortFormViewCount(shortFormId, memberId);
+    }
+
 }

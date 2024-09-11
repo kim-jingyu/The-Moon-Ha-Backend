@@ -30,4 +30,5 @@ public interface LessonService {
     CommonResponse payLesson(List<Long> cartIdList, Long memberId);
     List<LessonEnrollResponse> findEnrollLessonList(Long memberId);
     List<TutorLessonResponse> findTutorLessonList(Long memberId);
+    void addShortFormViewCount(Long shortFormId, Long memberId);
 }
