@@ -65,6 +65,15 @@ public class BeforeAfterController {
     }
 
     /**
+     * 비포애프터 콘텐츠 상세 리스트 조회 API
+     * @return
+     */
+    @GetMapping(value = "/details")
+    public ResponseEntity<List<BeforeAfterDetailResponse>> retrieveBeforeAfterContents() {
+        return ResponseEntity.ok(beforeAfterService.getBeforeAfterContents());
+    }
+
+    /**
      * 비포애프터 콘텐츠 등록 API
      * @param beforeAfterRequest
      * @param beforeContent

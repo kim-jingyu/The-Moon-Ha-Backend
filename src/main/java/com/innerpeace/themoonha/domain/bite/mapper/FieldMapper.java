@@ -31,4 +31,5 @@ public interface FieldMapper {
     void insertHashtagAndFieldHashtag(@Param("hashtags") List<String> hashtags, @Param("fieldId") Long fieldId);
     List<FieldSearchResponse> findFieldListByHashtags(@Param("hashtags") List<String> hashtags);
     Optional<FieldDetailResponse> findFieldDetail(Long fieldId);
+    List<FieldDetailResponse> findFieldDetails();
 }

@@ -70,6 +70,11 @@ public class FieldServiceImpl implements FieldService {
                 .orElseThrow(() -> new CustomException(FIELD_NOT_FOUND));
     }
 
+    @Override
+    public List<FieldDetailResponse> getFieldContents() {
+        return fieldMapper.findFieldDetails();
+    }
+
     /**
      * 분야별 한 입 콘텐츠 등록
      *

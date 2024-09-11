@@ -62,6 +62,11 @@ public class FieldController {
         return ResponseEntity.ok(fieldService.getFieldContent(fieldId));
     }
 
+    @GetMapping(value = "/details")
+    public ResponseEntity<List<FieldDetailResponse>> retrieveFieldContents() {
+        return ResponseEntity.ok(fieldService.getFieldContents());
+    }
+
     /**
      * 분야별 한 입 콘텐츠 등록 API
      * @param fieldRequest

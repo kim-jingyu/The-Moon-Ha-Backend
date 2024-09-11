@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,6 +96,11 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<LessonEnrollResponse> findEnrollLessonList(Long memberId) {
         return lessonMapper.selectLessonEnrollList(memberId);
+    }
+
+    @Override
+    public List<LessonEnrollResponse> findFieldEnrollLessonList(Long memberId) {
+        return lessonMapper.selectLessonFieldEnrollList(memberId);
     }
 
     @Override

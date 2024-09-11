@@ -81,8 +81,8 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     public LiveLessonResponse createLiveLesson(Long memberId, LiveLessonRequest liveLessonRequest, MultipartFile thumbnail) {
         try {
             LiveLesson liveLesson = LiveLesson.createLiveLesson(memberId, liveLessonRequest, s3Service.saveFile(thumbnail, LIVE_THUMBNAIL_PATH));
-            liveLessonMapper.insertLiveLesson(liveLesson);
             liveLesson.startLiveLesson();
+            liveLessonMapper.insertLiveLesson(liveLesson);
             liveLessonEventService.sendStatusEvent(liveLesson.getLiveId(), liveLesson.getStatus().name());
             Member member = authMapper.selectByMemberId(memberId)
                     .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
