@@ -33,5 +33,6 @@ public interface LessonMapper {
     int insertSugang(@Param("cartIdList") List<Long> cartIdList,
                      @Param("memberId") Long memberId);
     List<LessonEnrollResponse> selectLessonEnrollList(Long memberId);
+    List<LessonEnrollResponse> selectLessonFieldEnrollList(Long memberId);
     List<TutorLessonResponse> selectTutorLessonList(Long memberId);
 }

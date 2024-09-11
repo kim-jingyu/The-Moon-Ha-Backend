@@ -256,6 +256,24 @@
             s.lesson_id
     </select>
 
+    <select id="selectLessonFieldEnrollList"
+            resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonEnrollResponse">
+        SELECT
+            s.lesson_id, l.title
+        FROM
+            sugang s
+        JOIN
+            lesson l on s.lesson_id = l.lesson_id
+        LEFT JOIN
+            field f on l.lesson_id = f.lesson_id
+        WHERE
+            s.member_id = #{memberId} and
+            to_char(sysdate, 'YYYY-MM-DD') > l.start_date and
+            f.lesson_id is null
+        ORDER BY
+            s.lesson_id
+    </select>
+
     <select id="selectTutorLessonList"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.TutorLessonResponse">
         SELECT
