@@ -8,6 +8,7 @@ import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
@@ -33,10 +34,10 @@ public class FcmUtil {
     public void send_FCM(String tokenId, String title, String content) {
         try {
             //JSON 파일
-            FileInputStream refreshToken = new FileInputStream(SERIVCE_ACCOUNT_JSON);
+//            FileInputStream refreshToken = new FileInputStream(SERIVCE_ACCOUNT_JSON);
 
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(refreshToken))
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(SERIVCE_ACCOUNT_JSON).getInputStream()))
                     .build();
 
             // initializing
