@@ -68,9 +68,14 @@ public class BeforeAfterController {
      * 비포애프터 콘텐츠 상세 리스트 조회 API
      * @return
      */
-    @GetMapping(value = "/details")
-    public ResponseEntity<List<BeforeAfterDetailResponse>> retrieveBeforeAfterContents() {
-        return ResponseEntity.ok(beforeAfterService.getBeforeAfterContents());
+    @GetMapping(value = "/details/by-latest")
+    public ResponseEntity<List<BeforeAfterDetailResponse>> retrieveBeforeAfterContentsByLatest() {
+        return ResponseEntity.ok(beforeAfterService.getBeforeAfterContentsByLatest());
+    }
+
+    @GetMapping(value = "/details/by-title")
+    public ResponseEntity<List<BeforeAfterDetailResponse>> retrieveBeforeAfterContentsByTitle() {
+        return ResponseEntity.ok(beforeAfterService.getBeforeAfterContentsByTitle());
     }
 
     /**

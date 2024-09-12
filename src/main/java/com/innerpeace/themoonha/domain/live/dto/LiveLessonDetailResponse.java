@@ -38,4 +38,7 @@ public class LiveLessonDetailResponse {
     private Date createdAt;
     private Long minutesAgo;
     private Boolean isEnrolled;
+    private String summary;
+    private String curriculum;
+    private String supply;
 }

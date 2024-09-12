@@ -30,5 +30,6 @@ public interface FieldService {
     List<FieldSearchResponse> findFieldByTitle(String keyword);
     List<FieldSearchResponse> findFieldByHashTags(List<String> hashtags);
     List<FieldListResponse> getFieldListOrderByTitle();
-    List<FieldDetailResponse> getFieldContents();
+    List<FieldDetailResponse> getFieldContentsByLatest();
+    List<FieldDetailResponse> getFieldContentsByTitle();
 }

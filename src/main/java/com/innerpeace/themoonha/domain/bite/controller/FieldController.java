@@ -62,9 +62,14 @@ public class FieldController {
         return ResponseEntity.ok(fieldService.getFieldContent(fieldId));
     }
 
-    @GetMapping(value = "/details")
-    public ResponseEntity<List<FieldDetailResponse>> retrieveFieldContents() {
-        return ResponseEntity.ok(fieldService.getFieldContents());
+    @GetMapping(value = "/details/by-latest")
+    public ResponseEntity<List<FieldDetailResponse>> retrieveFieldContentsByLatest() {
+        return ResponseEntity.ok(fieldService.getFieldContentsByLatest());
+    }
+
+    @GetMapping(value = "/details/by-title")
+    public ResponseEntity<List<FieldDetailResponse>> retrieveFieldContentsByTitle() {
+        return ResponseEntity.ok(fieldService.getFieldContentsByTitle());
     }
 
     /**

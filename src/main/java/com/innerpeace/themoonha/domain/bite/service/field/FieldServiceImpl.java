@@ -71,8 +71,13 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<FieldDetailResponse> getFieldContents() {
-        return fieldMapper.findFieldDetails();
+    public List<FieldDetailResponse> getFieldContentsByLatest() {
+        return fieldMapper.findFieldDetailsByLatest();
+    }
+
+    @Override
+    public List<FieldDetailResponse> getFieldContentsByTitle() {
+        return fieldMapper.findFieldDetailsByTitle();
     }
 
     /**
