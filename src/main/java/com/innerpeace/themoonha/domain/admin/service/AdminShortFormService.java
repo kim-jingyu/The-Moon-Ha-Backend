@@ -22,5 +22,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminShortFormService {
     void addShortForm(ShortFormRegisterAdminRequest shortFormRegisterAdminRequest, MultipartFile thumbnailFile,  MultipartFile shortFormVideoFile);
 
-    List<ShortFormListAdminResponse> findShortFormList(Long branchId, int expiredYn);
+    List<ShortFormListAdminResponse> findShortFormList(Long branchId, String yearMonth);
 }

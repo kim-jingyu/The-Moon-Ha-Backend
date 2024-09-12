@@ -29,6 +29,7 @@ public class ShortFormListAdminResponse {
     private Long shortFormId;
     private String name;
     private String videoUrl;
+    private String thumbnailUrl;
     private Date startDate;
     private Date expireDate;
     private Date createdAt;
@@ -38,4 +39,5 @@ public class ShortFormListAdminResponse {
     private Long memberId;
     private String tutorName;
     private String title;
+    private int viewCount;
 }
