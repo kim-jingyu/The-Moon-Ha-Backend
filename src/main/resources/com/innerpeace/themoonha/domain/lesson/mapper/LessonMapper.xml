@@ -239,17 +239,15 @@
 
     <select id="selectLessonEnrollList"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonEnrollResponse">
-        SELECT
-            s.lesson_id, l.title
+        SELECT s.lesson_id,
+               l.title
         FROM
             sugang s
-        JOIN
-            lesson l ON s.lesson_id = l.lesson_id
-        LEFT JOIN
-            before_after ba ON l.lesson_id = ba.lesson_id
+        JOIN lesson l ON s.lesson_id = l.lesson_id
+        LEFT JOIN before_after ba ON s.lesson_id = ba.lesson_id AND ba.member_id = #{memberId}
         WHERE
             s.member_id = #{memberId} AND
-            to_char(sysdate, 'YYYY-MM-DD') > l.end_date AND
+            sysdate > l.end_date AND
             ba.lesson_id IS NULL
         ORDER BY
             s.lesson_id
@@ -264,10 +262,10 @@
         JOIN
             lesson l on s.lesson_id = l.lesson_id
         LEFT JOIN
-            field f on l.lesson_id = f.lesson_id
+            field f on l.lesson_id = f.lesson_id AND f.member_id = #{memberId}
         WHERE
             s.member_id = #{memberId} and
-            to_char(sysdate, 'YYYY-MM-DD') > l.start_date and
+            sysdate > l.start_date and
             f.lesson_id is null
         ORDER BY
             s.lesson_id
