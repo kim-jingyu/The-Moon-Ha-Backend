@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--
+ * 알림 매퍼 XML
+ * @author 조희정
+ * @since 2024.09.011
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.09.11  	조희정        최초 생성
+ * 2024.09.11  	조희정        FCM 토큰 저장 기능 구현
+ * 2024.09.12  	조희정        라운지 오픈 기능, 라운지 오픈 후 알림 기능 구현
+ * </pre>
+ -->
+<mapper namespace="com.innerpeace.themoonha.domain.alim.mapper.AlimMapper">
+
+    <!-- FCM 토큰 저장 -->
+    <insert id="insertFcmToken">
+        INSERT INTO alim (alim_id, member_id, fcm_token)
+        VALUES (alim_seq.nextval, #{memberId}, #{token})
+    </insert>
+
+    <!-- FCM 토큰이 이미 존재하는지 -->
+    <select id="selectFcmTokenExist" resultType="boolean">
+        SELECT
+            DECODE((SELECT COUNT(*) FROM alim WHERE fcm_token = #{token}), 0, 0, 1)
+        FROM dual
+    </select>
+
+    <!-- MemberId의 FCM 토큰 가져오기 -->
+    <select id="selectFcmTokenByMemberId" resultType="String" parameterType="list">
+        SELECT fcm_token
+        FROM alim
+        WHERE member_id IN
+        <foreach item="memberIds" collection="list" open="(" separator="," close=")">
+            #{memberIds}
+        </foreach>
+    </select>
+
+    <!-- 5분 후에 수업인 MemberId의 FCM 토큰 가져오기 -->
+    <select id="selectFcmTokenForUpcomingLessons" resultType="com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO">
+        SELECT a.fcm_token, l.title AS lesson_title
+        FROM sugang s
+                 JOIN lesson l ON s.lesson_id = l.lesson_id
+                 JOIN alim a ON s.member_id = a.member_id
+        WHERE TO_TIMESTAMP(l.start_date || ' ' || l.start_time, 'YYYY-MM-DD HH24:MI')
+                  BETWEEN SYSTIMESTAMP AND SYSTIMESTAMP + INTERVAL '5' MINUTE
+    </select>
+
+    <!-- 라운지 오픈 -->
+    <insert id="insertLounge">
+        INSERT INTO lounge(lounge_id, lesson_id, lounge_img_url)
+        SELECT lounge_seq.nextval, lesson_id,thumbnail_url
+        FROM lesson le
+        WHERE TO_DATE(le.START_DATE, 'YYYY-MM-DD') BETWEEN TRUNC(SYSDATE) AND TRUNC(SYSDATE) + 3
+          AND NOT EXISTS (
+            SELECT 1
+            FROM lounge lo
+            WHERE lo.lesson_id = le.lesson_id
+        )
+    </insert>
+
+    <!-- 오픈된 라운지에 참여하는 MemberId의 FCM 토큰 가져오기 -->
+    <select id="selectFcmTokensAndLessonTitle" resultType="com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO">
+        SELECT a.fcm_token, le.title AS lesson_title
+        FROM lesson le
+                 JOIN sugang su ON le.lesson_id = su.lesson_id
+                 JOIN alim a ON a.member_id = su.member_id
+        WHERE su.lounge_yn = 1
+          AND le.lesson_id IN (
+            SELECT lesson_id
+            FROM lounge
+            WHERE CREATED_AT >= TRUNC(SYSDATE)
+        )
+    </select>
+
+
+</mapper>

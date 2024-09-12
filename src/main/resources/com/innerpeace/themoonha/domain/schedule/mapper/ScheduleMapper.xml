@@ -13,6 +13,7 @@
  * ==========  =========    =========
  * 2024.09.07  	조희정        최초 생성
  * 2024.09.07  	조희정        스케줄 주간 보기 기능 구현
+ * 2024.09.08  	조희정        스케줄 월간 보기 기능, 다음 스케줄 보기 기능 구현
  * </pre>
  -->
 
@@ -49,6 +50,7 @@
         </foreach>
     </select>
 
+    <!-- 월별 스케줄 가져오기 -->
     <select id="selectMonthlySchedules" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleMonthlyResponse">
         <![CDATA[
             SELECT
@@ -79,6 +81,7 @@
         ]]>
     </select>
 
+    <!-- 다음 스케줄 보기 -->
     <select id="selectNextSchedule" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleNextResponse">
         SELECT /*+ FIRST_ROWS(1) */
             l.lesson_id,

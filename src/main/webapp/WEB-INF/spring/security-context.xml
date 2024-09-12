@@ -27,6 +27,7 @@
     <http pattern="/bite/**" security="none"></http>
     <http pattern="/live/**" security="none"></http>
     <http pattern="/schedule/**" security="none"></http>
+    <http pattern="/alim/**" security="none"></http>
 <!--    <http pattern="/admin/**" security="none"></http>-->
 
     <!-- HTTP 보안 설정 -->
