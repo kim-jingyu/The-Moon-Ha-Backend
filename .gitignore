@@ -48,4 +48,4 @@ src/main/resources/application.properties
 .env
 
 ## FCM ###
-.firebase-adminsdk.json
+firebase-adminsdk.json
