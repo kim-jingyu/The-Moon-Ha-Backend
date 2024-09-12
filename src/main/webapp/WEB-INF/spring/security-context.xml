@@ -24,7 +24,6 @@
     <http pattern="/auth/**" security="none"></http>
     <http pattern="/lounge/**" security="none"></http>
     <http pattern="/bite/**" security="none"></http>
-    <http pattern="/craft/**" security="none"></http>
     <http pattern="/live/**" security="none"></http>
     <http pattern="/schedule/**" security="none"></http>
 <!--    <http pattern="/admin/**" security="none"></http>-->
