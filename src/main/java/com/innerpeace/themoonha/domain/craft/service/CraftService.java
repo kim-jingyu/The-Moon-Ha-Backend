@@ -21,7 +21,7 @@ import com.innerpeace.themoonha.global.util.Criteria;
  * </pre>
  */
 public interface CraftService {
-    CraftMainResponse findCraftMain(Criteria criteria);
+    CraftMainResponse findCraftMain(Criteria criteria, Long memberId);
 
     CommonResponse addSuggestion(SuggestionRequest suggestionRequest, Long memberId);
 

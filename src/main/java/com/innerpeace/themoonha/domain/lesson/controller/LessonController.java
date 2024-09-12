@@ -3,6 +3,7 @@ package com.innerpeace.themoonha.domain.lesson.controller;
 import com.innerpeace.themoonha.domain.lesson.dto.*;
 import com.innerpeace.themoonha.domain.lesson.service.LessonService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,9 @@ public class LessonController {
      * @author 손승완
      */
     @GetMapping("/list")
-    public ResponseEntity<LessonListResponse> lessonList(LessonListRequest lessonListRequest) {
-        return ResponseEntity.ok(lessonService.findLessonList(lessonListRequest));
+    public ResponseEntity<LessonListResponse> lessonList(LessonListRequest lessonListRequest,
+                                                         @MemberId Long memberId) {
+        return ResponseEntity.ok(lessonService.findLessonList(lessonListRequest, memberId));
     }
 
     /**
@@ -62,27 +64,25 @@ public class LessonController {
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<List<CartResponse>> cartList() {
-        Long memberId = 1L;
+    public ResponseEntity<List<CartResponse>> cartList(@MemberId Long memberId) {
         return ResponseEntity.ok(lessonService.findCartList(memberId));
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<CommonResponse> cartSave(@RequestBody CartRequest cartRequest) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse> cartSave(@RequestBody CartRequest cartRequest,
+                                                   @MemberId Long memberId) {
         cartRequest.setMemberId(memberId);
         return ResponseEntity.ok(lessonService.addCart(cartRequest));
     }
 
     @PostMapping("/pay")
-    public ResponseEntity<CommonResponse> lessonPayment(@RequestBody SugangRequest sugangRequest) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse> lessonPayment(@RequestBody SugangRequest sugangRequest,
+                                                        @MemberId Long memberId) {
         return ResponseEntity.ok(lessonService.payLesson(sugangRequest.getCartIdList(), memberId));
     }
 
     @GetMapping("/enroll")
-    public ResponseEntity<List<LessonEnrollResponse>> lessonEnrollList() {
-        Long memberId = 1L;
+    public ResponseEntity<List<LessonEnrollResponse>> lessonEnrollList(@MemberId Long memberId) {
         return ResponseEntity.ok(lessonService.findEnrollLessonList(memberId));
     }
 
@@ -93,9 +93,14 @@ public class LessonController {
     }
 
     @GetMapping("/by-tutor")
-    public ResponseEntity<List<TutorLessonResponse>> tutorLessonList() {
-        Long memberId = 1L;
+    public ResponseEntity<List<TutorLessonResponse>> tutorLessonList(@MemberId Long memberId) {
         return ResponseEntity.ok(lessonService.findTutorLessonList(memberId));
+    }
+
+    @GetMapping("/shortform/{shortFormId}")
+    public void shortFormDetail(@PathVariable Long shortFormId,
+                                @MemberId Long memberId) {
+        lessonService.increaseShortFormViewCountCache(shortFormId, memberId);
     }
 
 }

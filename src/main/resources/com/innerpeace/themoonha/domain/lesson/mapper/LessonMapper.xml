@@ -110,7 +110,7 @@
                 AND l.branchId = #{branchId}
             </if>
         ORDER BY
-            s.short_form_id desc
+            s.view_count DESC
     </select>
 
     <select id="selectLessonDetail"
@@ -183,9 +183,9 @@
         JOIN lesson l ON c.lesson_id = l.lesson_id
         JOIN branch b ON l.branch_id = b.branch_id
         WHERE
-            m.member_id = #{memberId} and c.deleted_at is null
+            m.member_id = #{memberId} AND c.deleted_at IS NULL
         ORDER BY
-            b.branch_id, c.cart_id desc
+            b.branch_id, c.cart_id DESC
     </select>
 
     <insert id="insertCart">
@@ -216,8 +216,8 @@
         FROM
             cart
         WHERE
-            member_id = #{memberId} and
-            cart_id in
+            member_id = #{memberId} AND
+            cart_id IN
             <foreach item="cartId" collection="cartIdList" open="(" separator="," close=")">
                 #{cartId}
             </foreach>
@@ -229,14 +229,13 @@
         SET
             deleted_at = current_date
         WHERE
-            member_id = #{memberId} and
-            deleted_at is null and
-            cart_id in
+            member_id = #{memberId} AND
+            deleted_at IS NULL AND
+            cart_id IN
             <foreach item="cartId" collection="cartIdList" open="(" separator="," close=")">
                 #{cartId}
             </foreach>
     </update>
-
 
     <select id="selectLessonEnrollList"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonEnrollResponse">
@@ -245,13 +244,13 @@
         FROM
             sugang s
         JOIN
-            lesson l on s.lesson_id = l.lesson_id
+            lesson l ON s.lesson_id = l.lesson_id
         LEFT JOIN
-            before_after ba on l.lesson_id = ba.lesson_id
+            before_after ba ON l.lesson_id = ba.lesson_id
         WHERE
-            s.member_id = #{memberId} and
-            to_char(sysdate, 'YYYY-MM-DD') > l.end_date and
-            ba.lesson_id is null
+            s.member_id = #{memberId} AND
+            to_char(sysdate, 'YYYY-MM-DD') > l.end_date AND
+            ba.lesson_id IS NULL
         ORDER BY
             s.lesson_id
     </select>
@@ -282,10 +281,19 @@
         FROM
             lesson l
         WHERE
-            l.member_id = 1 and
-            l.end_date >= sysdate and
-            l.online_cost is not null
+            l.member_id = 1 AND
+            l.end_date >= sysdate AND
+            l.online_cost IS NOT NULL
         ORDER BY
-            l.lesson_id desc
+            l.lesson_id DESC
     </select>
+
+    <update id="updateShortFormViewCount">
+        UPDATE
+            short_form
+        SET
+            view_count = view_count + #{viewCount}
+        WHERE
+            short_form_id = #{shortFormId}
+    </update>
 </mapper>

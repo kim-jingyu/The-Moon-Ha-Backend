@@ -33,10 +33,10 @@
         FROM
             prologue p
         JOIN prologue_theme t ON p.prologue_theme_id = t.prologue_theme_id
-        LEFT JOIN like_cnt l ON p.prologue_id = l.prologue_id and l.member_id = #{memberId}
+        LEFT JOIN like_cnt l ON p.prologue_id = l.prologue_id AND l.member_id = #{memberId}
         JOIN member m ON p.member_id = m.member_id
         WHERE
-            p.deleted_at is null
+            p.deleted_at IS NULL
         GROUP BY
             p.prologue_id, p.prologue_theme_id, p.title, p.thumbnail_url, p.video_url, l.like_cnt_id, t.name, t.description, m.name
         ORDER BY
@@ -48,18 +48,18 @@
         SELECT
             w.wish_lesson_id,
             w.title,
-            (SELECT count(v2.vote_id) FROM vote v2 WHERE v2.wish_lesson_id = w.wish_lesson_id) as vote_cnt,
+            (SELECT count(v2.vote_id) FROM vote v2 WHERE v2.wish_lesson_id = w.wish_lesson_id) AS vote_cnt,
             w.theme,
-            nvl2(v.vote_id, 1, 0) already_voted
+            NVL2(v.vote_id, 1, 0) already_voted
         FROM
             wish_lesson w
-        LEFT JOIN vote v ON w.wish_lesson_id = v.wish_lesson_id and v.member_id = #{memberId}
+        LEFT JOIN vote v ON w.wish_lesson_id = v.wish_lesson_id AND v.member_id = #{memberId}
         WHERE
-            w.deleted_at is null
+            w.deleted_at IS NULL
         GROUP BY
             w.wish_lesson_id, w.title, w.theme, v.vote_id
         ORDER BY
-            w.theme, already_voted desc
+            w.theme, already_voted DESC
     </select>
 
     <select id="selectSuggestionList"
@@ -80,7 +80,7 @@
                  s.created_at
              FROM
                  suggestion s
-             JOIN member m on s.member_id = m.member_id
+             JOIN member m ON s.member_id = m.member_id
              WHERE
                  rownum <= #{pageNum} * #{size}
             )

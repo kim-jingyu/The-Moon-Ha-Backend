@@ -7,6 +7,7 @@ import com.innerpeace.themoonha.domain.live.vo.LiveChat;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import static com.innerpeace.themoonha.global.exception.ErrorCode.LIVE_CHAT_MESS
 @Service
 @Transactional
 @RequiredArgsConstructor
+@EnableScheduling
 public class ChatServiceImpl implements ChatService {
     private static final String CHAT_PREFIX = "chat:";
 
@@ -55,7 +57,7 @@ public class ChatServiceImpl implements ChatService {
         redisTemplate.delete(CHAT_PREFIX + liveId);
     }
 
-    @Scheduled(fixedRate = 60000)
+//    @Scheduled(fixedRate = 60000)
     public void batchSavedChatMessages() {
         liveLessonMapper.findActiveLiveLessonIdList()
                 .forEach(liveId -> {

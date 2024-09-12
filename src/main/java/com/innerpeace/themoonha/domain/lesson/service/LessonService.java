@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.lesson.dto.*;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 강좌 서비스 인터페이스
@@ -22,7 +23,7 @@ import java.util.List;
  * </pre>
  */
 public interface LessonService {
-    LessonListResponse findLessonList(LessonListRequest lessonListRequest);
+    LessonListResponse findLessonList(LessonListRequest lessonListRequest, Long memberId);
     LessonDetailResponse findLessonDetail(Long lessonId);
     TutorDetailResponse findTutorDetail(Long tutorId);
     List<CartResponse> findCartList(Long memberId);
@@ -31,4 +32,6 @@ public interface LessonService {
     List<LessonEnrollResponse> findEnrollLessonList(Long memberId);
     List<LessonEnrollResponse> findFieldEnrollLessonList(Long memberId);
     List<TutorLessonResponse> findTutorLessonList(Long memberId);
+    void increaseShortFormViewCountCache(Long shortFormId, Long memberId);
+    void increaseShortFormViewCountDB(List<ShortFormViewCountDTO> viewCOuntList);
 }

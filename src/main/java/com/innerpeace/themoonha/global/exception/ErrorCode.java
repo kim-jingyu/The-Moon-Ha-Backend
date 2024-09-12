@@ -42,7 +42,8 @@ public enum ErrorCode implements StatusCode {
     LIVE_STREAM_FAILED(500, "스트리밍 데이터 전송에 실패했습니다."),
     LIVE_CHAT_MESSAGE_NOT_FOUND(404, "채팅 메시지를 찾을 수 없습니다."),
     LIVE_LESSON_END_FAILED(400, "실시간 강좌 종료에 실패했습니다."),
-    LIVE_LESSON_CREATION_FAILED(400, "실시간 강좌 열기에 실패했습니다.");
+    LIVE_LESSON_CREATION_FAILED(400, "실시간 강좌 열기에 실패했습니다."),
+    SHORTFORM_VIEW_COUNT_INCREASE_FAILED(400, "숏폼 조회수 증가 저장에 실패했습니다.");
 
     private final int status;
     private final String message;

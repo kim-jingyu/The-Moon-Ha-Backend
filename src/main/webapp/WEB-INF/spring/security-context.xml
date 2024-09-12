@@ -23,7 +23,6 @@
     <http pattern="/health-check" security="none"></http>
     <http pattern="/auth/**" security="none"></http>
     <http pattern="/lounge/**" security="none"></http>
-    <http pattern="/lesson/**" security="none"></http>
     <http pattern="/bite/**" security="none"></http>
     <http pattern="/craft/**" security="none"></http>
     <http pattern="/live/**" security="none"></http>

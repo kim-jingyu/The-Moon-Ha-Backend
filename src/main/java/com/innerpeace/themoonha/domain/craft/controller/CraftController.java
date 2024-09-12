@@ -6,6 +6,7 @@ import com.innerpeace.themoonha.domain.craft.dto.SuggestionResponse;
 import com.innerpeace.themoonha.domain.craft.service.CraftService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.util.Criteria;
+import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,8 @@ import org.springframework.web.bind.annotation.*;
 public class CraftController {
     private final CraftService craftService;
     @GetMapping("/list")
-    public ResponseEntity<CraftMainResponse> craftMain(Criteria criteria) {
-        return ResponseEntity.ok(craftService.findCraftMain(criteria));
+    public ResponseEntity<CraftMainResponse> craftMain(Criteria criteria, @MemberId Long memberId) {
+        return ResponseEntity.ok(craftService.findCraftMain(criteria, memberId));
     }
 
     @GetMapping("/suggestion")
@@ -40,20 +41,20 @@ public class CraftController {
     }
 
     @PostMapping("/suggestion")
-    public ResponseEntity<CommonResponse> suggestionSave(@RequestBody SuggestionRequest suggestionRequest) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse> suggestionSave(@RequestBody SuggestionRequest suggestionRequest,
+                                                         @MemberId Long memberId) {
         return ResponseEntity.ok(craftService.addSuggestion(suggestionRequest, memberId));
     }
 
     @PostMapping("/prologue/{prologueId}")
-    public ResponseEntity<CommonResponse> prologueLike(@PathVariable Long prologueId) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse> prologueLike(@PathVariable Long prologueId,
+                                                       @MemberId Long memberId) {
         return ResponseEntity.ok(craftService.addPrologueLike(prologueId, memberId));
     }
 
     @PostMapping("/wishlesson/{wishLessonId}")
-    public ResponseEntity<CommonResponse> wishLessonVote(@PathVariable Long wishLessonId) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse> wishLessonVote(@PathVariable Long wishLessonId,
+                                                         @MemberId Long memberId) {
         return ResponseEntity.ok(craftService.addWishLessonVote(wishLessonId, memberId));
     }
 }
