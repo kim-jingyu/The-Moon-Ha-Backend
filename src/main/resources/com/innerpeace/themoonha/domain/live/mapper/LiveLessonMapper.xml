@@ -41,6 +41,9 @@
         <result property="createdAt" column="createdAt" />
         <result property="minutesAgo" column="minutesAgo" />
         <result property="isEnrolled" column="isEnrolled" />
+        <result property="summary" column="summary" />
+        <result property="curriculum" column="curriculum" />
+        <result property="supply" column="supply" />
     </resultMap>
 
     <!-- 실시간 강좌 정보 -->
@@ -199,9 +202,13 @@
             CASE
                 WHEN l.member_id = #{memberId} THEN 1
                 ELSE 0
-            END AS isEnrolled
+            END AS isEnrolled,
+            ls.summary AS summary,
+            ls.curriculum AS curriculum,
+            ls.supply AS supply
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
+        JOIN LESSON ls ON l.lesson_id = ls.lesson_id
         WHERE l.live_id = #{liveId}
     </select>
 

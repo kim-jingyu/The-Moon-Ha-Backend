@@ -75,8 +75,13 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
     }
 
     @Override
-    public List<BeforeAfterDetailResponse> getBeforeAfterContents() {
-        return beforeAfterMapper.findBeforeAfterDetailList();
+    public List<BeforeAfterDetailResponse> getBeforeAfterContentsByLatest() {
+        return beforeAfterMapper.findBeforeAfterDetailListByLatest();
+    }
+
+    @Override
+    public List<BeforeAfterDetailResponse> getBeforeAfterContentsByTitle() {
+        return beforeAfterMapper.findBeforeAfterDetailListByTitle();
     }
 
     /**

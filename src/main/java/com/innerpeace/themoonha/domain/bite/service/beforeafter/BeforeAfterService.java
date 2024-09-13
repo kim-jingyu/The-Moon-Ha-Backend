@@ -27,7 +27,8 @@ import java.util.List;
 public interface BeforeAfterService {
     List<BeforeAfterListResponse> getBeforeAfterList();
     BeforeAfterDetailResponse getBeforeAfterContent(Long beforeAfterId);
-    List<BeforeAfterDetailResponse> getBeforeAfterContents();
+    List<BeforeAfterDetailResponse> getBeforeAfterContentsByLatest();
+    List<BeforeAfterDetailResponse> getBeforeAfterContentsByTitle();
     CommonResponse makeBeforeAfter(Long memberId, BeforeAfterRequest beforeAfterRequest, MultipartFile beforeThumbnail, MultipartFile afterThumbnail, MultipartFile beforeContent, MultipartFile afterContent);
     List<BeforeAfterSearchResponse> findBeforeAfterByTitle(String keyword);
     List<BeforeAfterSearchResponse> findBeforeAfterByHashTags(List<String> hashtags);
