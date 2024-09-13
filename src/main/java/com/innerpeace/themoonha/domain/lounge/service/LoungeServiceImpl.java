@@ -1,5 +1,6 @@
 package com.innerpeace.themoonha.domain.lounge.service;
 
+import com.innerpeace.themoonha.domain.alim.service.AlimService;
 import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.domain.lounge.mapper.LoungeMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
@@ -9,8 +10,6 @@ import com.innerpeace.themoonha.global.service.S3Service;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.cursor.Cursor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +35,7 @@ import java.util.stream.Collectors;
  * 2024.08.29  	조희정       출석 시작 구현
  * 2024.08.30  	조희정       수강생 출석 여부 수정 구현
  * 2024.09.10  	조희정       출석 현황 조회 구현
+ * 2024.09.12  	조희정       라운지 게시글이 공지글이면 알림 전송
  * </pre>
  */
 @Service
@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 public class LoungeServiceImpl implements LoungeService {
 
     private final LoungeMapper loungeMapper;
+    private final AlimService alimService;
     private final S3Service s3Service;
     private final String S3Path = "lounge";
 
@@ -138,6 +139,20 @@ public class LoungeServiceImpl implements LoungeService {
             }
         }
 
+        // 공지글이면 알림 보내기
+        if (loungePostRequest.getNoticeYn()) {
+            Long lessonId = loungeMapper.selectLoungeInfo(loungePostRequest.getLoungeId(), null).get().getLessonId();
+            List<LoungeMemberDTO> memberDTOList = loungeMapper.selectLoungeMemberList(lessonId);
+            List<Long> memberIds = memberDTOList.stream()
+                    .map(LoungeMemberDTO::getMemberId)  // Extract memberId
+                    .collect(Collectors.toList());
+            String title = "라운지에 새로운 공지사항이 등록되었습니다!";
+            String message = loungePostRequest.getContent();
+            if (loungePostRequest.getContent().length() > 20) {
+                message = loungePostRequest.getContent().substring(0, 20) + "...";
+            }
+            alimService.sendAlimByMemberId(memberIds, title, message);
+        }
         return CommonResponse.of(true, SuccessCode.LOUNGE_POST_ADD_SUCCESS.getMessage());
     }
 
