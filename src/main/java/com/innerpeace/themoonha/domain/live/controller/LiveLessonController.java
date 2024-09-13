@@ -6,6 +6,7 @@ import com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonStatusResponse;
 import com.innerpeace.themoonha.domain.live.service.LiveLessonService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,34 +35,35 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class LiveLessonController {
     private final LiveLessonService liveLessonService;
     @GetMapping("/enrolled/by-latest")
-    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithMember() {
-        return ResponseEntity.ok(liveLessonService.getLiveLessonsByMember(1L));
+    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithMember(@MemberId Long memberId) {
+        return ResponseEntity.ok(liveLessonService.getLiveLessonsByMember(memberId));
     }
 
     @GetMapping("/enrolled/by-title")
-    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithMemberOrderByTitle() {
-        return ResponseEntity.ok(liveLessonService.getLiveLessonsByMemberOrderByTitle(1L));
+    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithMemberOrderByTitle(@MemberId Long memberId) {
+        return ResponseEntity.ok(liveLessonService.getLiveLessonsByMemberOrderByTitle(memberId));
     }
 
     @GetMapping("/not-enrolled/by-latest")
-    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithoutMember() {
-        return ResponseEntity.ok(liveLessonService.getLiveLessonsMemberDoesNotHave(1L));
+    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithoutMember(@MemberId Long memberId) {
+        return ResponseEntity.ok(liveLessonService.getLiveLessonsMemberDoesNotHave(memberId));
     }
 
     @GetMapping("/not-enrolled/by-title")
-    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithoutMemberOrderByTitle() {
-        return ResponseEntity.ok(liveLessonService.getLiveLessonsMemberDoesNotHaveOrderByTitle(1L));
+    public ResponseEntity<List<LiveLessonResponse>> retrieveLiveLessonListWithoutMemberOrderByTitle(@MemberId Long memberId) {
+        return ResponseEntity.ok(liveLessonService.getLiveLessonsMemberDoesNotHaveOrderByTitle(memberId));
     }
 
     @GetMapping("/{liveId}")
-    public ResponseEntity<LiveLessonDetailResponse> retrieveLiveLessonDetail(@PathVariable Long liveId) {
-        return ResponseEntity.ok(liveLessonService.getLiveLessonDetails(liveId, 1L));
+    public ResponseEntity<LiveLessonDetailResponse> retrieveLiveLessonDetail(@PathVariable Long liveId, @MemberId Long memberId) {
+        return ResponseEntity.ok(liveLessonService.getLiveLessonDetails(liveId, memberId));
     }
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<LiveLessonResponse> makeLiveLesson(@RequestPart LiveLessonRequest liveLessonRequest,
-                                                             @RequestPart MultipartFile thumbnail) {
-        return ResponseEntity.status(CREATED).body(liveLessonService.createLiveLesson(1L ,liveLessonRequest, thumbnail));
+                                                             @RequestPart MultipartFile thumbnail,
+                                                             @MemberId Long memberId) {
+        return ResponseEntity.status(CREATED).body(liveLessonService.createLiveLesson(memberId ,liveLessonRequest, thumbnail));
     }
 
     @PostMapping("/{liveId}/end")
@@ -85,20 +87,20 @@ public class LiveLessonController {
     }
 
     @PostMapping("/{liveId}/join")
-    public ResponseEntity<Void> joinLiveLesson(@PathVariable Long liveId) {
-        liveLessonService.joinLiveLesson(liveId, 1L);
+    public ResponseEntity<Void> joinLiveLesson(@PathVariable Long liveId, @MemberId Long memberId) {
+        liveLessonService.joinLiveLesson(liveId, memberId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{liveId}/leave")
-    public ResponseEntity<Void> leaveLiveLesson(@PathVariable Long liveId) {
-        liveLessonService.leaveLiveLesson(liveId, 1L);
+    public ResponseEntity<Void> leaveLiveLesson(@PathVariable Long liveId, @MemberId Long memberId) {
+        liveLessonService.leaveLiveLesson(liveId, memberId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{liveId}/like")
-    public ResponseEntity<Void> likeLiveLesson(@PathVariable Long liveId) {
-        liveLessonService.likeLiveLesson(liveId, 1L);
+    public ResponseEntity<Void> likeLiveLesson(@PathVariable Long liveId, @MemberId Long memberId) {
+        liveLessonService.likeLiveLesson(liveId, memberId);
         return ResponseEntity.ok().build();
     }
 

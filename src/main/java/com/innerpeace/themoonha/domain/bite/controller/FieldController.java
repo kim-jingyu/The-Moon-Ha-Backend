@@ -6,6 +6,7 @@ import com.innerpeace.themoonha.domain.bite.dto.field.FieldListResponse;
 import com.innerpeace.themoonha.domain.bite.dto.field.FieldSearchResponse;
 import com.innerpeace.themoonha.domain.bite.service.field.FieldService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,10 +83,11 @@ public class FieldController {
      */
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<CommonResponse> makeField(@RequestPart FieldRequest fieldRequest,
-                                                          @RequestPart MultipartFile thumbnail,
-                                                          @RequestPart MultipartFile content) {
+                                                    @RequestPart MultipartFile thumbnail,
+                                                    @RequestPart MultipartFile content,
+                                                    @MemberId Long memberId) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(fieldService.makeField(1L, fieldRequest, thumbnail, content));
+                .body(fieldService.makeField(memberId, fieldRequest, thumbnail, content));
     }
 
     /**
