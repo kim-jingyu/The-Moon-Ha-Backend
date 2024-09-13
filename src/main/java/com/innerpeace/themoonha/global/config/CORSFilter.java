@@ -33,7 +33,7 @@ public class CORSFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         // 허용할 출처 목록
-        String[] allowedOrigins = {"http://localhost:3000", "https://web.themoonha.site", "http://web.themoonha.site"};
+        String[] allowedOrigins = {"http://localhost:3000", "https://web.themoonha.site", "http://web.themoonha.site", "https://themoonha.site", "http://themoonha.site"};
         String origin = request.getHeader("Origin");
 
         // 요청 출처가 허용된 출처 목록에 포함되어 있는지 확인
