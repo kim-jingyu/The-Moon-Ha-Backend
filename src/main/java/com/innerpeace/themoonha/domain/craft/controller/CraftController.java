@@ -8,6 +8,8 @@ import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.util.Criteria;
 import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/craft")
 public class CraftController {
     private final CraftService craftService;
@@ -43,6 +46,8 @@ public class CraftController {
     @PostMapping("/suggestion")
     public ResponseEntity<CommonResponse> suggestionSave(@RequestBody SuggestionRequest suggestionRequest,
                                                          @MemberId Long memberId) {
+
+        log.info("댓글 입력 값 : {}", suggestionRequest.getContent());
         return ResponseEntity.ok(craftService.addSuggestion(suggestionRequest, memberId));
     }
 
