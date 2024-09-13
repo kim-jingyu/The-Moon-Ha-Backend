@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_ROOT="/home/ubuntu/backend"
+PROJECT_ROOT="/home/ubuntu/themoonha/backend"
 TARGET_DIR="$PROJECT_ROOT/target"
 WEBAPPS_DIR="/opt/tomcat/webapps"
 
