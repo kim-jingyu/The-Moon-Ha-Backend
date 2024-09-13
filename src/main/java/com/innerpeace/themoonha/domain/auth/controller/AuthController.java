@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * ----------  --------    ---------------------------
  * 2024.08.25  	최유경       최초 생성
  * 2024.08.26   최유경       로그인 API
+ * 2024.09.13   최유경       로그아웃 구현
  * </pre>
  */
 @RestController
@@ -50,8 +51,6 @@ public class AuthController {
         JwtDTO jwtDTO = authService.login(loginRequest);
 
         // 2. AccessToken Header 추가
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwtDTO.getAccessToken());
         Cookie accessTokenCookie = AuthUtil.createJwtTokenCookie("accessToken", jwtDTO.getAccessToken());
         response.addCookie(accessTokenCookie);
 
@@ -61,5 +60,16 @@ public class AuthController {
 
         return ResponseEntity
                 .ok(CommonResponse.from(SuccessCode.AUTH_LOGIN_SUCCESS.getMessage()));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<CommonResponse> logOut(HttpServletResponse response) {
+        Cookie accessTokenDeleteCookie = AuthUtil.createJwtTokenDeleteCookie("accessToken");
+        Cookie refreshTokenDeleteCookie = AuthUtil.createJwtTokenDeleteCookie("refreshToken");
+
+        response.addCookie(accessTokenDeleteCookie);
+        response.addCookie(refreshTokenDeleteCookie);
+
+        return ResponseEntity.ok(new CommonResponse(true, "로그아웃 성공"));
     }
 }
