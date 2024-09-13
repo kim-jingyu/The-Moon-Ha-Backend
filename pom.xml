@@ -366,11 +366,15 @@
     </dependencies>
 
     <build>
+        <finalName>Root</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
+<!--                <configuration>-->
+<!--                    <outputFileNameMapping>Root.war</outputFileNameMapping> &lt;!&ndash; Root.war로 설정 &ndash;&gt;-->
+<!--                </configuration>-->
             </plugin>
         </plugins>
     </build>
