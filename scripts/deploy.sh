@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_ROOT="/home/ubuntu/themoonha/backend"
+PROJECT_ROOT="/home/ubuntu/backend"
 TARGET_DIR="$PROJECT_ROOT/target"
 WEBAPPS_DIR="/opt/tomcat/webapps"
 
@@ -12,11 +12,11 @@ sudo systemctl stop tomcat
 echo "Navigating to project directory..."
 cd $PROJECT_ROOT || { echo "Directory not found!"; exit 1; }
 
-echo "Removing target directory..."
-rm -rf "$TARGET_DIR"
+#echo "Removing target directory..."
+#rm -rf "$TARGET_DIR"
 
-echo "Building the project..."
-mvn clean package
+#echo "Building the project..."
+#mvn clean package
 
 # 3. WAR 파일 찾기 (빌드된 최신 WAR 파일을 찾음)
 WAR_FILE=$(ls "$TARGET_DIR"/*.war)
