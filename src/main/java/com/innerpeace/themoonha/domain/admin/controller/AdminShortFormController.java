@@ -50,9 +50,9 @@ public class AdminShortFormController {
 
     @GetMapping("/list")
     public ResponseEntity<List<ShortFormListAdminResponse>> ShortFormList(@RequestParam(value = "branchId", required = false) Long branchId,
-                                                                          @RequestParam(value = "expiredYn") int expiredYn){
-        log.info("/admin/shortform/list  : {}, {} ", branchId, expiredYn);
-        List<ShortFormListAdminResponse> shortFormList =  adminShortFormService.findShortFormList(branchId, expiredYn);
+                                                                          @RequestParam(value = "yearMonth") String yearMonth){
+        log.info("/admin/shortform/list  : {}, {} ", branchId, yearMonth);
+        List<ShortFormListAdminResponse> shortFormList =  adminShortFormService.findShortFormList(branchId, yearMonth);
         return ResponseEntity.ok(shortFormList);
     }
 

@@ -60,7 +60,7 @@ public class AdminShortFormServiceImpl implements AdminShortFormService {
     }
 
     @Override
-    public List<ShortFormListAdminResponse> findShortFormList(Long branchId, int expiredYn) {
-        return adminShortFormMapper.selectShortFormList(branchId, expiredYn);
+    public List<ShortFormListAdminResponse> findShortFormList(Long branchId, String yearMonth) {
+        return adminShortFormMapper.selectShortFormList(branchId, yearMonth);
     }
 }

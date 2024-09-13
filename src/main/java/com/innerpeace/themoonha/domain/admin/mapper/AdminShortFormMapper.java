@@ -27,5 +27,5 @@ public interface AdminShortFormMapper {
                         @Param("shortFormVideoS3Url") String shortFormVideoS3Url);
 
     List<ShortFormListAdminResponse> selectShortFormList(@Param("branchId") Long branchId,
-                                                         @Param("expiredYn") int expiredYn);
+                                                         @Param("yearMonth") String yearMonth);
 }

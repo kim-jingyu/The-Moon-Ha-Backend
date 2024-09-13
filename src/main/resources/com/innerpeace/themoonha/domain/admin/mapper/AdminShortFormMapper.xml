@@ -32,15 +32,16 @@
     </insert>
 
     <select id="selectShortFormList" resultType="com.innerpeace.themoonha.domain.admin.dto.ShortFormListAdminResponse">
-
             SELECT
                 sf.short_form_id,
                 sf.lesson_id,
                 sf.name,
                 sf.video_url,
+                sf.thumbnail_url,
                 sf.start_date,
                 sf.expire_date,
                 sf.created_at,
+                sf.view_count,
                 l.branch_id,
                 b.name branch_name,
                 l.member_id,
@@ -59,25 +60,12 @@
                 member m
                 ON
                 l.member_id = m.member_id
-            <where>
+            WHERE
                 sf.deleted_at IS NULL
                 AND l.deleted_at IS NULL
+                AND TO_CHAR(sf.start_date, 'YYYY-MM') = #{yearMonth}
                 <if test="branchId != null">
                     AND l.branch_id = #{branchId}
                 </if>
-
-                <if test="expiredYn != null">
-                    AND expire_date
-                    <choose>
-                        <when test="expiredYn == 0">
-                            > SYSDATE
-                        </when>
-                        <when test="expiredYn == 1">
-                            <![CDATA[<= SYSDATE]]>
-                        </when>
-                    </choose>
-                </if>
-            </where>
-
     </select>
 </mapper>
