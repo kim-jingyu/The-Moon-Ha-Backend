@@ -34,8 +34,8 @@ public class EnvironmentConfig {
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(20971520); // 최대 파일 크기 20MB
-        multipartResolver.setMaxUploadSizePerFile(20971520); // 파일 당 최대 크기 20MB
+        multipartResolver.setMaxUploadSize(104857600);
+        multipartResolver.setMaxUploadSizePerFile(104857600);
         return multipartResolver;
     }
 }

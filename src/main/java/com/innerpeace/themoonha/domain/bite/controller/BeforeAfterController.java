@@ -6,6 +6,7 @@ import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterListRespo
 import com.innerpeace.themoonha.domain.bite.dto.beforeafter.BeforeAfterSearchResponse;
 import com.innerpeace.themoonha.domain.bite.service.beforeafter.BeforeAfterService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,12 +89,13 @@ public class BeforeAfterController {
      */
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<CommonResponse> makeBeforeAfter(@RequestPart BeforeAfterRequest beforeAfterRequest,
-                                                        @RequestPart MultipartFile beforeThumbnail,
-                                                        @RequestPart MultipartFile afterThumbnail,
-                                                        @RequestPart MultipartFile beforeContent,
-                                                        @RequestPart MultipartFile afterContent){
+                                                          @RequestPart MultipartFile beforeThumbnail,
+                                                          @RequestPart MultipartFile afterThumbnail,
+                                                          @RequestPart MultipartFile beforeContent,
+                                                          @RequestPart MultipartFile afterContent,
+                                                          @MemberId Long memberId){
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(beforeAfterService.makeBeforeAfter(1L, beforeAfterRequest, beforeThumbnail, afterThumbnail, beforeContent, afterContent));
+            .body(beforeAfterService.makeBeforeAfter(memberId, beforeAfterRequest, beforeThumbnail, afterThumbnail, beforeContent, afterContent));
     }
 
     /**
