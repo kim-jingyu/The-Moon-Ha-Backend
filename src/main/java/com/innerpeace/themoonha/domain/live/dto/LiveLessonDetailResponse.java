@@ -4,6 +4,7 @@ import com.innerpeace.themoonha.domain.live.vo.LiveStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -29,10 +30,10 @@ public class LiveLessonDetailResponse {
     private Long liveId;
     private String title;
     private String description;
-    private String streamKey;
     private String profileImgUrl;
     private String instructorName;
     private String thumbnailUrl;
+    @Setter
     private String broadcastUrl;
     private LiveStatus status;
     private Date createdAt;

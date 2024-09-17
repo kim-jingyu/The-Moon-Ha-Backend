@@ -31,12 +31,10 @@ import static lombok.AccessLevel.PROTECTED;
 public class LiveLessonResponse {
     private Long liveId;
     private String title;
-    private String streamKey;
     private String description;
     private String profileImgUrl;
     private String instructorName;
     private String thumbnailUrl;
-    private String broadcastUrl;
     private LiveStatus status;
     private Long minutesAgo;
 
@@ -44,12 +42,10 @@ public class LiveLessonResponse {
         return LiveLessonResponse.builder()
                 .liveId(liveLesson.getLiveId())
                 .title(liveLesson.getTitle())
-                .streamKey(liveLesson.getStreamKey())
                 .description(liveLesson.getDescription())
                 .profileImgUrl(profileImgUrl)
                 .instructorName(instructorName)
                 .thumbnailUrl(liveLesson.getThumbnailUrl())
-                .broadcastUrl(liveLesson.getBroadcastUrl())
                 .status(liveLesson.getStatus())
                 .minutesAgo(calculateMinutesSinceStart(liveLesson.getCreatedAt()))
                 .build();

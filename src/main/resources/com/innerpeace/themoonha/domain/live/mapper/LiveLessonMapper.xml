@@ -17,11 +17,9 @@
     <resultMap id="LiveLessonResponseMap" type="com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse">
         <result property="liveId" column="liveId" />
         <result property="title" column="title" />
-        <result property="streamKey" column="streamKey" />
         <result property="profileImgUrl" column="profileImgUrl" />
         <result property="instructorName" column="instructorName" />
         <result property="thumbnailUrl" column="thumbnailUrl" />
-        <result property="broadcastUrl" column="broadcastUrl" />
         <result property="status" column="status" />
         <result property="createdAt" column="createdAt" />
         <result property="minutesAgo" column="minutesAgo" />
@@ -32,11 +30,9 @@
         <id property="liveId" column="liveId" />
         <result property="title" column="title" />
         <result property="description" column="description" />
-        <result property="streamKey" column="streamKey" />
         <result property="profileImgUrl" column="profileImgUrl" />
         <result property="instructorName" column="instructorName" />
         <result property="thumbnailUrl" column="thumbnailUrl" />
-        <result property="broadcastUrl" column="broadcastUrl" />
         <result property="status" column="status" />
         <result property="createdAt" column="createdAt" />
         <result property="minutesAgo" column="minutesAgo" />
@@ -54,8 +50,6 @@
         <result property="title" column="title" />
         <result property="description" column="description" />
         <result property="status" column="status" />
-        <result property="streamKey" column="streamKey" />
-        <result property="broadcastUrl" column="broadcastUrl" />
         <result property="thumbnailUrl" column="thumbnailUrl" />
         <result property="createdAt" column="createdAt" />
         <result property="deletedAt" column="deletedAt" />
@@ -74,8 +68,6 @@
             title,
             description,
             status,
-            stream_key,
-            broadcast_url,
             thumbnail_url,
             created_at,
             updated_at
@@ -86,8 +78,6 @@
             #{title},
             #{description},
             #{status},
-            #{streamKey},
-            #{broadcastUrl},
             #{thumbnailUrl},
             #{createdAt},
             #{updatedAt}
@@ -104,11 +94,9 @@
         SELECT
             l.live_id AS liveId,
             l.title AS title,
-            l.stream_key AS streamKey,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
-            l.broadcast_url AS broadcastUrl,
             l.status AS status,
             EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
             EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
@@ -118,18 +106,16 @@
         WHERE
             l.status = 'ON_AIR'
             AND l.member_id = #{memberId}
-        ORDER BY l.lesson_id DESC
+        ORDER BY l.live_id DESC
     </select>
 
     <select id="findLiveLessonsByMemberOrderByTitle" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
             l.title AS title,
-            l.stream_key AS streamKey,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
-            l.broadcast_url AS broadcastUrl,
             l.status AS status,
             EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
             EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
@@ -146,11 +132,9 @@
         SELECT
             l.live_id AS liveId,
             l.title AS title,
-            l.stream_key AS streamKey,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
-            l.broadcast_url AS broadcastUrl,
             l.status AS status,
             EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
             EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
@@ -160,18 +144,16 @@
         WHERE
             l.status = 'ON_AIR'
             AND l.member_id != #{memberId}
-        ORDER BY l.lesson_id DESC
+        ORDER BY l.live_id DESC
     </select>
 
     <select id="findLiveLessonsMemberDoesNotHaveOrderByTitle" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
             l.title AS title,
-            l.stream_key AS streamKey,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
-            l.broadcast_url AS broadcastUrl,
             l.status AS status,
             EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
             EXTRACT(HOUR FROM (SYSTIMESTAMP - l.created_at)) * 60 +
@@ -189,11 +171,9 @@
             l.live_id AS liveId,
             l.title AS title,
             l.description AS description,
-            l.stream_key AS streamKey,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
             l.thumbnail_url AS thumbnailUrl,
-            l.broadcast_url AS broadcastUrl,
             l.status AS status,
             l.created_at AS createdAt,
             EXTRACT(MINUTE FROM (SYSTIMESTAMP - l.created_at)) +
@@ -219,9 +199,7 @@
             lesson_id AS lessonId,
             title AS title,
             description AS description,
-            stream_key AS streamKey,
             thumbnail_url AS thumbnailUrl,
-            broadcast_url AS broadcastUrl,
             status AS status
         FROM live_lesson
         WHERE live_id = #{liveId}

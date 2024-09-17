@@ -40,13 +40,3 @@ services:
     ports:
       - "6379:6379"
     container_name: redis
-
-  janus-webrtc:
-    image: meetecho/janus-gateway:latest
-    ports:
-      - "8088:8088"
-      - "8188:8188"
-      - "10000-10200:10000-10200/udp"
-    environment:
-      - JANUS_STUN_SERVER=stun.l.google.com:19302
-    container_name: janus-webrtc

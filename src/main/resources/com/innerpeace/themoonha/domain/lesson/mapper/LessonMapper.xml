@@ -279,7 +279,7 @@
         FROM
             lesson l
         WHERE
-            l.member_id = 1 AND
+            l.member_id = #{memberId} AND
             l.end_date >= sysdate AND
             l.online_cost IS NOT NULL
         ORDER BY

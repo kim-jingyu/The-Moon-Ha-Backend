@@ -29,11 +29,12 @@ public class LiveLessonEventConsumer {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    @KafkaListener(topics = "live-lessons-events", groupId = "live-lessons-group")
+    @KafkaListener(topics = LIVE_LESSONS_EVENTS, groupId = "live-lessons-group")
     public void processEvents(String message) {
         String[] splitMessage = getSplitMessage(message);
         String eventType = getEventType(splitMessage);
         long liveId = getLiveId(splitMessage);
+        long memberId = getMemberId(splitMessage);
 
         String viewersKey = getViewersKey(liveId);
         String likesKey = getLikesKey(liveId);
@@ -46,7 +47,12 @@ public class LiveLessonEventConsumer {
                 redisTemplate.opsForValue().decrement(viewersKey);
                 break;
             case LIKE:
-                redisTemplate.opsForValue().increment(likesKey);
+                int currentLikes = getLikesCount(liveId);
+                if (currentLikes > 0) {
+                    redisTemplate.opsForValue().decrement(likesKey);
+                } else {
+                    redisTemplate.opsForValue().increment(likesKey);
+                }
                 break;
         }
     }
@@ -79,6 +85,10 @@ public class LiveLessonEventConsumer {
 
     private long getLiveId(String[] splitMessage) {
         return Long.parseLong(splitMessage[1]);
+    }
+
+    private long getMemberId(String[] splitMessage) {
+        return Long.parseLong(splitMessage[2]);
     }
 
     private String getLikesKey(long liveId) {

@@ -48,6 +48,7 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     private final LiveLessonEventService liveLessonEventService;
     private final LiveLessonEventConsumer liveLessonEventConsumer;
 
+    private static final String LIVE_VIEW_URL = "http://172.30.1.80:3000/live/view/";
     private static final String LIVE_CONTENT_PATH = "live/content";
     private static final String LIVE_THUMBNAIL_PATH = "live/thumbnail";
 
@@ -73,8 +74,10 @@ public class LiveLessonServiceImpl implements LiveLessonService {
 
     @Override
     public LiveLessonDetailResponse getLiveLessonDetails(Long livedId, Long memberId) {
-        return liveLessonMapper.findLiveLessonDetailById(livedId, memberId)
+        LiveLessonDetailResponse liveLessonDetailResponse = liveLessonMapper.findLiveLessonDetailById(livedId, memberId)
                 .orElseThrow(() -> new CustomException(LIVE_LESSON_NOT_FOUND));
+        liveLessonDetailResponse.setBroadcastUrl(getBroadcastUrl(livedId));
+        return liveLessonDetailResponse;
     }
 
     @Override
@@ -130,8 +133,7 @@ public class LiveLessonServiceImpl implements LiveLessonService {
 
     @Override
     public String getShareLink(Long liveId) {
-        return liveLessonMapper.findLiveLessonById(liveId)
-                .orElseThrow(() -> new CustomException(LIVE_LESSON_NOT_FOUND)).getBroadcastUrl();
+        return getBroadcastUrl(liveId);
     }
 
     @Override
@@ -151,5 +153,9 @@ public class LiveLessonServiceImpl implements LiveLessonService {
 
     private void deleteS3Files(String thumbnailFilename) {
         s3Service.deleteFile(LIVE_THUMBNAIL_PATH, thumbnailFilename);
+    }
+
+    private String getBroadcastUrl(Long liveId) {
+        return LIVE_VIEW_URL + liveId;
     }
 }
