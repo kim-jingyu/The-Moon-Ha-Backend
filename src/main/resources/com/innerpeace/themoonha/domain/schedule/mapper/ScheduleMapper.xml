@@ -137,10 +137,9 @@
                 l.member_id = #{memberId}
             </if>
                 AND l.deleted_at IS NULL
-                AND TRUNC(TIMESTAMP '2024-09-18 09:00:00' AT TIME ZONE 'Asia/Seoul') BETWEEN l.start_date AND l.end_date
-                AND INSTR(l.day, TO_CHAR(TIMESTAMP '2024-09-18 09:00:00' AT TIME ZONE 'Asia/Seoul', 'DY', 'NLS_DATE_LANGUAGE=KOREAN')) > 0
-                AND l.start_time > TO_CHAR(TIMESTAMP '2024-09-18 09:00:00' AT TIME ZONE 'Asia/Seoul', 'HH24:MI')
-
+                AND TRUNC(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul') BETWEEN l.start_date AND l.end_date
+                AND INSTR(l.day, TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'DY', 'NLS_DATE_LANGUAGE=KOREAN')) > 0
+                AND l.start_time > TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'HH24:MI')
             ORDER BY l.start_date, l.start_time
             FETCH FIRST 1 ROWS ONLY
         ) l
