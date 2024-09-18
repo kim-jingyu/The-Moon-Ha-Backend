@@ -71,21 +71,18 @@
             content,
             created_at
         FROM
-            (
-             SELECT /*+INDEX_DESC(s pk_suggestion)*/
-                 rownum rn,
-                 m.name member_name,
-                 m.profile_img_url member_profile_img_url,
+            (SELECT
+                 m.name AS member_name,
+                 m.profile_img_url AS member_profile_img_url,
                  s.content,
-                 s.created_at
+                 s.created_at,
+                 ROW_NUMBER() OVER (ORDER BY s.suggestion_id DESC) AS rn
              FROM
                  suggestion s
              JOIN member m ON s.member_id = m.member_id
-             WHERE
-                 rownum <= #{pageNum} * #{size}
             )
         WHERE
-            rn > (#{pageNum} - 1) * #{size}
+            rn <= #{pageNum} * #{size} and rn > (#{pageNum} - 1) * #{size}
         ]]>
     </select>
 

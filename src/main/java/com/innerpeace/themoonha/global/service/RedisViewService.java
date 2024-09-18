@@ -18,10 +18,13 @@ public class RedisViewService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void incrementViewCount(Long memberId, Long domainId, String domain) {
+        log.info("domain : {}", domain + "에 대한 캐싱을 시작합니다.");
+        log.info("domain Id : {}", domainId);
         String domainFilterKey = domain + ": " + domainId;
         Boolean isViewed = redisTemplate.opsForSet().isMember(domainFilterKey, memberId);
 
         if (Boolean.FALSE.equals(isViewed)) {
+            log.info("memberId 첫 조회: {}", memberId);
             String domainViewCntKey = domain + ":" + domainId + ":viewCount";
             redisTemplate.opsForSet().add(domainFilterKey, memberId);
             redisTemplate.opsForValue().increment(domainViewCntKey);

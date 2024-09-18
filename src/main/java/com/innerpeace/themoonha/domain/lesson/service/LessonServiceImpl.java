@@ -55,7 +55,7 @@ public class LessonServiceImpl implements LessonService {
         Member member = authMapper.selectByMemberId(memberId).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         List<LessonDTO> lessonList = lessonMapper.selectLessonList(lessonListRequest);
         List<ShortFormDTO> shortFormList = lessonMapper.selectShortFormList(lessonListRequest.getBranchId());
-        return LessonListResponse.of(lessonList, shortFormList, member.getUsername(), lessonListRequest.getBranchId());
+        return LessonListResponse.of(lessonList, shortFormList, member.getName(), lessonListRequest.getBranchId());
     }
 
     @Override
