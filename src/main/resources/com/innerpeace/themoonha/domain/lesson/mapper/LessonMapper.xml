@@ -83,6 +83,7 @@
                     </when>
                 </choose>
             </if>
+            and l.end_date > sysdate
         </where>
         ORDER BY
             l.lesson_id desc

@@ -28,17 +28,15 @@
             p.thumbnail_url,
             p.video_url,
             count(l.like_cnt_id) like_cnt,
-            nvl2(l.like_cnt_id, 1, 0) already_liked,
-            m.name tutor_name
+            nvl2(l.like_cnt_id, 1, 0) already_liked
         FROM
             prologue p
         JOIN prologue_theme t ON p.prologue_theme_id = t.prologue_theme_id
         LEFT JOIN like_cnt l ON p.prologue_id = l.prologue_id AND l.member_id = #{memberId}
-        JOIN member m ON p.member_id = m.member_id
         WHERE
             p.deleted_at IS NULL
         GROUP BY
-            p.prologue_id, p.prologue_theme_id, p.title, p.thumbnail_url, p.video_url, l.like_cnt_id, t.name, t.description, m.name
+            p.prologue_id, p.prologue_theme_id, p.title, p.thumbnail_url, p.video_url, l.like_cnt_id, t.name, t.description
         ORDER BY
             p.prologue_theme_id
     </select>
