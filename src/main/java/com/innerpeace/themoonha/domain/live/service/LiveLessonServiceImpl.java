@@ -104,6 +104,8 @@ public class LiveLessonServiceImpl implements LiveLessonService {
             LiveLesson liveLesson = liveLessonMapper.findLiveLessonById(liveId)
                     .orElseThrow(() -> new CustomException(LIVE_LESSON_NOT_FOUND));
             if (liveLesson.getStatus() != ON_AIR) throw new CustomException(LIVE_LESSON_NOT_FOUND);
+            getThumbnailName(liveLesson);
+            deleteS3Files(getThumbnailName(liveLesson));
             liveLesson.endLiveLesson();
             liveLessonMapper.updateLiveLessonStatus(liveId, ENDED);
             liveLessonEventConsumer.removeViewers(liveId);
@@ -149,6 +151,11 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     @Override
     public void likeLiveLesson(Long liveId, Long memberId) {
         liveLessonEventService.sendLikeEvent(liveId, memberId);
+    }
+
+    private String getThumbnailName(LiveLesson liveLesson) {
+        String thumbnailUrl = liveLesson.getThumbnailUrl();
+        return thumbnailUrl.split("/")[thumbnailUrl.split("/").length - 1];
     }
 
     private void deleteS3Files(String thumbnailFilename) {
