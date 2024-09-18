@@ -10,6 +10,9 @@ import com.innerpeace.themoonha.global.service.S3Service;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,7 +54,9 @@ public class LoungeServiceImpl implements LoungeService {
 
     /**
      * 라운지 목록 조회
+     *
      * @param memberId
+     * @param role
      * @return
      */
     @Override
@@ -68,31 +73,48 @@ public class LoungeServiceImpl implements LoungeService {
      */
     @Override
     public LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role) {
-        AttendanceMembersResponse attendanceList;
 
-        LoungeInfoDTO loungeInfo = loungeMapper.selectLoungeInfo(loungeId, memberId)
+        LoungeInfoDTO loungeInfo = loungeMapper.selectLoungeInfo(loungeId, memberId, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_NOT_FOUND));
-        List<LoungePostDTO> loungePostList = loungeMapper.selectLoungePostList(loungeId, memberId)
-                .stream()
-                .map(loungePost -> {
-                    List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePost.getLoungePostId());
-                    return LoungePostDTO.of(loungePost, postImgUrl);
-                })
-                .collect(Collectors.toList());
-        if (role.equals("ROLE_TUTOR")) {
-            attendanceList = findAllMemberAttendance(loungeId, null);
-        } else {
-            attendanceList = findAllMemberAttendance(loungeId, memberId);
 
+        List<LoungePostDTO> loungeNoticeList = loungeMapper.selectLoungeNoticeList(loungeId, memberId);
+
+        AttendanceMembersResponse attendanceMembersResponse;
+        if (role.equals("ROLE_TUTOR")) {
+            attendanceMembersResponse = findAllMemberAttendance(loungeId, null);
+        } else {
+            attendanceMembersResponse = findAllMemberAttendance(loungeId, memberId);
         }
         List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeInfo.getLessonId());
 
         return LoungeHomeResponse.of(
                 loungeInfo,
-                loungePostList,
-                attendanceList,
+                attendanceMembersResponse,
+                loungeNoticeList,
                 loungeMemberList
         );
+    }
+
+    /**
+     * 라운지 게시글 목록 조회
+     * @param loungeId
+     * @param memberId
+     * @param page
+     * @param size
+     * @return
+     */
+    @Override
+    public List<LoungePostDTO> findLoungePostList(Long loungeId, Long memberId, String role, int page, int size) {
+        int offset = (page - 1) * size;
+        return loungeMapper.selectLoungePostList(loungeId, memberId, role, offset, size)
+                .stream()
+                .map(loungePostDTO -> {
+                    // 게시글의 이미지 리스트 조회
+                    List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePostDTO.getLoungePostId());
+
+                    return LoungePostDTO.of(loungePostDTO, postImgUrl);
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -101,15 +123,20 @@ public class LoungeServiceImpl implements LoungeService {
      * @return
      */
     @Override
-    public LoungePostDetailDTO findLoungePostDetail(Long loungePostId, Long memberId) {
+    public LoungePostDetailDTO findLoungePostDetail(Long loungePostId, Long memberId, String role) {
 
-        LoungePostDTO loungePost = loungeMapper.selectLoungePostDetail(loungePostId, memberId)
+        LoungePostDTO loungePost = loungeMapper.selectLoungePostDetail(loungePostId, memberId, role)
                 .map(loungePostDTO -> {
                     List<String> postImgUrl = loungeMapper.selectLoungePostImgList(loungePostDTO.getLoungePostId());
                     return LoungePostDTO.of(loungePostDTO, postImgUrl);
                 })
                 .orElseThrow(() -> new CustomException(ErrorCode.LOUNGE_POST_NOT_FOUND));
-        List<LoungeCommentDTO> loungeCommentList = loungeMapper.selectLoungeCommentList(loungePostId, memberId);
+
+        List<LoungeCommentDTO> loungeCommentList = loungeMapper.selectLoungeCommentList(loungePostId, memberId, role)
+                .stream()
+                .map(LoungeCommentDTO::of)
+                .collect(Collectors.toList());
+
         return LoungePostDetailDTO.of(
                 loungePost,
                 loungeCommentList
@@ -141,10 +168,10 @@ public class LoungeServiceImpl implements LoungeService {
 
         // 공지글이면 알림 보내기
         if (loungePostRequest.getNoticeYn()) {
-            Long lessonId = loungeMapper.selectLoungeInfo(loungePostRequest.getLoungeId(), null).get().getLessonId();
+            Long lessonId = loungeMapper.selectLoungeInfo(loungePostRequest.getLoungeId(), null, null).get().getLessonId();
             List<LoungeMemberDTO> memberDTOList = loungeMapper.selectLoungeMemberList(lessonId);
             List<Long> memberIds = memberDTOList.stream()
-                    .map(LoungeMemberDTO::getMemberId)  // Extract memberId
+                    .map(LoungeMemberDTO::getMemberId)
                     .collect(Collectors.toList());
             String title = "라운지에 새로운 공지사항이 등록되었습니다!";
             String message = loungePostRequest.getContent();

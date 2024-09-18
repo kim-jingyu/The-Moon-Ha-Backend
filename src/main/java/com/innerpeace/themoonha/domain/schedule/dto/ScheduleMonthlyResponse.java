@@ -28,5 +28,6 @@ public class ScheduleMonthlyResponse {
     private String tutorName;
     private String target;
     private boolean onlineYn;
+    private Long loungeId;
 }
 

@@ -47,13 +47,14 @@ public class AlimServiceImpl implements AlimService{
      */
     @Override
     public CommonResponse addFcmToken(Long memberId, String token) {
-        if (!alimMapper.selectFcmTokenExist(token)) {
-            if(alimMapper.insertFcmToken(memberId, token) != 1) {
-                throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-            return CommonResponse.of(true, SuccessCode.FCM_TOKEN_ADD_SUCCESS.getMessage());
+        if (token != null && token.startsWith("\"") && token.endsWith("\"")) {
+            token = token.substring(1, token.length() - 1);
         }
-        return CommonResponse.of(false, "이미 등록된 FCM 토큰입니다.");
+
+        if(alimMapper.insertFcmToken(memberId, token) != 1) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        return CommonResponse.of(true, SuccessCode.FCM_TOKEN_ADD_SUCCESS.getMessage());
     }
 
     /**
@@ -78,9 +79,10 @@ public class AlimServiceImpl implements AlimService{
      */
     @Override
     public void sendAlimByMemberId(List<Long> memberIds, String title, String message) {
-        List<String> fcmTokens = alimMapper.selectFcmTokenByMemberId(memberIds);
-
-        sendAlimToMultipleMembers(fcmTokens, title, message);
+        if (!memberIds.isEmpty()) {
+            List<String> fcmTokens = alimMapper.selectFcmTokenByMemberId(memberIds);
+            sendAlimToMultipleMembers(fcmTokens, title, message);
+        }
     }
 
     /**

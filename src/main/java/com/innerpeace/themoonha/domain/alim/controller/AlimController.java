@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.alim.controller;
 
 import com.innerpeace.themoonha.domain.alim.service.AlimService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,7 @@ public class AlimController {
     private final AlimService alimService;
 
     @PostMapping("/token")
-    public ResponseEntity<CommonResponse> fcmTokenAdd(@RequestBody String token) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse> fcmTokenAdd(@RequestBody String token, @MemberId Long memberId) {
         return ResponseEntity.ok(alimService.addFcmToken(memberId, token));
     }
 

@@ -3,12 +3,15 @@ package com.innerpeace.themoonha.domain.lounge.controller;
 import com.innerpeace.themoonha.domain.lounge.dto.*;
 import com.innerpeace.themoonha.domain.lounge.service.LoungeService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
+import com.innerpeace.themoonha.global.util.MemberId;
+import com.innerpeace.themoonha.global.util.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,9 +46,8 @@ public class LoungeController {
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<List<LoungeListResponse>> loungeList() {
-        Long memberId = 1L; // 임시 memberId
-        String role = "ROLE_TUTOR";
+    public ResponseEntity<List<LoungeListResponse>> loungeList(@MemberId Long memberId, @Role String role) {
+        log.info("User Role: {}", role);
         return ResponseEntity.ok(loungeService.findLoungeList(memberId, role));
     }
 
@@ -55,10 +57,17 @@ public class LoungeController {
      * @return
      */
     @GetMapping("/{loungeId}/home")
-    public ResponseEntity<LoungeHomeResponse> loungeHomeList(@PathVariable Long loungeId) {
-        Long memberId = 1L; // 임시 memberId
-        String role = "ROLE_TUTOR"; // 임시 role
+    public ResponseEntity<LoungeHomeResponse> loungeHomeList(@PathVariable Long loungeId, @MemberId Long memberId, @Role String role) {
         return ResponseEntity.ok(loungeService.findLoungeHome(loungeId, memberId, role));
+    }
+
+    @GetMapping("/{loungeId}/posts")
+    public ResponseEntity<List<LoungePostDTO>> loungePostList(@PathVariable Long loungeId,
+                                                             @MemberId Long memberId,
+                                                             @Role String role,
+                                                             @RequestParam(defaultValue = "1") int page,
+                                                             @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(loungeService.findLoungePostList(loungeId, memberId, role, page, size));
     }
 
     /**
@@ -68,9 +77,8 @@ public class LoungeController {
      * @return
      */
     @GetMapping("/{loungeId}/post/{loungePostId}")
-    public ResponseEntity<LoungePostDetailDTO> loungePostDetails(@PathVariable Long loungeId, @PathVariable Long loungePostId) {
-        Long memberId = 1L;
-        return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId, memberId));
+    public ResponseEntity<LoungePostDetailDTO> loungePostDetails(@PathVariable Long loungeId, @MemberId Long memberId, @Role String role, @PathVariable Long loungePostId) {
+        return ResponseEntity.ok(loungeService.findLoungePostDetail(loungePostId, memberId, role));
     }
 
     /**
@@ -80,8 +88,8 @@ public class LoungeController {
      */
     @PostMapping("/post/register")
     public ResponseEntity<CommonResponse> loungePostAdd(@RequestPart("loungePostRequest") LoungePostRequest loungePostRequest,
-                                                             @RequestPart(value = "files", required = false) List<MultipartFile> loungePostImgs) {
-        Long memberId = 1L;
+                                                         @RequestPart(value = "files", required = false) List<MultipartFile> loungePostImgs,
+                                                        @MemberId Long memberId) {
         return ResponseEntity.ok(loungeService.addLoungePost(loungePostRequest, memberId, loungePostImgs));
     }
         
@@ -92,8 +100,7 @@ public class LoungeController {
      * @return
      */
     @PostMapping("/comment/register")
-    public ResponseEntity<CommonResponse> loungeCommentAdd(@RequestBody LoungeCommentRequest loungeCommentRequest) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse> loungeCommentAdd(@RequestBody LoungeCommentRequest loungeCommentRequest, @MemberId Long memberId) {
         return ResponseEntity.ok(loungeService.addLoungeComment(loungeCommentRequest, memberId));
     }
 

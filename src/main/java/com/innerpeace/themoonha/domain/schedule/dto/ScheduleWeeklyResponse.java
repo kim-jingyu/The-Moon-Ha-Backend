@@ -27,4 +27,10 @@ public class ScheduleWeeklyResponse {
     private String endMinute;
     private String title;
     private String standardDate;
+    private String branchName;
+    private int cnt;
+    private String period;
+    private String lessonTime;
+    private String tutorName;
+    private Long loungeId;
 }

@@ -25,9 +25,9 @@
     <http pattern="/api/**" security="none"></http>
     <http pattern="/auth/login" security="none"></http>
     <http pattern="/auth/signup" security="none"></http>
-    <http pattern="/lounge/**" security="none"></http>
-    <http pattern="/schedule/**" security="none"></http>
-    <http pattern="/alim/**" security="none"></http>
+<!--    <http pattern="/lounge/**" security="none"></http>-->
+<!--    <http pattern="/schedule/**" security="none"></http>-->
+<!--    <http pattern="/alim/**" security="none"></http>-->
 
     <!-- HTTP 보안 설정 -->
     <http auto-config="true" use-expressions="true" create-session="stateless">

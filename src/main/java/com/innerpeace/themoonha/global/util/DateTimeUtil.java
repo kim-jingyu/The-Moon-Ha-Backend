@@ -67,7 +67,7 @@ public class DateTimeUtil {
     }
 
     private static String formatDate(LocalDateTime time) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm", Locale.KOREAN);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM.dd. HH:mm", Locale.KOREAN);
         return time.format(dateFormatter);
     }
 }

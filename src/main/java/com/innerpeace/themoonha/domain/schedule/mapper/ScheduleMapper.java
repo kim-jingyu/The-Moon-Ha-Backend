@@ -30,7 +30,7 @@ public interface ScheduleMapper {
      * @param standardDates
      * @return
      */
-    List<ScheduleWeeklyResponse> selectWeeklySchedules(@Param("memberId") Long memberId, @Param("standardDates") List<String> standardDates);
+    List<ScheduleWeeklyResponse> selectWeeklySchedules(@Param("memberId") Long memberId, @Param("standardDates") List<String> standardDates, @Param("role") String role);
 
     /**
      * 월 단위로 스케줄 가져오기
@@ -38,12 +38,12 @@ public interface ScheduleMapper {
      * @param yearMonth
      * @return
      */
-    List<ScheduleMonthlyResponse> selectMonthlySchedules(@Param("memberId") Long memberId, @Param("yearMonth") String yearMonth);
+    List<ScheduleMonthlyResponse> selectMonthlySchedules(@Param("memberId") Long memberId, @Param("yearMonth") String yearMonth, @Param("role") String role);
 
     /**
      * 다음 강의 조회
      * @param memberId
      * @return
      */
-    ScheduleNextResponse selectNextSchedule(Long memberId);
+    ScheduleNextResponse selectNextSchedule(@Param("memberId") Long memberId, @Param("role") String role);
 }

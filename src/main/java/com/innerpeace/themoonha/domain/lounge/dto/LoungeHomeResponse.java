@@ -24,25 +24,19 @@ import java.util.stream.Collectors;
 public class LoungeHomeResponse {
 
     private LoungeInfoDTO loungeInfo;
-    private List<LoungePostDTO> loungeNoticePostList;
-    private List<LoungePostDTO> loungePostList;
+    private List<LoungePostDTO> loungeNoticeList;
     private AttendanceMembersResponse attendanceList;
     private List<LoungeMemberDTO> loungeMemberList;
 
-    public static LoungeHomeResponse of(LoungeInfoDTO loungeInfo,List<LoungePostDTO> loungePostList,
-                                        AttendanceMembersResponse attendanceList, List<LoungeMemberDTO> loungeMemberList) {
-
-        // 공지 게시글 리스트 생성
-        List<LoungePostDTO> loungeNoticePostList = loungePostList.stream()
-                .filter(LoungePostDTO::isNoticeYn)
-                .map(post -> LoungePostDTO.of(post, null))
-                .collect(Collectors.toList());
+    public static LoungeHomeResponse of(LoungeInfoDTO loungeInfo,
+                                        AttendanceMembersResponse attendanceList,
+                                        List<LoungePostDTO> loungeNoticeList,
+                                        List<LoungeMemberDTO> loungeMemberList) {
 
         return LoungeHomeResponse.builder()
                 .loungeInfo(loungeInfo)
-                .loungeNoticePostList(loungeNoticePostList)
-                .loungePostList(loungePostList)
                 .attendanceList(attendanceList)
+                .loungeNoticeList(loungeNoticeList)
                 .loungeMemberList(loungeMemberList)
                 .build();
     }

@@ -22,7 +22,6 @@
     <!-- 주별 스케줄 가져오기 -->
     <select id="selectWeeklySchedules" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse">
         <foreach collection="standardDates" item="standardDate" separator="UNION ALL">
-            <![CDATA[
                 SELECT
                     l.lesson_id,
                     l.day,
@@ -31,16 +30,34 @@
                     SUBSTR(l.end_time, 1, 2) AS end_hour,
                     SUBSTR(l.end_time, 4, 2) AS end_minute,
                     l.title,
-                    #{standardDate} AS standard_date
+                    #{standardDate} AS standard_date,
+                    b.name AS branch_name,
+                    l.cnt,
+                    l.start_date || '~' || l.end_date AS period,
+                    CASE
+                        WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
+                        ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
+                    END AS lesson_time,
+                    m.name AS tutor_name,
+                    lo.lounge_id
                 FROM
                     lesson l
+                    JOIN branch b ON l.branch_id = b.branch_id
+                    JOIN member m ON l.member_id = m.member_id
+                    LEFT JOIN lounge lo ON l.lesson_id = lo.lesson_id
                 WHERE
+                <if test="role == 'ROLE_MEMBER'">
                     l.lesson_id IN (
                         SELECT s.lesson_id
                         FROM sugang s
                         WHERE s.member_id = #{memberId}
                         AND s.deleted_at IS NULL
                     )
+                </if>
+                <if test="role != 'ROLE_MEMBER'">
+                    l.member_id = #{memberId}
+                </if>
+            <![CDATA[
                     AND l.deleted_at IS NULL
                     AND (
                         TO_DATE(l.start_date, 'YYYY-MM-DD') <= TO_DATE(#{standardDate}, 'YYYY-MM-DD') + INTERVAL '6' DAY
@@ -52,7 +69,6 @@
 
     <!-- 월별 스케줄 가져오기 -->
     <select id="selectMonthlySchedules" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleMonthlyResponse">
-        <![CDATA[
             SELECT
                 l.lesson_id,
                 b.name AS branch_name,
@@ -60,26 +76,36 @@
                 l.cnt,
                 l.start_date || '~' || l.end_date AS period,
                 CASE
-                WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
-                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
-                END AS lesson_time,
+                    WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
+                    ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
+                    END AS lesson_time,
                 m.name AS tutor_name,
                 l.target,
-                s.online_yn
+                lo.lounge_id
             FROM
                 lesson l
-                JOIN branch b ON l.branch_id = b.branch_id
-                JOIN member m ON l.member_id = m.member_id
-                JOIN sugang s ON l.lesson_id = s.lesson_id
+                    JOIN branch b ON l.branch_id = b.branch_id
+                    JOIN member m ON l.member_id = m.member_id
+                    LEFT JOIN lounge lo ON l.lesson_id = lo.lesson_id
+                <if test="role == 'ROLE_MEMBER'">
+                    JOIN sugang s ON l.lesson_id = s.lesson_id
+                </if>
             WHERE
+                <if test="role == 'ROLE_MEMBER'">
                 s.member_id = #{memberId}
-                AND s.deleted_at IS NULL
-                AND l.deleted_at IS NULL
-                AND SUBSTR(l.start_date, 1, 7) <= SUBSTR(#{yearMonth}, 1, 7)
-                AND SUBSTR(l.end_date, 1, 7) >= SUBSTR(#{yearMonth}, 1, 7)
+              AND s.deleted_at IS NULL
+                </if>
+                <if test="role != 'ROLE_MEMBER'">
+                l.member_id = #{memberId}
+                </if>
+              AND l.deleted_at IS NULL
+        <![CDATA[
+              AND SUBSTR(l.start_date, 1, 7) <= SUBSTR(#{yearMonth}, 1, 7)
+              AND SUBSTR(l.end_date, 1, 7) >= SUBSTR(#{yearMonth}, 1, 7)
             ORDER BY l.start_date, l.start_time
         ]]>
     </select>
+
 
     <!-- 다음 스케줄 보기 -->
     <select id="selectNextSchedule" resultType="com.innerpeace.themoonha.domain.schedule.dto.ScheduleNextResponse">
@@ -92,26 +118,35 @@
             CASE
                 WHEN l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
                 ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
-                END AS lesson_time,
+            END AS lesson_time,
             m.name AS tutor_name,
             l.target,
-            lo.lounge_id,
-            l.online_yn
+            lo.lounge_id
         FROM (
-                 SELECT l.lesson_id, l.title, l.branch_id, l.member_id, l.cnt, l.start_date, l.end_date, l.start_time, l.end_time, l.day, l.target, s.online_yn
-                 FROM lesson l
-                          JOIN sugang s ON l.lesson_id = s.lesson_id
-                 WHERE s.member_id = #{memberId}
-                   AND s.deleted_at IS NULL
-                   AND l.deleted_at IS NULL
-                   AND TRUNC(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul') BETWEEN l.start_date AND l.end_date
-                   AND INSTR(l.day, TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'DY', 'NLS_DATE_LANGUAGE=KOREAN')) > 0
-                   AND l.start_time > TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'HH24:MI')
-                 ORDER BY l.start_date, l.start_time
-                     FETCH FIRST 1 ROWS ONLY
-             ) l
-                 JOIN member m ON l.member_id = m.member_id
-                 JOIN branch b ON l.branch_id = b.branch_id
-                 LEFT JOIN lounge lo ON l.lesson_id = lo.lesson_id
+            SELECT l.lesson_id, l.title, l.branch_id, l.member_id, l.cnt, l.start_date, l.end_date, l.start_time, l.end_time, l.day, l.target
+            FROM lesson l
+            <if test="role == 'ROLE_MEMBER'">
+                JOIN sugang s ON l.lesson_id = s.lesson_id
+            </if>
+            WHERE
+            <if test="role == 'ROLE_MEMBER'">
+                s.member_id = #{memberId}
+                AND s.deleted_at IS NULL
+            </if>
+            <if test="role != 'ROLE_MEMBER'">
+                l.member_id = #{memberId}
+            </if>
+                AND l.deleted_at IS NULL
+                AND TRUNC(TIMESTAMP '2024-09-18 09:00:00' AT TIME ZONE 'Asia/Seoul') BETWEEN l.start_date AND l.end_date
+                AND INSTR(l.day, TO_CHAR(TIMESTAMP '2024-09-18 09:00:00' AT TIME ZONE 'Asia/Seoul', 'DY', 'NLS_DATE_LANGUAGE=KOREAN')) > 0
+                AND l.start_time > TO_CHAR(TIMESTAMP '2024-09-18 09:00:00' AT TIME ZONE 'Asia/Seoul', 'HH24:MI')
+
+            ORDER BY l.start_date, l.start_time
+            FETCH FIRST 1 ROWS ONLY
+        ) l
+        JOIN member m ON l.member_id = m.member_id
+        JOIN branch b ON l.branch_id = b.branch_id
+        LEFT JOIN lounge lo ON l.lesson_id = lo.lesson_id
     </select>
+
 </mapper>

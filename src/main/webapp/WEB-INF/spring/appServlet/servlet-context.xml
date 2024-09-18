@@ -24,12 +24,14 @@
     </beans:bean>
 
     <beans:bean id="memberIdResolver" class="com.innerpeace.themoonha.global.resolver.MemberIdResolver"/>
+    <beans:bean id="roleResolver" class="com.innerpeace.themoonha.global.resolver.RoleResolver"/>
 
     <!-- Register custom argument resolvers -->
     <mvc:annotation-driven>
         <!-- Register custom argument resolvers -->
         <mvc:argument-resolvers>
             <beans:bean class="com.innerpeace.themoonha.global.resolver.MemberIdResolver"/>
+            <beans:bean class="com.innerpeace.themoonha.global.resolver.RoleResolver"/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
 
