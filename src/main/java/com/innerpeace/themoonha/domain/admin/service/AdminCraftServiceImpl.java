@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.admin.service;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterV2AdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.mapper.AdminCraftMapper;
 import com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO;
@@ -61,6 +62,18 @@ public class AdminCraftServiceImpl implements AdminCraftService{
                 prologueRegisterAdminRequest,
                 thumbnailS3Url,
                 prologueS3Url);
+    }
+
+    @Override
+    @Transactional
+    public void addPrologue(Long memberId,
+                            PrologueRegisterV2AdminRequest prologueRegisterAdminRequest) {
+        // 데이터베이스 저장
+        adminCraftMapper.insertPrologue(
+                memberId,
+                prologueRegisterAdminRequest,
+                prologueRegisterAdminRequest.getThumbnailList(),
+                prologueRegisterAdminRequest.getVideoList());
     }
 
     /**

@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +23,7 @@ import org.springframework.stereotype.Component;
  * </pre>
  * @since 2024.08.27
  */
-@Component
-@PropertySource(value={"classpath:application.properties"})
+@Configuration
 public class S3Config {
     @Value("${aws.credentials.accessKey}")
     private String accessKey;

@@ -27,8 +27,8 @@
                 #{registerRequest.startDate, mode=IN, jdbcType=DATE},
                 #{registerRequest.expireDate, mode=IN, jdbcType=DATE},
                 #{registerRequest.prologueList, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
-                #{thumbnailS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
-                #{prologueS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler}
+                #{prologueS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler},
+                #{thumbnailS3Url, mode=IN, jdbcTypeName=VARCHAR2_TABLE, typeHandler=com.innerpeace.themoonha.global.handler.StringListTypeHandler}
             )
     </insert>
 

@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.admin.controller;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterV2AdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.service.AdminCraftService;
 import com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO;
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 2024.08.30  	최유경       최초 생성
  * 2024.08.31   최유경       프롤로그 테마 기획 변경
  * 2024.09.01   최유경       제안합니다 조회
+ * 2024.09.17   최유경       프롤로그 S3 업로드 분리
  * </pre>
  */
 @RestController
@@ -59,6 +61,15 @@ public class AdminCraftController {
 
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_PROLOGUE_REGISTER_SUCCESS.getMessage()));
     }
+
+    @PostMapping("/prologue/register/v2")
+    public ResponseEntity<CommonResponse> PrologueAdd(@RequestPart("registerRequest") PrologueRegisterV2AdminRequest registerAdminRequest,
+                                                      @MemberId Long memberId){
+        adminCraftService.addPrologue(memberId, registerAdminRequest);
+
+        return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_PROLOGUE_REGISTER_SUCCESS.getMessage()));
+    }
+
 
     /**
      * 테마 전체 조회
