@@ -87,8 +87,7 @@ public class LessonController {
     }
 
     @GetMapping("/field/enroll")
-    public ResponseEntity<List<LessonEnrollResponse>> lessonFieldEnrollList() {
-        Long memberId = 1L;
+    public ResponseEntity<List<LessonEnrollResponse>> lessonFieldEnrollList(@MemberId Long memberId) {
         return ResponseEntity.ok(lessonService.findFieldEnrollLessonList(memberId));
     }
 
