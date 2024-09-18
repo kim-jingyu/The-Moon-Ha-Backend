@@ -40,26 +40,18 @@ public class LiveLesson {
     private String title;
     private String description;
     private LiveStatus status;
-    private String streamKey;
-    private String broadcastUrl;
     private String thumbnailUrl;
     private Date createdAt;
     private Date deletedAt;
     private Date updatedAt;
 
-    private static final String STREAM_DOMAIN = "http://localhost:8081/live/";
-    private static final String SHA_256 = "sha-256";
-
     public static LiveLesson createLiveLesson(Long memberId, LiveLessonRequest request, String thumbnailUrl) {
-        String generatedStreamKey = generateStreamKey();
         return LiveLesson.builder()
                 .memberId(memberId)
                 .lessonId(request.getLessonId())
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .status(UPCOMING)
-                .streamKey(generatedStreamKey)
-                .broadcastUrl(STREAM_DOMAIN + generatedStreamKey +".m3u8")
                 .thumbnailUrl(thumbnailUrl)
                 .createdAt(new Date())
                 .updatedAt(new Date())
@@ -72,18 +64,5 @@ public class LiveLesson {
 
     public void endLiveLesson() {
         this.status = ENDED;
-    }
-
-    private static String generateStreamKey() {
-        try {
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : MessageDigest.getInstance(SHA_256)
-                    .digest(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8))) {
-                hexString.append(String.format("%02x", b));
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new CustomException(ErrorCode.LIVE_STREAM_KEY_CREATION_FAILED);
-        }
     }
 }
