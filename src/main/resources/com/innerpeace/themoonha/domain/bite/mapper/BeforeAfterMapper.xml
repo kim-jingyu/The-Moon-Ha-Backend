@@ -93,7 +93,7 @@
                 ELSE 0
             END as afterIsImage,
             ba.title as title,
-            m.profile_img_url AS profileImageUrl,
+            m.profile_img_url AS profileImgUrl,
             m.username AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
@@ -127,7 +127,7 @@
                 ELSE 0
             END as afterIsImage,
             ba.title as title,
-            m.profile_img_url AS profileImageUrl,
+            m.profile_img_url AS profileImgUrl,
             m.username AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
@@ -163,7 +163,7 @@
                 ELSE 0
             END as afterIsImage,
             ba.title as title,
-            m.profile_img_url AS profileImageUrl,
+            m.profile_img_url AS profileImgUrl,
             m.username AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM

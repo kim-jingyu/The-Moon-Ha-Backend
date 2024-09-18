@@ -30,6 +30,6 @@ public interface LiveLessonMapper {
     Optional<LiveLessonDetailResponse> findLiveLessonDetailById(@Param("liveId") Long liveId,@Param("memberId") Long memberId);
     void insertLiveLesson(LiveLesson liveLesson);
     Optional<LiveLesson> findLiveLessonById(Long liveId);
-    void updateLiveLessonStatus(Long liveId, LiveStatus status);
+    void updateLiveLessonStatus(@Param("liveId") Long liveId,@Param("status") LiveStatus status);
     List<Long> findActiveLiveLessonIdList();
 }

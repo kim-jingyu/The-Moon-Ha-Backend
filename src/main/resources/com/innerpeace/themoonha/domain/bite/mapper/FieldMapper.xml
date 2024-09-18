@@ -81,7 +81,7 @@
                 ELSE 0
             END as contentIsImage,
             f.title as title,
-            m.profile_img_url AS profileImageUrl,
+            m.profile_img_url AS profileImgUrl,
             m.username AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
@@ -109,7 +109,7 @@
                 ELSE 0
             END as contentIsImage,
             f.title as title,
-            m.profile_img_url AS profileImageUrl,
+            m.profile_img_url AS profileImgUrl,
             m.username AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
@@ -139,7 +139,7 @@
                 ELSE 0
             END as contentIsImage,
             f.title as title,
-            m.profile_img_url AS profileImageUrl,
+            m.profile_img_url AS profileImgUrl,
             m.username AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
