@@ -82,7 +82,7 @@
             END as contentIsImage,
             f.title as title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName,
+            m.name AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             field f
@@ -97,7 +97,7 @@
             f.content_url,
             f.title,
             m.profile_img_url,
-            m.username
+            m.name
     </select>
 
     <!-- 분야별 한 입 콘텐츠 상세 리스트 조회(최신순) -->
@@ -110,7 +110,7 @@
             END as contentIsImage,
             f.title as title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName,
+            m.name AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             field f
@@ -125,7 +125,7 @@
             f.content_url,
             f.title,
             m.profile_img_url,
-            m.username
+            m.name
         ORDER BY
             f.field_id DESC
     </select>
@@ -140,7 +140,7 @@
             END as contentIsImage,
             f.title as title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName,
+            m.name AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             field f
@@ -155,7 +155,7 @@
             f.content_url,
             f.title,
             m.profile_img_url,
-            m.username
+            m.name
         ORDER BY
             f.title ASC
     </select>
@@ -169,7 +169,7 @@
             f.thumbnail_url AS thumbnailUrl,
             f.title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName
+            m.name AS memberName
         FROM field f
         JOIN member m ON f.member_id = m.member_id
         LEFT JOIN lesson l ON f.lesson_id = l.lesson_id
@@ -186,7 +186,7 @@
             f.thumbnail_url AS thumbnailUrl,
             f.title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName
+            m.name AS memberName
         FROM field f
         JOIN member m ON f.member_id = m.member_id
         LEFT JOIN lesson l ON f.lesson_id = l.lesson_id

@@ -94,7 +94,7 @@
             END as afterIsImage,
             ba.title as title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName,
+            m.name AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             before_after ba
@@ -110,7 +110,7 @@
             ba.after_content_url,
             ba.title,
             m.profile_img_url,
-            m.username
+            m.name
     </select>
 
     <!-- 비포애프터 콘텐츠 상세 리스트 조회(최신순) -->
@@ -128,7 +128,7 @@
             END as afterIsImage,
             ba.title as title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName,
+            m.name AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             before_after ba
@@ -144,7 +144,7 @@
             ba.after_content_url,
             ba.title,
             m.profile_img_url,
-            m.username
+            m.name
         ORDER BY
             ba.before_after_id DESC
     </select>
@@ -164,7 +164,7 @@
             END as afterIsImage,
             ba.title as title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName,
+            m.name AS memberName,
             LISTAGG(h.name, ',') WITHIN GROUP (ORDER BY h.name ASC) AS hashtags
         FROM
             before_after ba
@@ -180,7 +180,7 @@
             ba.after_content_url,
             ba.title,
             m.profile_img_url,
-            m.username
+            m.name
         ORDER BY
             ba.title ASC
     </select>
@@ -193,7 +193,7 @@
             ba.after_thumbnail_url AS afterThumbnailUrl,
             ba.title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName
+            m.name AS memberName
         FROM before_after ba
         JOIN member m ON ba.member_id = m.member_id
         ORDER BY ba.before_after_id DESC
@@ -207,7 +207,7 @@
             ba.after_thumbnail_url AS afterThumbnailUrl,
             ba.title,
             m.profile_img_url AS profileImgUrl,
-            m.username AS memberName
+            m.name AS memberName
         FROM before_after ba
         JOIN member m ON ba.member_id = m.member_id
         ORDER BY ba.title ASC
