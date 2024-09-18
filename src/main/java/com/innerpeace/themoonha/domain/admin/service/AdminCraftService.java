@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.admin.service;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterV2AdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import com.innerpeace.themoonha.domain.craft.dto.SuggestionDTO;
 import com.innerpeace.themoonha.global.util.Criteria;
@@ -35,6 +36,10 @@ public interface AdminCraftService {
                      PrologueRegisterAdminRequest prologueRegisterAdminRequest,
                      List<MultipartFile> thumbnailFile,
                      List<MultipartFile> prologueVideoFil);
+
+
+    void addPrologue(Long memberId,
+                     PrologueRegisterV2AdminRequest prologueRegisterAdminRequest);
 
     /**
      * 테마 조회

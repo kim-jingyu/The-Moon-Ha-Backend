@@ -11,24 +11,20 @@ import lombok.ToString;
 /**
  * 어드민 프롤로그 등록 요청 dto
  * @author 최유경
- * @since 2024.08.30
+ * @since 2024.09.17
  * @version 1.0
  *
  * <pre>
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.08.30  	최유경       최초 생성
+ * 2024.09.17   최유경       프롤로그 S3 업로드 분리
  * </pre>
  */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PrologueRegisterAdminRequest {
-    private String name;
-    private String description;
-    private int videoCnt;
-    private Date startDate;
-    private Date expireDate;
-    List<String> prologueList;
+public class PrologueRegisterV2AdminRequest extends PrologueRegisterAdminRequest{
+    List<String> thumbnailList;
+    List<String> videoList;
 }

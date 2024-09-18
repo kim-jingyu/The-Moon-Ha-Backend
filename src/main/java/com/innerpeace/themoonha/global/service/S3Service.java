@@ -1,9 +1,17 @@
 package com.innerpeace.themoonha.global.service;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +36,7 @@ import java.util.UUID;
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.27  김진규        최초 생성
+ * 2024.09.17  최유경        Presigned Url 생성
  * </pre>
  * @since 2024.08.27
  */
@@ -77,6 +86,36 @@ public class S3Service {
         s3Client.deleteObject(bucket, getFullPath(folderName, originalFilename));
     }
 
+    public String getPreSignedUrl(String fileName){
+        java.util.Date expiration = new java.util.Date();
+        long expTimeMillis = Instant.now().toEpochMilli();
+        expTimeMillis += 1000 * 60 * 60;
+        expiration.setTime(expTimeMillis);
+
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(fileName);
+
+        URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+        log.info("s3Client : {}", url.toString());
+        return url.toString();
+    }
+
+    private GeneratePresignedUrlRequest getGeneratePreSignedUrlRequest(String fileName) {
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucket,  fileName)
+                        .withMethod(HttpMethod.PUT)
+                        .withExpiration(getPreSignedUrlExpiration());
+
+        return generatePresignedUrlRequest;
+    }
+
+    private Date getPreSignedUrlExpiration() {
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 3;
+        expiration.setTime(expTimeMillis);
+        return expiration;
+    }
+
     private String getFullPath(String folderName, String originalFilename) {
         return folderName + "/" + originalFilename;
     }
@@ -99,6 +138,24 @@ public class S3Service {
         String baseName = originalName.substring(0, pos);
         // 파일 확장자
         String ext = multipartFile.getOriginalFilename().substring(pos + 1);
+
+        return today + "_" + uuid.split("-")[0] + "_" + baseName + "." + ext;
+    }
+
+    private static String getFileNameServer(String fileName) {
+        // 날짜
+        String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        // uuid
+        String uuid = UUID.randomUUID().toString();
+
+        String originalName = fileName;
+        int pos = fileName.lastIndexOf(".");
+
+        // 원본 파일 명
+        String baseName = originalName.substring(0, pos);
+
+        // 파일 확장자
+        String ext = fileName.substring(pos + 1);
 
         return today + "_" + uuid.split("-")[0] + "_" + baseName + "." + ext;
     }

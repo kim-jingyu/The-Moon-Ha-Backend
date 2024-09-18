@@ -2,11 +2,11 @@ package com.innerpeace.themoonha.domain.admin.mapper;
 
 import com.innerpeace.themoonha.domain.admin.dto.PrologueListAdminResponse;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterAdminRequest;
+import com.innerpeace.themoonha.domain.admin.dto.PrologueRegisterV2AdminRequest;
 import com.innerpeace.themoonha.domain.admin.dto.PrologueThemeListAdminResponse;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
 
 /**
  * 어드민 문화공방 관리 매퍼
