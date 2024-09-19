@@ -57,7 +57,7 @@
         GROUP BY
             w.wish_lesson_id, w.title, w.theme, v.vote_id
         ORDER BY
-            w.theme, already_voted DESC
+            w.theme DESC
     </select>
 
     <select id="selectSuggestionList"
