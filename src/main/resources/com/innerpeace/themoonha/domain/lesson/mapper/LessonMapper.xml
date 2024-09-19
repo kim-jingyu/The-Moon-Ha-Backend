@@ -108,7 +108,7 @@
             s.deleted_at IS NULL AND
             s.expire_date > sysdate
             <if test="branchId != null">
-                AND l.branchId = #{branchId}
+                AND l.branch_id = #{branchId}
             </if>
         ORDER BY
             s.view_count DESC
