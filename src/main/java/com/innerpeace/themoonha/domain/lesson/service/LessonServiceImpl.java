@@ -144,4 +144,15 @@ public class LessonServiceImpl implements LessonService {
             throw e;
         }
     }
+
+    @Override
+    public CommonResponse removeCart(Long cartId, Long memberId) {
+        int result = lessonMapper.deleteCartById(cartId, memberId);
+
+        if (result != 1) {
+            throw new CustomException(ErrorCode.CART_LESSON_ALREADY_EXISTS);
+        }
+
+        return CommonResponse.from("장바구니 상품 제거에 성공했습니다.");
+    }
 }

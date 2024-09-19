@@ -75,6 +75,12 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.addCart(cartRequest));
     }
 
+    @DeleteMapping("/cart/{cartId}")
+    public ResponseEntity<CommonResponse> cartRemove(@PathVariable Long cartId,
+                                                     @MemberId Long memberId) {
+        return ResponseEntity.ok(lessonService.removeCart(cartId, memberId));
+    }
+
     @PostMapping("/pay")
     public ResponseEntity<CommonResponse> lessonPayment(@RequestBody SugangRequest sugangRequest,
                                                         @MemberId Long memberId) {

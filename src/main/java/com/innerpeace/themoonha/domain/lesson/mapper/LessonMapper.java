@@ -37,4 +37,6 @@ public interface LessonMapper {
     List<LessonEnrollResponse> selectLessonFieldEnrollList(Long memberId);
     List<TutorLessonResponse> selectTutorLessonList(Long memberId);
     int updateShortFormViewCount(ShortFormViewCountDTO viewCountDTO);
+    int deleteCartById(@Param("cartId") Long cartId,
+                       @Param("memberId") Long memberId);
 }
