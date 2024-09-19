@@ -83,7 +83,7 @@
                     </when>
                 </choose>
             </if>
-            and l.end_date > sysdate
+            and TO_DATE(l.end_date, 'YYYY-MM-DD') > SYSDATE
         </where>
         ORDER BY
             l.lesson_id desc
