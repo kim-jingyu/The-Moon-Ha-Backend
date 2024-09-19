@@ -3,6 +3,9 @@ package com.innerpeace.themoonha.domain.lounge.dto;
 import com.innerpeace.themoonha.global.util.DateTimeUtil;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 라운지 게시글 댓글 DTO
  * @author 조희정
@@ -26,8 +29,14 @@ public class LoungeCommentDTO {
     private LoungeMemberDTO loungeMember;
     private boolean permissionYn;
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = DateTimeUtil.timeAgo(createdAt);
+    public static LoungeCommentDTO of(LoungeCommentDTO loungeCommentDTO) {
+        return LoungeCommentDTO.builder()
+                .loungeCommentId(loungeCommentDTO.getLoungeCommentId())
+                .content(loungeCommentDTO.getContent())
+                .createdAt(DateTimeUtil.timeAgo(loungeCommentDTO.getCreatedAt()))
+                .loungeMember(loungeCommentDTO.getLoungeMember())
+                .permissionYn(loungeCommentDTO.permissionYn)
+                .build();
     }
 
 }

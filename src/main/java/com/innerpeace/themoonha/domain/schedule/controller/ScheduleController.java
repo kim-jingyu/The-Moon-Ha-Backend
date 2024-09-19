@@ -4,6 +4,8 @@ import com.innerpeace.themoonha.domain.schedule.dto.ScheduleMonthlyResponse;
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleNextResponse;
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse;
 import com.innerpeace.themoonha.domain.schedule.service.ScheduleService;
+import com.innerpeace.themoonha.global.util.MemberId;
+import com.innerpeace.themoonha.global.util.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +42,8 @@ public class ScheduleController {
      * @return
      */
     @GetMapping("/weekly")
-    public ResponseEntity<List<List<ScheduleWeeklyResponse>>> scheduleWeekly(@RequestParam List<String> standardDates) {
-        Long memberId = 1L;
-        return ResponseEntity.ok(scheduleService.findWeeklySchedules(memberId, standardDates));
+    public ResponseEntity<List<List<ScheduleWeeklyResponse>>> scheduleWeekly(@RequestParam List<String> standardDates, @MemberId Long memberId, @Role String role) {
+        return ResponseEntity.ok(scheduleService.findWeeklySchedules(memberId, standardDates, role));
     }
 
     /**
@@ -51,9 +52,8 @@ public class ScheduleController {
      * @return
      */
     @GetMapping("/monthly")
-    public ResponseEntity<List<ScheduleMonthlyResponse>>scheduleMonthly(@RequestParam String yearMonth) {
-        Long memberId = 1L;
-        return ResponseEntity.ok(scheduleService.findMonthlySchedules(memberId, yearMonth));
+    public ResponseEntity<List<ScheduleMonthlyResponse>>scheduleMonthly(@RequestParam String yearMonth, @MemberId Long memberId, @Role String role) {
+        return ResponseEntity.ok(scheduleService.findMonthlySchedules(memberId, yearMonth, role));
     }
 
     /**
@@ -61,8 +61,7 @@ public class ScheduleController {
      * @return
      */
     @GetMapping("/next")
-    public ResponseEntity<ScheduleNextResponse>scheduleNext() {
-        Long memberId = 1L;
-        return ResponseEntity.ok(scheduleService.findNextSchedule(memberId));
+    public ResponseEntity<ScheduleNextResponse>scheduleNext(@MemberId Long memberId, @Role String role) {
+        return ResponseEntity.ok(scheduleService.findNextSchedule(memberId, role));
     }
 }

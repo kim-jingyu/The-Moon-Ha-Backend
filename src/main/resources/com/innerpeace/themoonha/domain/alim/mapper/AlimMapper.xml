@@ -21,8 +21,12 @@
 
     <!-- FCM 토큰 저장 -->
     <insert id="insertFcmToken">
-        INSERT INTO alim (alim_id, member_id, fcm_token)
-        VALUES (alim_seq.nextval, #{memberId}, #{token})
+        MERGE INTO alim a
+            USING (SELECT #{memberId} AS member_id, #{token} AS fcm_token FROM dual) b
+            ON (a.member_id = b.member_id AND a.fcm_token = b.fcm_token)
+            WHEN NOT MATCHED THEN
+                INSERT (alim_id, member_id, fcm_token)
+                VALUES (alim_seq.nextval, b.member_id, b.fcm_token)
     </insert>
 
     <!-- FCM 토큰이 이미 존재하는지 -->

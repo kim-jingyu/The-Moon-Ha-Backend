@@ -23,18 +23,18 @@ public interface AlimMapper {
 
     /**
      * FCM 토큰 저장
-     * @param memebrId
+     * @param memberId
      * @param token
      * @return
      */
-    int insertFcmToken(@Param("memberId") Long memebrId, @Param("token") String token);
+    int insertFcmToken(@Param("memberId") Long memberId, @Param("token") String token);
 
     /**
      * FCM 토큰이 이미 존재하는지 여부
      * @param token
      * @return
      */
-    boolean selectFcmTokenExist(String token);
+    boolean selectFcmTokenExist(@Param("memberId") Long memberId, @Param("token") String token);
 
     /**
      * MemberId의 FCM 토큰 가져오기

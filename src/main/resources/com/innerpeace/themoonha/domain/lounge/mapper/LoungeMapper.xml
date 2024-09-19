@@ -71,29 +71,27 @@
                         MAX(created_at)
                     FROM lounge_post
                     WHERE lounge_id = lo.lounge_id
-                      AND deleted_at IS NULL
+                        AND deleted_at IS NULL
                 )
         WHERE
             lo.deleted_at IS NULL
-          AND le.deleted_at IS NULL
-          AND (
-                (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 2
-                    AND le.member_id = #{memberId}
-                OR
-                (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 1
-                    AND lo.lesson_id IN (
-                    SELECT s.lesson_id
-                    FROM sugang s
-                    WHERE s.member_id = #{memberId}
-                      AND s.lounge_yn = 1
-                      AND s.deleted_at IS NULL
-                )
+            AND le.deleted_at IS NULL
+        <if test="role == 'ROLE_MEMBER'">
+            AND lo.lesson_id IN (
+                SELECT s.lesson_id
+                FROM sugang s
+                WHERE s.member_id = #{memberId}
+                    AND s.lounge_yn = 1
+                    AND s.deleted_at IS NULL
             )
-           OR (
-               (SELECT m.member_role FROM member m WHERE m.member_id = #{memberId}) = 0
-                   AND (1 = 1)
-                )
-          AND (lp.lounge_post_id IS NULL OR lp.deleted_at IS NULL)
+        </if>
+        <if test="role == 'ROLE_TUTOR'">
+            AND le.member_id = #{memberId}
+        </if>
+        <if test="role == 'ROLE_ADMIN'">
+            AND (1 = 1)
+        </if>
+            AND (lp.lounge_post_id IS NULL OR lp.deleted_at IS NULL)
         ORDER BY
             lo.lounge_id DESC
     </select>
@@ -110,8 +108,9 @@
             m.profile_img_url AS tutorImgUrl,
             le.summary,
             CASE
-                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (0) THEN 1
-                WHEN le.member_id = #{memberId} THEN 1
+                WHEN #{role} = 'ROLE_ADMIN' THEN 1
+                WHEN #{role} = 'ROLE_TUTOR' AND le.member_id = #{memberId} THEN 1
+                WHEN #{role} = 'ROLE_MEMBER' THEN 0
                 ELSE 0
             END AS permission_yn
         FROM
@@ -120,6 +119,23 @@
                 JOIN lounge lo ON le.lesson_id = lo.lesson_id
         WHERE
             lo.lounge_id = #{loungeId}
+    </select>
+
+
+    <select id="selectLoungeNoticeList"
+            resultType="com.innerpeace.themoonha.domain.lounge.dto.LoungePostDTO">
+        SELECT /*+ INDEX_ASC(lp PK_LOUNGE_POST) ORDERED */
+            lp.lounge_post_id,
+            lp.content
+        FROM
+            lounge_post lp
+        WHERE
+            lp.lounge_id = #{loungeId}
+          AND lp.deleted_at IS NULL
+          AND lp.notice_yn = 1
+        ORDER BY
+            lp.lounge_post_id DESC
+
     </select>
 
     <!-- 라운지 게시글 목록 조회 -->
@@ -134,8 +150,9 @@
             lm.name,
             lm.profile_img_url,
             CASE
-                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (2, 0) THEN 1
-                WHEN lp.member_id = #{memberId} THEN 1
+                WHEN #{role} = 'ROLE_ADMIN' THEN 1
+                WHEN #{role} = 'ROLE_TUTOR' THEN 1
+                WHEN #{role} = 'ROLE_MEMBER' AND lp.member_id = #{memberId} THEN 1
                 ELSE 0
             END AS permission_yn
         FROM
@@ -146,6 +163,7 @@
             AND lp.deleted_at IS NULL
         ORDER BY
             lp.lounge_post_id DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
     </select>
 
     <!-- 라운지 게시글 당 이미지 조회 -->
@@ -221,8 +239,9 @@
             lm.name,
             lm.profile_img_url,
             CASE
-                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (2, 0) THEN 1
-                WHEN lp.member_id = #{memberId} THEN 1
+                WHEN #{role} = 'ROLE_ADMIN' THEN 1
+                WHEN #{role} = 'ROLE_TUTOR' THEN 1
+                WHEN #{role} = 'ROLE_MEMBER' AND lp.member_id = #{memberId} THEN 1
                 ELSE 0
             END AS permission_yn
         FROM
@@ -244,10 +263,11 @@
             lcm.name,
             lcm.profile_img_url,
             CASE
-                WHEN (SELECT member_role FROM member WHERE member_id = #{memberId}) IN (2, 0) THEN 1
-                WHEN lc.member_id = #{memberId} THEN 1
+                WHEN #{role} = 'ROLE_ADMIN' THEN 1
+                WHEN #{role} = 'ROLE_TUTOR' THEN 1
+                WHEN #{role} = 'ROLE_MEMBER' AND lc.member_id = #{memberId} THEN 1
                 ELSE 0
-            END AS permission_yn
+                END AS permission_yn
         FROM
             lounge_comment lc
                 LEFT JOIN member lcm ON lc.member_id = lcm.member_id

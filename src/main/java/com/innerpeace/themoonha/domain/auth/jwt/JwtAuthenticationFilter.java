@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -70,6 +71,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 request.setAttribute("memberId", Long.parseLong(authentication.getName()));
+                request.setAttribute("role", getRole(authentication));
 
                 log.info("[][] JwtAuthenticationFilter - memberId set to: {}", authentication.getName());
 
@@ -104,5 +106,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 filterChain.doFilter(request,response);
             }
         }
+    }
+
+    private String getRole(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse(null);
     }
 }

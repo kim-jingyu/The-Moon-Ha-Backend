@@ -44,10 +44,8 @@ public class ScheduleServiceImpl implements ScheduleService{
      * @return
      */
     @Override
-    public List<List<ScheduleWeeklyResponse>> findWeeklySchedules(Long memberId, List<String> standardDates) {
-        // 지난주, 이번주, 다음주 기준 일요일 계산
-
-        List<ScheduleWeeklyResponse> schedules = scheduleMapper.selectWeeklySchedules(memberId, standardDates);
+    public List<List<ScheduleWeeklyResponse>> findWeeklySchedules(Long memberId, List<String> standardDates, String role) {
+        List<ScheduleWeeklyResponse> schedules = scheduleMapper.selectWeeklySchedules(memberId, standardDates, role);
 
         Map<String, List<ScheduleWeeklyResponse>> groupedSchedules = schedules.stream()
                 .collect(Collectors.groupingBy(ScheduleWeeklyResponse::getStandardDate));
@@ -64,8 +62,8 @@ public class ScheduleServiceImpl implements ScheduleService{
      * @return
      */
     @Override
-    public List<ScheduleMonthlyResponse> findMonthlySchedules(Long memberId, String yearMonth) {
-        return scheduleMapper.selectMonthlySchedules(memberId, yearMonth);
+    public List<ScheduleMonthlyResponse> findMonthlySchedules(Long memberId, String yearMonth, String role) {
+        return scheduleMapper.selectMonthlySchedules(memberId, yearMonth, role);
     }
 
     /**
@@ -74,7 +72,7 @@ public class ScheduleServiceImpl implements ScheduleService{
      * @return
      */
     @Override
-    public ScheduleNextResponse findNextSchedule(Long memberId) {
-        return scheduleMapper.selectNextSchedule(memberId);
+    public ScheduleNextResponse findNextSchedule(Long memberId, String role) {
+        return scheduleMapper.selectNextSchedule(memberId, role);
     }
 }

@@ -28,7 +28,9 @@ import java.util.List;
 public interface LoungeService {
     /**
      * 라운지 목록 조회
+     *
      * @param memberId
+     * @param role
      * @return
      */
     List<LoungeListResponse> findLoungeList(Long memberId, String role);
@@ -43,11 +45,21 @@ public interface LoungeService {
     LoungeHomeResponse findLoungeHome(Long loungeId, Long memberId, String role);
 
     /**
+     * 라운지 게시글 목록 조회
+     * @param loungeId
+     * @param memberId
+     * @param page
+     * @param size
+     * @return
+     */
+    List<LoungePostDTO> findLoungePostList(Long loungeId, Long memberId, String role, int page, int size);
+
+    /**
      * 라운지 게시글 상세 조회
      * @param loungePostId
      * @return
      */
-    LoungePostDetailDTO findLoungePostDetail(Long loungePostId, Long memberId);
+    LoungePostDetailDTO findLoungePostDetail(Long loungePostId, Long memberId, String role);
 
     /**
      * 라운지 게시글 등록

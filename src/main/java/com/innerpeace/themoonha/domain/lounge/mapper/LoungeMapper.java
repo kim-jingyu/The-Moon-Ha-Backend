@@ -2,6 +2,7 @@ package com.innerpeace.themoonha.domain.lounge.mapper;
 
 import com.innerpeace.themoonha.domain.lounge.dto.*;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,14 +38,24 @@ public interface LoungeMapper {
      * @param loungeId
      * @return
      */
-    Optional<LoungeInfoDTO> selectLoungeInfo(@Param("loungeId") Long loungeId, @Param("memberId") Long memberId);
+    Optional<LoungeInfoDTO> selectLoungeInfo(@Param("loungeId") Long loungeId, @Param("memberId") Long memberId, @Param("role") String role);
+
+    /**
+     * 라운지 공지 조회
+     * @param loungeId
+     * @param memberId
+     * @return
+     */
+    List<LoungePostDTO> selectLoungeNoticeList(@Param("loungeId") Long loungeId, @Param("memberId") Long memberId);
 
     /**
      * 라운지 게시글 목록 조회
      * @param loungeId
      * @return
      */
-    List<LoungePostDTO> selectLoungePostList(@Param("loungeId") Long loungeId, @Param("memberId") Long memberId);
+    List<LoungePostDTO> selectLoungePostList(@Param("loungeId") Long loungeId, @Param("memberId") Long memberId, @Param("role") String role,
+                                             @Param("offset") int offset, @Param("limit") int limit);
+
 
     /**
      * 라운지 게시글 이미지 목록 조회
@@ -76,14 +87,14 @@ public interface LoungeMapper {
      * @param loungePostId
      * @return
      */
-    Optional<LoungePostDTO> selectLoungePostDetail(@Param("loungePostId") Long loungePostId, @Param("memberId") Long memberId);
+    Optional<LoungePostDTO> selectLoungePostDetail(@Param("loungePostId") Long loungePostId, @Param("memberId") Long memberId, @Param("role") String role);
 
     /**
      * 라운지 게시글 한 건의 댓글 조회
      * @param loungePostId
      * @return
      */
-    List<LoungeCommentDTO> selectLoungeCommentList(@Param("loungePostId") Long loungePostId, @Param("memberId") Long memberId);
+    List<LoungeCommentDTO> selectLoungeCommentList(@Param("loungePostId") Long loungePostId, @Param("memberId") Long memberId, @Param("role") String role);
 
     /**
      * 라운지 게시물 등록

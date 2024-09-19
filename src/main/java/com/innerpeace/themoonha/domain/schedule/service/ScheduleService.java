@@ -30,7 +30,7 @@ public interface ScheduleService {
      * @param standardDate
      * @return
      */
-    List<List<ScheduleWeeklyResponse>> findWeeklySchedules(Long memberId, List<String> standardDate);
+    List<List<ScheduleWeeklyResponse>> findWeeklySchedules(Long memberId, List<String> standardDate, String role);
 
     /**
      * 스케줄 월간 보기
@@ -38,12 +38,12 @@ public interface ScheduleService {
      * @param yearMonth
      * @return
      */
-    List<ScheduleMonthlyResponse> findMonthlySchedules(Long memberId, String yearMonth);
+    List<ScheduleMonthlyResponse> findMonthlySchedules(Long memberId, String yearMonth, String role);
 
     /**
      * 다음 스케줄 조회
      * @param memberId
      * @return
      */
-    ScheduleNextResponse findNextSchedule(Long memberId);
+    ScheduleNextResponse findNextSchedule(Long memberId, String role);
 }

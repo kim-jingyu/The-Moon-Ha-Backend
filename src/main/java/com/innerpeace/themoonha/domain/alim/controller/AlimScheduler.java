@@ -40,6 +40,9 @@ public class AlimScheduler {
     private final AlimService alimService;
     private final FcmUtil fcmUtil;
 
+    /**
+     * 수업 시작 5분점 알림
+     */
     @Scheduled(cron = "0 */5 * * * *")
     public void sendAlimForUpcomingLesson() {
         List<LoungeAlimDTO> loungePostAlim = alimService.getFcmTokenForUpcomingLessons();
@@ -58,6 +61,9 @@ public class AlimScheduler {
         }
     }
 
+    /**
+     * 라운지 오픈하고 알림 보내기
+     */
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void addLoungeAndSendAlim() {
         List<LoungeAlimDTO> loungeAddAlim = alimService.addLoungeAndSendAlim();
