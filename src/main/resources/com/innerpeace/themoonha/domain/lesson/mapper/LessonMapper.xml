@@ -22,71 +22,77 @@
             parameterType="com.innerpeace.themoonha.domain.lesson.dto.LessonListRequest"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonDTO">
         SELECT
-            l.branch_id,
-            l.lesson_id,
-            l.thumbnail_url,
-            l.target,
-            l.title,
-            l.cnt,
-            l.cost,
-            m.name tutor_name,
-            CASE
-            WHEN l.cnt = 1 THEN l.start_date || ' ' || l.start_time || '~' || l.end_time
-            ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
-            END AS  lesson_time
-        FROM
-            lesson l
-        JOIN member m ON l.member_id = m.member_id
-        <where>
-            <if test="branchId != null">
-                l.branch_id = #{branchId}
-            </if>
+            *
+        FROM (
+            SELECT
+                l.branch_id,
+                l.lesson_id,
+                l.thumbnail_url,
+                l.target,
+                l.title,
+                l.cnt,
+                l.cost,
+                m.name tutor_name,
+                CASE
+                WHEN l.cnt = 1 THEN l.start_date || ' ' || l.start_time || '~' || l.end_time
+                ELSE '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time
+                END AS lesson_time,
+                ROWNUM as rnum
+            FROM
+                lesson l
+            JOIN member m ON l.member_id = m.member_id
+            <where>
+                <if test="branchId != null">
+                    l.branch_id = #{branchId}
+                </if>
 
-            <if test="lessonTitle != null and lessonTitle != ''">
-                and l.title like '%' || #{lessonTitle} || '%'
-            </if>
+                <if test="lessonTitle != null and lessonTitle != ''">
+                    and l.title like '%' || #{lessonTitle} || '%'
+                </if>
 
-            <if test="tutorName != null and tutorName != ''">
-                and m.name like '%' || #{tutorName} || '%'
-            </if>
+                <if test="tutorName != null and tutorName != ''">
+                    and m.name like '%' || #{tutorName} || '%'
+                </if>
 
-            <if test="day != null">
-                and l.day = #{day}
-            </if>
+                <if test="day != null">
+                    and l.day = #{day}
+                </if>
 
-            <if test="target != null">
-                and l.target = #{target}
-            </if>
+                <if test="target != null">
+                    and l.target = #{target}
+                </if>
 
-            <if test="categoryId != null">
-                and l.category_id = #{categoryId}
-            </if>
+                <if test="categoryId != null">
+                    and l.category_id = #{categoryId}
+                </if>
 
-            <if test="startTime != null and startTime != ''">
-                and substr(l.start_time, 1, 2) = #{startTime}
-            </if>
+                <if test="startTime != null and startTime != ''">
+                    and substr(l.start_time, 1, 2) = #{startTime}
+                </if>
 
-            <if test="endTime != null and endTime != ''">
-                and substr(l.end_time, 1, 2) = #{endTime}
-            </if>
+                <if test="endTime != null and endTime != ''">
+                    and substr(l.end_time, 1, 2) = #{endTime}
+                </if>
 
-            <if test="cnt != null">
-                <choose>
-                    <when test="cnt == 1">
-                        and l.cnt = 1
-                    </when>
-                    <when test="cnt == 2">
-                        and l.cnt between 2 and 4
-                    </when>
-                    <when test="cnt == 3">
-                        and l.cnt >= 5
-                    </when>
-                </choose>
-            </if>
-            and TO_DATE(l.end_date, 'YYYY-MM-DD') > SYSDATE
-        </where>
-        ORDER BY
-            l.lesson_id desc
+                <if test="cnt != null">
+                    <choose>
+                        <when test="cnt == 1">
+                            and l.cnt = 1
+                        </when>
+                        <when test="cnt == 2">
+                            and l.cnt between 2 and 4
+                        </when>
+                        <when test="cnt == 3">
+                            and l.cnt >= 5
+                        </when>
+                    </choose>
+                </if>
+                and TO_DATE(l.end_date, 'YYYY-MM-DD') > SYSDATE
+            </where>
+            ORDER BY
+                l.lesson_id desc
+            )
+        WHERE 12 >= ROWNUM
     </select>
 
     <select id="selectShortFormList"
