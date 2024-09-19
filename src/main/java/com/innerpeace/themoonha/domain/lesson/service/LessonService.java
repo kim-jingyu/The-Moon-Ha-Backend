@@ -34,4 +34,5 @@ public interface LessonService {
     List<TutorLessonResponse> findTutorLessonList(Long memberId);
     void increaseShortFormViewCountCache(Long shortFormId, Long memberId);
     void increaseShortFormViewCountDB(List<ShortFormViewCountDTO> viewCOuntList);
+    CommonResponse removeCart(Long cartId, Long memberId);
 }

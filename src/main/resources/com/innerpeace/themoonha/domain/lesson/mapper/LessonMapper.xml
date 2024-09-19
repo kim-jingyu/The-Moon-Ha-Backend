@@ -301,4 +301,12 @@
         WHERE
             short_form_id = #{shortFormId}
     </update>
+
+    <delete id="deleteCartById">
+        DELETE
+        FROM
+            cart
+        WHERE
+            cart_id = #{cartId} and member_id = #{memberId}
+    </delete>
 </mapper>

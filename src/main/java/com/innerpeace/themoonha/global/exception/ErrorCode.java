@@ -44,7 +44,8 @@ public enum ErrorCode implements StatusCode {
     LIVE_LESSON_END_FAILED(400, "실시간 강좌 종료에 실패했습니다."),
     LIVE_LESSON_CREATION_FAILED(400, "실시간 강좌 열기에 실패했습니다."),
     SHORTFORM_VIEW_COUNT_INCREASE_FAILED(400, "숏폼 조회수 증가 저장에 실패했습니다."),
-    ALIM_SEND_FAIL(400, "알림 전송에 실패했습니다.");
+    ALIM_SEND_FAIL(400, "알림 전송에 실패했습니다."),
+    CART_REMOVE_FAIL(400, "장바구니 상품 제거에 실패했습니다.");
 
     private final int status;
     private final String message;
