@@ -273,7 +273,6 @@
         WHERE
             s.member_id = #{memberId} and
             sysdate > l.start_date and
-            f.lesson_id is null
         ORDER BY
             s.lesson_id
     </select>

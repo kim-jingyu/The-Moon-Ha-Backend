@@ -1,5 +1,6 @@
 package com.innerpeace.themoonha.domain.live.service;
 
+import com.innerpeace.themoonha.domain.alim.service.AlimService;
 import com.innerpeace.themoonha.domain.auth.mapper.AuthMapper;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonDetailResponse;
 import com.innerpeace.themoonha.domain.live.dto.LiveLessonRequest;
@@ -42,11 +43,13 @@ import static com.innerpeace.themoonha.global.vo.SuccessCode.LIVE_LESSON_END_SUC
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class LiveLessonServiceImpl implements LiveLessonService {
+    private static final String SUFFIX_MESSAGE = " 강좌가 개설되었습니다.";
     private final LiveLessonMapper liveLessonMapper;
     private final AuthMapper authMapper;
     private final S3Service s3Service;
     private final LiveLessonEventService liveLessonEventService;
     private final LiveLessonEventConsumer liveLessonEventConsumer;
+    private final AlimService alimService;
 
     private static final String LIVE_VIEW_URL = "http://172.30.1.80:3000/live/view/";
     private static final String LIVE_CONTENT_PATH = "live/content";
@@ -89,6 +92,11 @@ public class LiveLessonServiceImpl implements LiveLessonService {
             liveLessonEventService.sendStatusEvent(liveLesson.getLiveId(), liveLesson.getStatus().name());
             Member member = authMapper.selectByMemberId(memberId)
                     .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+            alimService.sendAlimToMultipleMembers(
+                    liveLessonMapper.findFcmTokensByLessonId(liveLessonRequest.getLessonId()),
+                    liveLesson.getTitle(),
+                    liveLesson.getTitle() + SUFFIX_MESSAGE
+            );
             return LiveLessonResponse.of(liveLesson, member.getName(), member.getProfileImgUrl());
         } catch (IOException e) {
             deleteS3Files(thumbnail.getOriginalFilename());

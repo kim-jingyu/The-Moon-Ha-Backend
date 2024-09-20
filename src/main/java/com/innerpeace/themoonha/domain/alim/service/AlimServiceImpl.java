@@ -1,7 +1,6 @@
 package com.innerpeace.themoonha.domain.alim.service;
 
 import com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO;
-import com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO;
 import com.innerpeace.themoonha.domain.alim.mapper.AlimMapper;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;
@@ -110,7 +109,8 @@ public class AlimServiceImpl implements AlimService{
      * @param title
      * @param message
      */
-    private void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message) {
+    @Override
+    public void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message) {
         for (String token : fcmTokens) {
             try {
                 fcmUtil.send_FCM(token, title, message);

@@ -1,7 +1,6 @@
 package com.innerpeace.themoonha.domain.alim.service;
 
 import com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO;
-import com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 
 import java.util.List;
@@ -58,4 +57,5 @@ public interface AlimService {
      */
     List<LoungeAlimDTO> addLoungeAndSendAlim();
 
+    void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message);
 }
