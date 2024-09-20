@@ -32,4 +32,5 @@ public interface LiveLessonMapper {
     Optional<LiveLesson> findLiveLessonById(Long liveId);
     void updateLiveLessonStatus(@Param("liveId") Long liveId,@Param("status") LiveStatus status);
     List<Long> findActiveLiveLessonIdList();
+    List<String> findFcmTokensByLessonId(Long lessonId);
 }

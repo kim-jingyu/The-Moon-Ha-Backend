@@ -210,4 +210,11 @@
         FROM live_lesson
         WHERE status = 'ON_AIR'
     </select>
+
+    <select id="findFcmTokensByLessonId" resultType="String">
+        SELECT a.fcm_token
+        FROM sugang s
+            JOIN alim a ON s.member_id = a.member_id
+        WHERE s.lesson_id = #{lessonId}
+    </select>
 </mapper>
