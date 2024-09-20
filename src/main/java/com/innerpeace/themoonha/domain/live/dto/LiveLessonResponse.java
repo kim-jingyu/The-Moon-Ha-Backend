@@ -30,6 +30,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class LiveLessonResponse {
     private Long liveId;
+    private Long lessonId;
     private String title;
     private String description;
     private String profileImgUrl;

@@ -16,6 +16,7 @@
     <!-- 실시간 강좌 응답 정보 -->
     <resultMap id="LiveLessonResponseMap" type="com.innerpeace.themoonha.domain.live.dto.LiveLessonResponse">
         <result property="liveId" column="liveId" />
+        <result property="lessonId" column="lessonId" />
         <result property="title" column="title" />
         <result property="profileImgUrl" column="profileImgUrl" />
         <result property="instructorName" column="instructorName" />
@@ -93,6 +94,7 @@
     <select id="findLiveLessonsByMember" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
+            l.lesson_id AS lessonId,
             l.title AS title,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
@@ -105,13 +107,18 @@
         JOIN member m ON l.member_id = m.member_id
         WHERE
             l.status = 'ON_AIR'
-            AND l.member_id = #{memberId}
+            AND l.lesson_id IN (
+                SELECT lesson_id
+                FROM sugang
+                WHERE member_id = #{memberId}
+            )
         ORDER BY l.live_id DESC
     </select>
 
     <select id="findLiveLessonsByMemberOrderByTitle" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
+            l.lesson_id AS lessonId,
             l.title AS title,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
@@ -124,13 +131,18 @@
         JOIN member m ON l.member_id = m.member_id
         WHERE
             l.status = 'ON_AIR'
-            AND l.member_id = #{memberId}
+            AND l.lesson_id IN (
+                SELECT lesson_id
+                FROM sugang
+                WHERE member_id = #{memberId}
+            )
         ORDER BY l.title ASC
     </select>
 
     <select id="findLiveLessonsMemberDoesNotHave" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
+            l.lesson_id AS lessonId,
             l.title AS title,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
@@ -143,13 +155,18 @@
         JOIN member m ON l.member_id = m.member_id
         WHERE
             l.status = 'ON_AIR'
-            AND l.member_id != #{memberId}
+            AND l.lesson_id NOT IN (
+                SELECT lesson_id
+                FROM sugang
+                WHERE member_id = #{memberId}
+            )
         ORDER BY l.live_id DESC
     </select>
 
     <select id="findLiveLessonsMemberDoesNotHaveOrderByTitle" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
+            l.lesson_id AS lessonId,
             l.title AS title,
             m.profile_img_url AS profileImgUrl,
             m.name AS instructorName,
@@ -161,8 +178,12 @@
         FROM live_lesson l
         JOIN member m ON l.member_id = m.member_id
         WHERE
-            l.status = 'ON_AIR'
-            AND l.member_id != #{memberId}
+        l.status = 'ON_AIR'
+        AND l.lesson_id NOT IN (
+            SELECT lesson_id
+            FROM sugang
+            WHERE member_id = #{memberId}
+        )
         ORDER BY l.title ASC
     </select>
 
