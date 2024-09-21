@@ -5,6 +5,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 
+/**
+ * XSS 처리 필터
+ *
+ * @author 손승완
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.12  	손승완       최초 생성
+ * </pre>
+ * @since 2024.09.12
+ */
 public class XSSFilter implements Filter {
     private FilterConfig filterConfig;
 

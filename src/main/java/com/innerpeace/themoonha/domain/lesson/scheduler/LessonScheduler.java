@@ -8,12 +8,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 강좌 숏폼 조회수 증가 스케줄러
+ *
+ * @author 손승완
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.11  	손승완       최초 생성
+ * </pre>
+ * @since 2024.09.11
+ */
 @Component
 @RequiredArgsConstructor
 @EnableScheduling

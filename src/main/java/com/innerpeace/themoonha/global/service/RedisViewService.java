@@ -10,6 +10,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 레디스 조회수 증가 서비스
+ *
+ * @author 손승완
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.11  	손승완       최초 생성
+ * </pre>
+ * @since 2024.09.11
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
