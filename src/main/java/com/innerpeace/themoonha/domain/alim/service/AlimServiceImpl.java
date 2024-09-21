@@ -84,6 +84,14 @@ public class AlimServiceImpl implements AlimService{
         }
     }
 
+    @Override
+    public void sendAlimByMemberId(List<Long> memberIds, String title, String message, String type, Long id) {
+        if (!memberIds.isEmpty()) {
+            List<String> fcmTokens = alimMapper.selectFcmTokenByMemberId(memberIds);
+            sendAlimToMultipleMembers(fcmTokens, title, message, type, id);
+        }
+    }
+
     /**
      * 5분 후 시작하는 수업 수강생에게 알림 보내기
      * @return
@@ -123,6 +131,30 @@ public class AlimServiceImpl implements AlimService{
         CommonResponse.of(true, SuccessCode.ALIM_SEND_SUCCESS.getMessage());
     }
 
+    public void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message, String type) {
+        for (String token : fcmTokens) {
+            try {
+                fcmUtil.send_FCM(token, title, message, type);
+            } catch (Exception e) {
+                log.error("FCM 알림 전송 실패: " + e.getMessage(), e);
+                throw new CustomException(ErrorCode.ALIM_SEND_FAIL);
+            }
+        }
 
+        CommonResponse.of(true, SuccessCode.ALIM_SEND_SUCCESS.getMessage());
+    }
+
+    public void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message, String type, Long id) {
+        for (String token : fcmTokens) {
+            try {
+                fcmUtil.send_FCM(token, title, message, type, id);
+            } catch (Exception e) {
+                log.error("FCM 알림 전송 실패: " + e.getMessage(), e);
+                throw new CustomException(ErrorCode.ALIM_SEND_FAIL);
+            }
+        }
+
+        CommonResponse.of(true, SuccessCode.ALIM_SEND_SUCCESS.getMessage());
+    }
 
 }

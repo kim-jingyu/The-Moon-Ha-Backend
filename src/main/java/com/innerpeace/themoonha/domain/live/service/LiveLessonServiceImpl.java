@@ -95,7 +95,8 @@ public class LiveLessonServiceImpl implements LiveLessonService {
             alimService.sendAlimToMultipleMembers(
                     liveLessonMapper.findFcmTokensByLessonId(liveLessonRequest.getLessonId()),
                     liveLesson.getTitle(),
-                    liveLesson.getTitle() + SUFFIX_MESSAGE
+                    liveLesson.getTitle() + SUFFIX_MESSAGE,
+                    "live"
             );
             return LiveLessonResponse.of(liveLesson, member.getName(), member.getProfileImgUrl());
         } catch (IOException e) {

@@ -61,7 +61,7 @@
             lo.lounge_id,
             le.title,
             lo.lounge_img_url,
-            lp.created_at AS latest_post_time
+            CAST(FROM_TZ(CAST(lp.created_at AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' AS TIMESTAMP) AS latest_post_time
         FROM
             lounge lo
                 JOIN lesson le ON lo.lesson_id = le.lesson_id
@@ -145,7 +145,7 @@
             lp.lounge_post_id,
             lp.content,
             lp.notice_yn,
-            lp.created_at,
+            CAST(FROM_TZ(CAST(lp.created_at AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' AS TIMESTAMP) AS created_at,
             lm.member_id,
             lm.name,
             lm.profile_img_url,
@@ -234,7 +234,7 @@
             lp.lounge_post_id,
             lp.content,
             lp.notice_yn,
-            lp.created_at,
+            CAST(FROM_TZ(CAST(lp.created_at AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' AS TIMESTAMP) AS created_at,
             lm.member_id,
             lm.name,
             lm.profile_img_url,
@@ -258,7 +258,7 @@
         SELECT /*+ INDEX_ASC(lp PK_LOUNGE_COMMENT) ORDERED */
             lc.lounge_comment_id,
             lc.content,
-            lc.created_at,
+            CAST(FROM_TZ(CAST(lc.created_at AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' AS TIMESTAMP) AS created_at,
             lcm.member_id,
             lcm.name,
             lcm.profile_img_url,
@@ -267,7 +267,7 @@
                 WHEN #{role} = 'ROLE_TUTOR' THEN 1
                 WHEN #{role} = 'ROLE_MEMBER' AND lc.member_id = #{memberId} THEN 1
                 ELSE 0
-                END AS permission_yn
+            END AS permission_yn
         FROM
             lounge_comment lc
                 LEFT JOIN member lcm ON lc.member_id = lcm.member_id
@@ -406,7 +406,7 @@
             s.member_id,
             m.name,
             m.profile_img_url,
-            a.attendance_date,
+            CAST(FROM_TZ(CAST(a.attendance_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' AS TIMESTAMP) AS attendance_date,
             a.attendance_yn
         FROM
             attendance a

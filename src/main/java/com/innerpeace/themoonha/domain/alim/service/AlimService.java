@@ -46,6 +46,16 @@ public interface AlimService {
     void sendAlimByMemberId(List<Long> memberIds, String title, String message);
 
     /**
+     * 클릭시 이동할 정보와 함께 알림 보내기
+     * @param memberIds
+     * @param title
+     * @param message
+     * @param type
+     * @param id
+     */
+    void sendAlimByMemberId(List<Long> memberIds, String title, String message, String type, Long id);
+
+    /**
      * 5분 후 시작하는 강좌 알림 보내기
      * @return
      */
@@ -58,4 +68,7 @@ public interface AlimService {
     List<LoungeAlimDTO> addLoungeAndSendAlim();
 
     void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message);
+
+    void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message, String type);
+
 }
