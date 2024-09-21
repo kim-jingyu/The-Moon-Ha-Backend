@@ -264,19 +264,15 @@
 
     <select id="selectLessonFieldEnrollList"
             resultType="com.innerpeace.themoonha.domain.lesson.dto.LessonEnrollResponse">
-        SELECT
-            s.lesson_id, l.title
-        FROM
-            sugang s
-        JOIN
-            lesson l on s.lesson_id = l.lesson_id
-        LEFT JOIN
-            field f on l.lesson_id = f.lesson_id AND f.member_id = #{memberId}
-        WHERE
-            s.member_id = #{memberId} and
-            sysdate > TO_DATE(l.start_date, 'YYYY-MM-DD') and
-        ORDER BY
-            s.lesson_id
+        select
+            lesson_id, title
+        FROM lesson
+        WHERE lesson_id IN (
+            SELECT lesson_id
+            FROM sugang
+            WHERE member_id = #{memberId}
+        ) AND sysdate > TO_DATE(start_date, 'YYYY-MM-DD')
+        ORDER BY lesson_id;
     </select>
 
     <select id="selectTutorLessonList"
