@@ -54,12 +54,12 @@ public class FcmUtil {
                     .putData("message", content)
                     .setAndroidConfig(AndroidConfig.builder()
                             .setTtl(3600 * 1000) // 1 hour in milliseconds
-                            .setPriority(AndroidConfig.Priority.NORMAL)
+                            .setPriority(AndroidConfig.Priority.HIGH)
                             .setNotification(AndroidNotification.builder()
-                                    .setTitle(title)
-                                    .setBody(content)
-                                    .setIcon("stock_ticker_update")
-                                    .setColor("#f45342")
+//                                    .setTitle(title)
+//                                    .setBody(content)
+                                    .setIcon("ic_noti")
+                                    .setColor("#01A76B")
                                     .build())
                             .build())
                     .setToken(registrationToken);
