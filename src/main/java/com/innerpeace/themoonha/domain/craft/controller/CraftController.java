@@ -9,7 +9,6 @@ import com.innerpeace.themoonha.global.util.Criteria;
 import com.innerpeace.themoonha.global.util.MemberId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
