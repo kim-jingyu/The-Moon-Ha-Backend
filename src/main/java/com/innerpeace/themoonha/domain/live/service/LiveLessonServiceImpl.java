@@ -51,7 +51,6 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     private final LiveLessonEventConsumer liveLessonEventConsumer;
     private final AlimService alimService;
 
-    private static final String LIVE_VIEW_URL = "http://172.30.1.80:3000/live/view/";
     private static final String LIVE_CONTENT_PATH = "live/content";
     private static final String LIVE_THUMBNAIL_PATH = "live/thumbnail";
 
@@ -172,6 +171,6 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     }
 
     private String getBroadcastUrl(Long liveId) {
-        return LIVE_VIEW_URL + liveId;
+        return String.valueOf(liveId);
     }
 }

@@ -63,16 +63,6 @@ public class FieldController {
         return ResponseEntity.ok(fieldService.getFieldContent(fieldId));
     }
 
-    @GetMapping(value = "/details/by-latest")
-    public ResponseEntity<List<FieldDetailResponse>> retrieveFieldContentsByLatest() {
-        return ResponseEntity.ok(fieldService.getFieldContentsByLatest());
-    }
-
-    @GetMapping(value = "/details/by-title")
-    public ResponseEntity<List<FieldDetailResponse>> retrieveFieldContentsByTitle() {
-        return ResponseEntity.ok(fieldService.getFieldContentsByTitle());
-    }
-
     /**
      * 분야별 한 입 콘텐츠 등록 API
      * @param fieldRequest
