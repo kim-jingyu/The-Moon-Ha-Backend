@@ -31,7 +31,7 @@ public class FcmUtil {
     @Value("${fcm.key.path}")
     private String SERIVCE_ACCOUNT_JSON;
 
-    public void send_FCM(String tokenId, String title, String content) {
+    public void send_FCM(String tokenId, String title, String content, String type, Long id) {
         try {
             //JSON 파일
 //            FileInputStream refreshToken = new FileInputStream(SERIVCE_ACCOUNT_JSON);
@@ -49,7 +49,9 @@ public class FcmUtil {
             String registrationToken = tokenId;
 
             // message 작성
-            Message msg = Message.builder()
+            Message.Builder messageBuilder = Message.builder()
+                    .putData("title", title)
+                    .putData("message", content)
                     .setAndroidConfig(AndroidConfig.builder()
                             .setTtl(3600 * 1000) // 1 hour in milliseconds
                             .setPriority(AndroidConfig.Priority.NORMAL)
@@ -60,10 +62,20 @@ public class FcmUtil {
                                     .setColor("#f45342")
                                     .build())
                             .build())
-                    .setToken(registrationToken)
-                    .build();
+                    .setToken(registrationToken);
+
+            // type이 null이 아니면 데이터 추가
+            if (type != null) {
+                messageBuilder.putData("type", type);
+            }
+
+            // id가 null이 아니면 데이터 추가
+            if (id != null) {
+                messageBuilder.putData("id", id.toString());
+            }
 
             // 알림 전송
+            Message msg = messageBuilder.build();
             String response = FirebaseMessaging.getInstance().send(msg);
             System.out.println("Successfully sent message: " + response);
 
@@ -71,4 +83,19 @@ public class FcmUtil {
             e.printStackTrace();
         }
     }
+
+    public void send_FCM(String tokenId, String title, String content) {
+        send_FCM(tokenId, title, content, null, null);
+    }
+
+    public void send_FCM(String tokenId, String title, String content, Long id) {
+        send_FCM(tokenId, title, content, null, id);
+    }
+
+    public void send_FCM(String tokenId, String title, String content, String type) {
+        send_FCM(tokenId, title, content, type, null);
+    }
 }
+
+
+

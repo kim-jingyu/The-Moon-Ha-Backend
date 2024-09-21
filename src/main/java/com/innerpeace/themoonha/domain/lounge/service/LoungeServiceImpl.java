@@ -167,19 +167,20 @@ public class LoungeServiceImpl implements LoungeService {
         }
 
         // 공지글이면 알림 보내기
-        if (loungePostRequest.getNoticeYn()) {
+        if (loungePostRequest.getNoticeYn() || !loungePostRequest.getNoticeYn()) {
             Long lessonId = loungeMapper.selectLoungeInfo(loungePostRequest.getLoungeId(), null, null).get().getLessonId();
             List<LoungeMemberDTO> memberDTOList = loungeMapper.selectLoungeMemberList(lessonId);
             List<Long> memberIds = memberDTOList.stream()
                     .map(LoungeMemberDTO::getMemberId)
                     .collect(Collectors.toList());
-            String title = "라운지에 새로운 공지사항이 등록되었습니다!";
+            String title = "라운지에 새로운 게시글이 등록되었습니다!";
             String message = loungePostRequest.getContent();
             if (loungePostRequest.getContent().length() > 20) {
                 message = loungePostRequest.getContent().substring(0, 20) + "...";
             }
-            alimService.sendAlimByMemberId(memberIds, title, message);
+            alimService.sendAlimByMemberId(memberIds, title, message, "lounge", loungePostRequest.getLoungeId());
         }
+
         return CommonResponse.of(true, SuccessCode.LOUNGE_POST_ADD_SUCCESS.getMessage());
     }
 
