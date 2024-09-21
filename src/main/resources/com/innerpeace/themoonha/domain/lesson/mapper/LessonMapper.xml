@@ -256,7 +256,7 @@
         LEFT JOIN before_after ba ON s.lesson_id = ba.lesson_id AND ba.member_id = #{memberId}
         WHERE
             s.member_id = #{memberId} AND
-            sysdate > l.end_date AND
+            sysdate > TO_DATE(l.end_date, 'YYYY-MM-DD') AND
             ba.lesson_id IS NULL
         ORDER BY
             s.lesson_id
@@ -274,7 +274,7 @@
             field f on l.lesson_id = f.lesson_id AND f.member_id = #{memberId}
         WHERE
             s.member_id = #{memberId} and
-            sysdate > l.start_date and
+            sysdate > TO_DATE(l.start_date, 'YYYY-MM-DD') and
         ORDER BY
             s.lesson_id
     </select>
@@ -288,7 +288,7 @@
             lesson l
         WHERE
             l.member_id = #{memberId} AND
-            l.end_date >= sysdate AND
+            TO_DATE(l.end_date, 'YYYY-MM-DD') >= sysdate AND
             l.online_cost IS NOT NULL
         ORDER BY
             l.lesson_id DESC
