@@ -88,6 +88,7 @@
                     </choose>
                 </if>
                 and TO_DATE(l.end_date, 'YYYY-MM-DD') > SYSDATE
+                and l.deleted_at is null
             </where>
             ORDER BY
                 l.lesson_id desc
@@ -179,7 +180,7 @@
             case
                 when l.cnt = 1 THEN l.start_date || '(' || l.day || ') ' || l.start_time || '~' || l.end_time
                 else '매주 ' || l.day || ' ' || l.start_time || '~' || l.end_time end as lesson_time,
-            m.name tutor_name,
+            m2.name tutor_name,
             l.target,
             l.cost,
             l.online_cost,
@@ -189,6 +190,7 @@
         JOIN cart c ON m.member_id = c.member_id
         JOIN lesson l ON c.lesson_id = l.lesson_id
         JOIN branch b ON l.branch_id = b.branch_id
+        JOIN member m2 ON l.member_id = m2.member_id
         WHERE
             m.member_id = #{memberId} AND c.deleted_at IS NULL
         ORDER BY
