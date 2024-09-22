@@ -101,6 +101,7 @@
         SELECT /*+ INDEX(s PK_SHORT_FORM) */
             s.short_form_id,
             l.lesson_id,
+            l.category_id,
             l.title lesson_title,
             m.name tutor_name,
             s.name short_form_name,

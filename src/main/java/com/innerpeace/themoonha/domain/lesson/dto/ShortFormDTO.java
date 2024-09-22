@@ -22,6 +22,7 @@ import lombok.*;
 public class ShortFormDTO {
     private Long lessonId;
     private Long shortFormId;
+    private Long categoryId;
     private String lessonTitle;
     private String tutorName;
     private String shortFormName;
