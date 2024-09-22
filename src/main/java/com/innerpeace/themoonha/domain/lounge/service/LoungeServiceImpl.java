@@ -81,9 +81,9 @@ public class LoungeServiceImpl implements LoungeService {
 
         AttendanceMembersResponse attendanceMembersResponse;
         if (role.equals("ROLE_TUTOR")) {
-            attendanceMembersResponse = findAllMemberAttendance(loungeId, null);
+            attendanceMembersResponse = findAllMemberAttendance(loungeInfo.getLessonId(), null);
         } else {
-            attendanceMembersResponse = findAllMemberAttendance(loungeId, memberId);
+            attendanceMembersResponse = findAllMemberAttendance(loungeInfo.getLessonId(), memberId);
         }
         List<LoungeMemberDTO> loungeMemberList = loungeMapper.selectLoungeMemberList(loungeInfo.getLessonId());
 
