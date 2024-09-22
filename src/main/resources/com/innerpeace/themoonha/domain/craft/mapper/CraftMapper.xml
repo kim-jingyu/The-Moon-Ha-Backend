@@ -19,24 +19,23 @@
 <mapper namespace="com.innerpeace.themoonha.domain.craft.mapper.CraftMapper">
     <select id="selectPrologueList"
             resultType="com.innerpeace.themoonha.domain.craft.dto.PrologueDTO">
-        SELECT
-            p.prologue_id,
-            p.prologue_theme_id,
-            t.name theme_name,
-            t.description theme_description,
-            p.title,
-            p.thumbnail_url,
-            p.video_url,
-            count(l.like_cnt_id) like_cnt,
-            nvl2(l.like_cnt_id, 1, 0) already_liked
-        FROM
-            prologue p
+        SELECT p.prologue_id,
+               p.prologue_theme_id,
+               t.name                         theme_name,
+               t.description                  theme_description,
+               p.title,
+               p.thumbnail_url,
+               p.video_url,
+               count(l_all.like_cnt_id)        like_cnt,
+               nvl2(l_user.like_cnt_id, 1, 0)  already_liked
+        FROM prologue p
         JOIN prologue_theme t ON p.prologue_theme_id = t.prologue_theme_id
-        LEFT JOIN like_cnt l ON p.prologue_id = l.prologue_id AND l.member_id = #{memberId}
+        LEFT JOIN like_cnt l_all ON p.prologue_id = l_all.prologue_id
+        LEFT JOIN like_cnt l_user ON p.prologue_id = l_user.prologue_id AND l_user.member_id = #{memberId}
         WHERE
             p.deleted_at IS NULL
         GROUP BY
-            p.prologue_id, p.prologue_theme_id, p.title, p.thumbnail_url, p.video_url, l.like_cnt_id, t.name, t.description
+            p.prologue_id, p.prologue_theme_id, p.title, p.thumbnail_url, p.video_url, l_user.like_cnt_id, t.name, t.description
         ORDER BY
             p.prologue_theme_id
     </select>
