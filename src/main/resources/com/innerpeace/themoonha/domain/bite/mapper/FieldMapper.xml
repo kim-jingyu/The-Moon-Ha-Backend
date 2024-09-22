@@ -27,6 +27,7 @@
 
     <!-- 분야별 한 입 상세보기용 응답 정보 -->
     <resultMap id="FieldDetailResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.field.FieldDetailResponse">
+        <result property="lessonId" column="lessonId" />
         <result property="contentUrl" column="contentUrl" />
         <result property="contentIsImage" column="contentIsImage" />
         <result property="title" column="title" />
@@ -75,6 +76,7 @@
     <!-- 분야별 한 입 콘텐츠 상세 조회 -->
     <select id="findFieldDetail" resultMap="FieldDetailResponseMap">
         SELECT
+            l.lesson_id AS lessonId,
             f.content_url AS contentUrl,
             CASE
                 WHEN f.content_url LIKE '%/image/%' THEN 1
@@ -92,8 +94,11 @@
             field_hashtag fh ON f.field_id = fh.field_id
         LEFT JOIN
             hashtag h ON fh.hashtag_id = h.hashtag_id
+        JOIN
+            lesson l ON f.lesson_id = l.lesson_id
         WHERE f.field_id = #{fieldId}
         GROUP BY
+            l.lesson_id,
             f.content_url,
             f.title,
             m.profile_img_url,
@@ -132,6 +137,23 @@
         LEFT JOIN lesson l ON f.lesson_id = l.lesson_id
         JOIN category c ON l.category_id = c.category_id
         ORDER BY f.title ASC
+    </select>
+
+    <select id="findFieldListByCategory" resultMap="FieldListResponseMap">
+        SELECT
+            l.category_id AS categoryId,
+            c.category AS category,
+            f.field_id AS fieldId,
+            f.thumbnail_url AS thumbnailUrl,
+            f.title,
+            m.profile_img_url AS profileImgUrl,
+            m.name AS memberName
+        FROM field f
+        JOIN member m ON f.member_id = m.member_id
+        LEFT JOIN lesson l ON f.lesson_id = l.lesson_id
+        JOIN category c ON l.category_id = c.category_id
+        WHERE c.category_id = #{categoryId}
+        ORDER BY f.field_id DESC
     </select>
 
     <!-- 분야별 한 입 해시태그 기반 목록 검색 -->

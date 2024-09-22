@@ -24,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FieldDetailResponse {
+    private Long lessonId;
     private String contentUrl;
     private int contentIsImage;
     private String title;

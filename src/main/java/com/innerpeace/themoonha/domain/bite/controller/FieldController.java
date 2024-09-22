@@ -54,6 +54,16 @@ public class FieldController {
     }
 
     /**
+     * 분야별 한 입 카테고리 별 목록 조회 API
+     * @param categoryId
+     * @return 분야별 한 입 카테고리 별 목록
+     */
+    @GetMapping(value = "/by-category/{categoryId}")
+    public ResponseEntity<List<FieldListResponse>> retrieveFieldListByCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(fieldService.getFieldListByCategory(categoryId));
+    }
+
+    /**
      * 분야별 한 입 콘텐츠 상세 조회 API
      * @param fieldId
      * @return 분야별 한 입 콘텐츠

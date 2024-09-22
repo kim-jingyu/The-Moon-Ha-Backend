@@ -59,6 +59,11 @@ public class FieldServiceImpl implements FieldService {
         return fieldMapper.findFieldListOrderByTitle();
     }
 
+    @Override
+    public List<FieldListResponse> getFieldListByCategory(Long categoryId) {
+        return fieldMapper.findFieldListByCategory(categoryId);
+    }
+
     /**
      * 분야별 한 입 콘텐츠 상세 조회
      * @param fieldId
