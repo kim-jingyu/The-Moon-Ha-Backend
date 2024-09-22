@@ -16,6 +16,7 @@
 <mapper namespace="com.innerpeace.themoonha.domain.bite.mapper.FieldMapper">
     <!-- 분야별 한 입 리스트용 응답 정보 -->
     <resultMap id="FieldListResponseMap" type="com.innerpeace.themoonha.domain.bite.dto.field.FieldListResponse">
+        <result property="lessonTitle" column="lessonTitle" />
         <result property="categoryId" column="categoryId" />
         <result property="category" column="category" />
         <result property="fieldId" column="fieldId" />
@@ -108,6 +109,7 @@
     <!-- 분야별 한 입 콘텐츠 전체 목록 조회(최신순) -->
     <select id="findFieldList" resultMap="FieldListResponseMap">
         SELECT
+            l.title AS lessonTitle,
             l.category_id AS categoryId,
             c.category AS category,
             f.field_id AS fieldId,
@@ -125,6 +127,7 @@
     <!-- 분야별 한 입 콘텐츠 전체 목록 조회(제목순) -->
     <select id="findFieldListOrderByTitle" resultMap="FieldListResponseMap">
         SELECT
+            l.title AS lessonTitle,
             l.category_id AS categoryId,
             c.category AS category,
             f.field_id AS fieldId,
@@ -141,6 +144,7 @@
 
     <select id="findFieldListByCategory" resultMap="FieldListResponseMap">
         SELECT
+            l.title AS lessonTitle,
             l.category_id AS categoryId,
             c.category AS category,
             f.field_id AS fieldId,

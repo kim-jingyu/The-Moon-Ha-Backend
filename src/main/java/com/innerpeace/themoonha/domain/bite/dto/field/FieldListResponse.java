@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FieldListResponse {
+    private String lessonTitle;
     private Long categoryId;
     private String category;
     private Long fieldId;
