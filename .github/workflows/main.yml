@@ -20,14 +20,10 @@ jobs:
           touch ./src/main/resources/application.properties
           echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
           cat ./src/main/resources/application.properties
-          
-     - name: firebase service key JSON File
-       id: create-json
-       uses: jsdaniell/create-json@v1.2.2
-       with:
-         name: "firebase-adminsdk.json"
-         json: ${{ secrets.FIREBASE_ADMINSDK_JSON }}
-         dir: './src/main/resources/firebase-adminsdk.json'
+
+          touch ./src/main/resources/firebase-adminsdk.json
+          printf '%s' "${{ secrets.FIREBASE_ADMINSDK_JSON }}" > ./src/main/resources/firebase-adminsdk.json
+          cat ./src/main/resources/firebase-adminsdk.json
           
      - name: Configure AWS credentials
        uses: aws-actions/configure-aws-credentials@v1
