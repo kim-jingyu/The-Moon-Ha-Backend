@@ -39,6 +39,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminLessonController {
     private final AdminLessonService adminLessonService;
 
+    /**
+     * 강좌 등록
+     *
+     * @param registerRequest 강좌 상세 내용
+     * @param thumbnailFile 썸네일 사진
+     * @param previewVideoFile 프롤로그 사진
+     * @return
+     */
     @PostMapping("/register")
     public ResponseEntity<CommonResponse> LessonAdd(@RequestPart("registerRequest") LessonRegisterAdminRequest registerRequest,
                                                     @RequestPart(value="thumbnailFile", required=false) MultipartFile thumbnailFile,
@@ -49,6 +57,12 @@ public class AdminLessonController {
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_LESSON_REGISTER_SUCCESS.getMessage()));
     }
 
+    /**
+     * 강좌 리스트 조회
+     *
+     * @param lessonListAdminRequest
+     * @return
+     */
     @GetMapping("/list")
     public ResponseEntity<List<LessonDetailAdminResponse>> LessonList(LessonListAdminRequest lessonListAdminRequest){
         log.info("LessonList : {}", lessonListAdminRequest.toString());
@@ -56,6 +70,12 @@ public class AdminLessonController {
         return ResponseEntity.ok(lessonDTOList);
     }
 
+    /**
+     * 강좌 상세 조회
+     *
+     * @param lessonId
+     * @return
+     */
     @GetMapping("/detail/{lessonId}")
     public ResponseEntity<LessonDetailAdminResponse> LessonDetail(@PathVariable("lessonId") Long lessonId){
         log.info("LessonDetail : {}", lessonId);

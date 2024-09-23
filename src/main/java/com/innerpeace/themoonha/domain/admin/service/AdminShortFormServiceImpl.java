@@ -36,6 +36,13 @@ public class AdminShortFormServiceImpl implements AdminShortFormService {
     private final AdminShortFormMapper adminShortFormMapper;
     private final S3Service s3Service;
 
+    /**
+     * 숏폼 등록
+     *
+     * @param shortFormRegisterAdminRequest 숏폼 등록
+     * @param thumbnailFile 썸네일 파일
+     * @param shortFormVideoFile 영상 파일
+     */
     @Override
     @Transactional
     public void addShortForm(ShortFormRegisterAdminRequest shortFormRegisterAdminRequest, MultipartFile thumbnailFile, MultipartFile shortFormVideoFile) {
@@ -59,6 +66,12 @@ public class AdminShortFormServiceImpl implements AdminShortFormService {
         }
     }
 
+    /**
+     * 숏폼 리스트
+     * @param branchId 지점 아이디
+     * @param yearMonth 월별
+     * @return
+     */
     @Override
     public List<ShortFormListAdminResponse> findShortFormList(Long branchId, String yearMonth) {
         return adminShortFormMapper.selectShortFormList(branchId, yearMonth);

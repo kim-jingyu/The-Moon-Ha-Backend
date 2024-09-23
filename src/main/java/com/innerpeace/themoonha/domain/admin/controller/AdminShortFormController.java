@@ -38,6 +38,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminShortFormController {
     private final AdminShortFormService adminShortFormService;
 
+    /**
+     * 숏폼 등록
+     *
+     * @param registerRequest
+     * @param thumbnailFile
+     * @param shortFormVideoFile
+     * @return
+     */
     @PostMapping("/register")
     public ResponseEntity<CommonResponse> ShortFormAdd(@RequestPart("registerRequest") ShortFormRegisterAdminRequest registerRequest,
                                                        @RequestPart(value="thumbnailFile", required=false) MultipartFile thumbnailFile,
@@ -48,6 +56,12 @@ public class AdminShortFormController {
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.ADMIN_SHORTFROM_REGISTER_SUCCESS.getMessage()));
     }
 
+    /**
+     * 숏폼 리스트 조회
+     * @param branchId
+     * @param yearMonth
+     * @return
+     */
     @GetMapping("/list")
     public ResponseEntity<List<ShortFormListAdminResponse>> ShortFormList(@RequestParam(value = "branchId", required = false) Long branchId,
                                                                           @RequestParam(value = "yearMonth") String yearMonth){

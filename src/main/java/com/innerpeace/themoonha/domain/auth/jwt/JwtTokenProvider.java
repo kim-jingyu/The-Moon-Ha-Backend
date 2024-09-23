@@ -42,6 +42,7 @@ import org.springframework.util.StringUtils;
  * ----------  --------    ---------------------------
  * 2024.08.26  	최유경       최초 생성
  * 2024.08.27  	최유경       getSigningKey refactor, 토큰 재발급 로직
+ * 2024.09.06   최유경       액세스 토큰 cookie로 변경
  * </pre>
  */
 @Slf4j
@@ -97,7 +98,12 @@ public class JwtTokenProvider {
         return JwtDTO.of(accessToken,refreshToken);
     }
 
-
+    /**
+     * 토큰 재발급
+     *
+     * @param refreshToken 리프레스 토큰
+     * @return
+     */
     public JwtDTO regenerateAccessToken(String refreshToken){
         Claims claims = parseClaims(refreshToken);
         if (claims.get("auth") == null) {
@@ -221,12 +227,7 @@ public class JwtTokenProvider {
         String accessToken = null;
         String refreshToken = null;
 
-//        // AccessToken 추출
-//        String bearerToken = request.getHeader("Authorization");
-//        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer"))
-//             accessToken = bearerToken.substring(7);
-
-        // RefreshToken 추출
+        // Token 추출
         for(Cookie cookie : request.getCookies()){
             if("accessToken".equals(cookie.getName())) {
                 accessToken = cookie.getValue();

@@ -9,6 +9,22 @@
     http://www.springframework.org/schema/security
     http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <!--
+     * security-context XML
+     * @author 최유경
+     * @since 2024.08.28
+     * @version 1.0
+     * XSS 시큐어 코딩 필터 적용
+     * <pre>
+     * 수정일        	수정자        수정내용
+     * ==========  =========    =========
+     * 2024.08.28  	최유경        최초 생성
+     * 2024.09.04  	최유경        CORS config 설정
+     * 2024.09.06  	최유경        MemberId 어노테이션 구현
+     * 2024.09.13  	최유경        JSESSIONID 생성 안되게 수정
+     * </pre>
+     -->
+
     <!-- JWT 인증 필터 빈 정의 -->
     <beans:bean id="jwtTokenProvider" class="com.innerpeace.themoonha.domain.auth.jwt.JwtTokenProvider">
     </beans:bean>

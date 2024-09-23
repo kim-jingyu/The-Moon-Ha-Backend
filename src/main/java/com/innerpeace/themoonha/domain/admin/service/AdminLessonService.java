@@ -22,8 +22,28 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface AdminLessonService {
 
+    /**
+     * 강좌 등록 메서드
+     *
+     * @param registerRequest 강좌 등록 요청 dto
+     * @param thumbnailFile 강좌 썸네일 사진 파일
+     * @param previewVideoFile 강좌 프리뷰 영상 파일
+     */
     void addLesson(LessonRegisterAdminRequest registerRequest, MultipartFile thumbnailFile, MultipartFile previewVideoFile);
+
+    /**
+     * 강좌 조회 메서드
+     *
+     * @param lessonListAdminRequest 조회 필터 요청 dto
+     * @return 조회 결과 dto
+     */
     List<LessonDetailAdminResponse> findLessonList(LessonListAdminRequest lessonListAdminRequest);
 
+    /**
+     * 강좌 상세 조회 메서드
+     *
+     * @param lessonId 강좌 조회 아이디
+     * @return 상세 조회 dto
+     */
     LessonDetailAdminResponse findLesson(Long lessonId);
 }

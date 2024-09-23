@@ -36,6 +36,12 @@ public class AuthServiceImpl implements AuthService{
     private final PasswordEncoder encoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    /**
+     * 회원가입 메서드
+     *
+     * @param signUpRequest 회원가입 요청
+     * @return
+     */
     @Override
     public int signUp(SignUpRequest signUpRequest) {
         // 사용 가능한 username 여부 확인
@@ -53,11 +59,23 @@ public class AuthServiceImpl implements AuthService{
         return result;
     }
 
+    /**
+     * 사용자 이름 확인 메서드
+     *
+     * @param username 사용자 이름
+     * @return
+     */
     @Override
     public boolean checkAvailableUsername(String username) {
         return !authMapper.selectByUsername(username).isPresent();
     }
 
+    /**
+     * 로그인
+     *
+     * @param loginRequest 로그인 요청
+     * @return
+     */
     @Override
     public JwtDTO login(LoginRequest loginRequest) {
         // 1. 회원인지 확인하기
@@ -76,25 +94,25 @@ public class AuthServiceImpl implements AuthService{
         return jwtDTO;
     }
 
-
+    /**
+     * 토큰 재발급
+     * @param refreshToken 리프레시 토큰
+     * @return
+     */
     @Override
     public JwtDTO regenerateToken(String refreshToken) {
         // 1. 회원인지 확인하기
         Claims claims = jwtTokenProvider.parseClaims(refreshToken);
         String memberId = claims.getSubject();
-        log.info("regenerateToken : memberId : {}", memberId);
         Member member =  authMapper.selectByMemberId(Long.valueOf(memberId))
                 .orElseThrow(()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 2. AccessToken 재발급하기
-        log.info("regenerateToken : AccessToken 재발급하기" );
-        log.info("regenerateToken : {}", member.toString());
         JwtDTO jwtDTO = jwtTokenProvider.generateToken(member);
 
         if(jwtDTO==null)
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
-        log.info("regenerateToken 발급 완료");
         return jwtDTO;
     }
 }

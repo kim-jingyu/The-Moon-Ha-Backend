@@ -17,7 +17,6 @@ public class AdminController {
 
     @GetMapping("/data")
     public ResponseEntity<?> AdminInitData(){
-//        log.info("들어옴");
         return ResponseEntity.ok(adminService.findData());
     }
 }
