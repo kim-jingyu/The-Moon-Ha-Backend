@@ -171,11 +171,7 @@ public class AlimServiceImpl implements AlimService{
     public void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message, String type, Long id) {
         for (String token : fcmTokens) {
             try {
-                log.info("보내려고 {}", token);
-                log.info("보내려고 {}", title);
-                log.info("보내려고 {}", type);
                 fcmUtil.send_FCM(token, title, message, type, id);
-                log.info("보내졌음");
             } catch (Exception e) {
                 log.error("FCM 알림 전송 실패: " + e.getMessage(), e);
                 throw new CustomException(ErrorCode.ALIM_SEND_FAIL);

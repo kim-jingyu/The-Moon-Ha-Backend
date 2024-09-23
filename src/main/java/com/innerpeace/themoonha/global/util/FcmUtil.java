@@ -32,26 +32,20 @@ public class FcmUtil {
     private String SERIVCE_ACCOUNT_JSON;
 
     public void send_FCM(String tokenId, String title, String content, String type, Long id) {
-        log.info("1");
         try {
-            log.info("2");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(SERIVCE_ACCOUNT_JSON).getInputStream()))
                     .build();
-            log.info("3 {}", options.toString());
 
             // initializing
             if(FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
-                log.info("4");
 
             }
-            log.info("5");
 
             // FCM 토큰 입력
             String registrationToken = tokenId;
-            log.info("6 {}", registrationToken);
 
             // message 작성
             Message.Builder messageBuilder = Message.builder()
@@ -66,27 +60,22 @@ public class FcmUtil {
                                     .build())
                             .build())
                     .setToken(registrationToken);
-            log.info("7 {}", messageBuilder.toString());
 
             // type이 null이 아니면 데이터 추가
             if (type != null) {
                 messageBuilder.putData("type", type);
             }
-            log.info("8 {}", type);
 
             // id가 null이 아니면 데이터 추가
             if (id != null) {
                 messageBuilder.putData("id", id.toString());
             }
-            log.info("9 {}", id);
 
             // 알림 전송
             Message msg = messageBuilder.build();
-            log.info("10 {}", msg.toString());
             String response = FirebaseMessaging.getInstance().send(msg);
-            log.info("11 {}", response);
 
-        }catch(Exception e){
+        } catch(Exception e){
             log.error("e {}", e.getMessage());
         }
     }
