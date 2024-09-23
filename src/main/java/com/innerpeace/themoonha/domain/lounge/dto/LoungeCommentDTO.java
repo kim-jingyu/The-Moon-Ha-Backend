@@ -3,9 +3,6 @@ package com.innerpeace.themoonha.domain.lounge.dto;
 import com.innerpeace.themoonha.global.util.DateTimeUtil;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 라운지 게시글 댓글 DTO
  * @author 조희정

@@ -5,7 +5,6 @@ import com.innerpeace.themoonha.domain.schedule.dto.ScheduleNextResponse;
 import com.innerpeace.themoonha.domain.schedule.dto.ScheduleWeeklyResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 스케줄 서비스 인터페이스

@@ -2,7 +2,6 @@ package com.innerpeace.themoonha.domain.alim.controller;
 
 
 import com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO;
-import com.innerpeace.themoonha.domain.alim.dto.LoungeAlimDTO;
 import com.innerpeace.themoonha.domain.alim.service.AlimService;
 import com.innerpeace.themoonha.global.dto.CommonResponse;
 import com.innerpeace.themoonha.global.exception.CustomException;

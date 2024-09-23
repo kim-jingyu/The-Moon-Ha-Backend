@@ -67,8 +67,21 @@ public interface AlimService {
      */
     List<LoungeAlimDTO> addLoungeAndSendAlim();
 
+    /**
+     * 여러 유저에게 알림 보내기
+     * @param fcmTokens
+     * @param title
+     * @param message
+     */
     void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message);
 
+    /**
+     * 여러 유저에게 알림 보내기 (이동 위치 추가)
+     * @param fcmTokens
+     * @param title
+     * @param message
+     * @param type
+     */
     void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message, String type);
 
 }

@@ -3,7 +3,6 @@ package com.innerpeace.themoonha.domain.lounge.dto;
 import lombok.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 라운지 홈 응답 DTO

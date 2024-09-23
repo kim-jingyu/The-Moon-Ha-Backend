@@ -1,9 +1,9 @@
 package com.innerpeace.themoonha.domain.lounge.dto;
 
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 라운지 게시글 작성 Request

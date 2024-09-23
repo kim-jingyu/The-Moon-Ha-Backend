@@ -32,6 +32,7 @@ public class AlimController {
 
     private final AlimService alimService;
 
+    // FCM 토큰 저장
     @PostMapping("/token")
     public ResponseEntity<CommonResponse> fcmTokenAdd(@RequestBody String token, @MemberId Long memberId) {
         return ResponseEntity.ok(alimService.addFcmToken(memberId, token));

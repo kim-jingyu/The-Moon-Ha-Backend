@@ -84,6 +84,14 @@ public class AlimServiceImpl implements AlimService{
         }
     }
 
+    /**
+     * MemberId 리스트에게 알림 보내기 (이동 위치, 정보 추가)
+     * @param memberIds
+     * @param title
+     * @param message
+     * @param type
+     * @param id
+     */
     @Override
     public void sendAlimByMemberId(List<Long> memberIds, String title, String message, String type, Long id) {
         if (!memberIds.isEmpty()) {
@@ -131,6 +139,13 @@ public class AlimServiceImpl implements AlimService{
         CommonResponse.of(true, SuccessCode.ALIM_SEND_SUCCESS.getMessage());
     }
 
+    /**
+     * 알림 보내기 (이동 위치 추가)
+     * @param fcmTokens
+     * @param title
+     * @param message
+     * @param type
+     */
     public void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message, String type) {
         for (String token : fcmTokens) {
             try {
@@ -144,6 +159,14 @@ public class AlimServiceImpl implements AlimService{
         CommonResponse.of(true, SuccessCode.ALIM_SEND_SUCCESS.getMessage());
     }
 
+    /**
+     * 알림 보내기 (이동 위치, 정보  추가)
+     * @param fcmTokens
+     * @param title
+     * @param message
+     * @param type
+     * @param id
+     */
     public void sendAlimToMultipleMembers(List<String> fcmTokens, String title, String message, String type, Long id) {
         for (String token : fcmTokens) {
             try {

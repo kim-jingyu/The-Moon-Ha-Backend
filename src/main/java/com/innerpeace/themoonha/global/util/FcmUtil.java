@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
-
 /**
  * FCM 알림 Util
  * @author 조희정
@@ -33,8 +31,6 @@ public class FcmUtil {
 
     public void send_FCM(String tokenId, String title, String content, String type, Long id) {
         try {
-            //JSON 파일
-//            FileInputStream refreshToken = new FileInputStream(SERIVCE_ACCOUNT_JSON);
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(SERIVCE_ACCOUNT_JSON).getInputStream()))
@@ -53,11 +49,9 @@ public class FcmUtil {
                     .putData("title", title)
                     .putData("message", content)
                     .setAndroidConfig(AndroidConfig.builder()
-                            .setTtl(3600 * 1000) // 1 hour in milliseconds
+                            .setTtl(3600 * 1000)
                             .setPriority(AndroidConfig.Priority.HIGH)
                             .setNotification(AndroidNotification.builder()
-//                                    .setTitle(title)
-//                                    .setBody(content)
                                     .setIcon("ic_noti")
                                     .setColor("#01A76B")
                                     .build())

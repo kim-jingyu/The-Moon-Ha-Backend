@@ -1,9 +1,6 @@
 package com.innerpeace.themoonha.domain.lounge.dto;
 
-import com.innerpeace.themoonha.global.util.DateTimeUtil;
 import lombok.*;
-
-import java.util.List;
 
 /**
  * 수강생 출석 정보 DTO
