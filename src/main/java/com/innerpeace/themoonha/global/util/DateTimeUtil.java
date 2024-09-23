@@ -25,8 +25,8 @@ public class DateTimeUtil {
         }
 
         DateTimeFormatter[] formatters = {
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault()),  // yyyy-MM-dd 형식
-                DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm", Locale.getDefault())     // yyyy.MM.dd 형식
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault()),
+                DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm", Locale.getDefault())
         };
 
         LocalDateTime timeObj = null;

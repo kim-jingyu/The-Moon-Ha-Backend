@@ -10,9 +10,6 @@ import com.innerpeace.themoonha.global.service.S3Service;
 import com.innerpeace.themoonha.global.vo.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -167,7 +164,7 @@ public class LoungeServiceImpl implements LoungeService {
         }
 
         // 공지글이면 알림 보내기
-        if (loungePostRequest.getNoticeYn() || !loungePostRequest.getNoticeYn()) {
+        if (loungePostRequest.getNoticeYn()) {
             Optional<LoungeInfoDTO> loungeInfo = loungeMapper.selectLoungeInfo(loungePostRequest.getLoungeId(), null, null);
             Long lessonId = loungeInfo.get().getLessonId();
             List<LoungeMemberDTO> memberDTOList = loungeMapper.selectLoungeMemberList(lessonId);

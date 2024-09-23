@@ -2,7 +2,6 @@ package com.innerpeace.themoonha.domain.lounge.mapper;
 
 import com.innerpeace.themoonha.domain.lounge.dto.*;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;

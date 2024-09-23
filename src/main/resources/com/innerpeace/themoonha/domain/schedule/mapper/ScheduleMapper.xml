@@ -109,9 +109,9 @@
             </if>
             AND l.deleted_at IS NULL
         <![CDATA[
-        AND SUBSTR(l.start_date, 1, 7) <= SUBSTR(#{yearMonth}, 1, 7)
-        AND SUBSTR(l.end_date, 1, 7) >= SUBSTR(#{yearMonth}, 1, 7)
-        ORDER BY l.start_date, l.start_time
+            AND SUBSTR(l.start_date, 1, 7) <= SUBSTR(#{yearMonth}, 1, 7)
+            AND SUBSTR(l.end_date, 1, 7) >= SUBSTR(#{yearMonth}, 1, 7)
+            ORDER BY l.start_date, l.start_time
         ]]>
     </select>
 
