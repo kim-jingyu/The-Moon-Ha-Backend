@@ -160,7 +160,7 @@
                 LEFT JOIN member lm ON lp.member_id = lm.member_id
         WHERE
             lp.lounge_id = #{loungeId}
-            AND lp.lounge_yn = 0
+            AND lp.notice_yn = 0
             AND lp.deleted_at IS NULL
         ORDER BY
             lp.lounge_post_id DESC
