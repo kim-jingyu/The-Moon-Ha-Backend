@@ -164,7 +164,7 @@ public class LoungeServiceImpl implements LoungeService {
         }
 
         // 공지글이면 알림 보내기
-        if (loungePostRequest.getNoticeYn()) {
+        if (loungePostRequest.getNoticeYn() || !loungePostRequest.getNoticeYn()) {
             Optional<LoungeInfoDTO> loungeInfo = loungeMapper.selectLoungeInfo(loungePostRequest.getLoungeId(), null, null);
             Long lessonId = loungeInfo.get().getLessonId();
             List<LoungeMemberDTO> memberDTOList = loungeMapper.selectLoungeMemberList(lessonId);

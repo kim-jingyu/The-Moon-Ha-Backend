@@ -42,7 +42,7 @@ public class AlimScheduler {
     /**
      * 수업 시작 5분점 알림
      */
-    @Scheduled(cron = "0 */5 * * * *")
+//    @Scheduled(cron = "0 */5 * * * *")
     public void sendAlimForUpcomingLesson() {
         List<LoungeAlimDTO> loungePostAlim = alimService.getFcmTokenForUpcomingLessons();
 
