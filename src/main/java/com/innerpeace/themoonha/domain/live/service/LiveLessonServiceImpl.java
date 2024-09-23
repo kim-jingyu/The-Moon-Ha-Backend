@@ -20,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.innerpeace.themoonha.domain.live.vo.LiveStatus.ENDED;
 import static com.innerpeace.themoonha.domain.live.vo.LiveStatus.ON_AIR;
@@ -88,6 +91,7 @@ public class LiveLessonServiceImpl implements LiveLessonService {
 
     @Override
     public LiveLessonResponse createLiveLesson(Long memberId, LiveLessonRequest liveLessonRequest, MultipartFile thumbnail) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         try {
             LiveLesson liveLesson = LiveLesson.createLiveLesson(memberId, liveLessonRequest, s3Service.saveFile(thumbnail, LIVE_THUMBNAIL_PATH));
             liveLesson.startLiveLesson();
@@ -95,12 +99,14 @@ public class LiveLessonServiceImpl implements LiveLessonService {
             liveLessonEventService.sendStatusEvent(liveLesson.getLiveId(), liveLesson.getStatus().name());
             Member member = authMapper.selectByMemberId(memberId)
                     .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-            alimService.sendAlimToMultipleMembers(
-                    liveLessonMapper.findFcmTokensByLessonId(liveLessonRequest.getLessonId()),
-                    liveLesson.getTitle(),
-                    liveLesson.getTitle() + SUFFIX_MESSAGE,
-                    LIVE_TYPE
-            );
+            scheduler.schedule(() -> {
+                alimService.sendAlimToMultipleMembers(
+                        liveLessonMapper.findFcmTokensByLessonId(liveLessonRequest.getLessonId()),
+                        liveLesson.getTitle(),
+                        liveLesson.getTitle() + SUFFIX_MESSAGE,
+                        "live"
+                );
+            }, 10, TimeUnit.SECONDS);
             return LiveLessonResponse.of(liveLesson, member.getName(), member.getProfileImgUrl());
         } catch (IOException e) {
             deleteS3Files(thumbnail.getOriginalFilename());
