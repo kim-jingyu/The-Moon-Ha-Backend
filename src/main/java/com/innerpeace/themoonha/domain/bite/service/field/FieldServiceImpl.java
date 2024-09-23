@@ -27,6 +27,7 @@ import static com.innerpeace.themoonha.global.exception.ErrorCode.*;
  * ----------  --------    ---------------------------
  * 2024.08.31  김진규        최초 생성
  * 2024.08.31  김진규        getFieldList, makeField, findFieldByTitle, findFieldByHashTags, getFieldContent 메서드 구현
+ * 2024.09.02  김진규        getFieldListOrderByTitle, getFieldListByCategory 메서드 구현
  * </pre>
  * @since 2024.08.31
  */

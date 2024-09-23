@@ -20,6 +20,7 @@ import java.util.Optional;
  * ----------  --------    ---------------------------
  * 2024.08.31  김진규       최초 생성
  * 2024.08.31  김진규       findFieldList, insertField, findBeforeAfterListByTitle, insertHashtagAndFieldHashtag, findFieldListByHashtags, findFieldContent 메서드 추가
+ * 2024.09.02  김진규       findFieldListOrderByTitle, findFieldDetail, findFieldListByCategory 메서드 추가
  * </pre>
  * @since 2024.08.31
  */

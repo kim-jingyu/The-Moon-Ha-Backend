@@ -12,7 +12,7 @@ import java.util.Date;
 import static lombok.AccessLevel.PROTECTED;
 
 /**
- * 실시간 강좌 목록 Response
+ * 실시간 강좌 Response
  *
  * @author 김진규
  * @version 1.0

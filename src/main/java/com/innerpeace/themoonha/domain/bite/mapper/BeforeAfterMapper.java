@@ -22,6 +22,7 @@ import java.util.Optional;
  * 2024.08.27  김진규       findBeforeAfterList, insertBeforeAfter, findBeforeAfterListByTitle 메서드 추가
  * 2024.08.28  김진규       insertHashtag, insertBeforeAfterHashtag, findBeforeAfterListByHashtags 메서드 추가
  * 2024.08.30  김진규       insertHashtag, insertBeforeAfterHashtag 삭제 및 insertHashtagAndBeforeAfterHashtag 메서드 추가
+ * 2024.09.05  김진규       findBeforeAfterListOrderByTitle, findBeforeAfterDetail, findBeforeAfterDetailListByLatest, findBeforeAfterDetailListByTitle 메서드 추가
  * </pre>
  * @since 2024.08.27
  */

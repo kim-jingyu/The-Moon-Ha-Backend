@@ -30,6 +30,7 @@ import static com.innerpeace.themoonha.global.exception.ErrorCode.*;
  * 2024.08.28  김진규        makeBeforeAfter, findBeforeAfterByTitle, findBeforeAfterByHashTags 메서드 구현
  * 2024.08.30  김진규        makeBeforeAfter 메서드 수정
  * 2024.08.31  김진규        getBeforeAfterContent 메서드 구현
+ * 2024.09.05  김진규        getBeforeAfterContentsByLatest, getBeforeAfterContentsByTitle, getBeforeAfterListOrderByTitle 메서드 구현
  * </pre>
  * @since 2024.08.27
  */
@@ -64,9 +65,9 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
     }
 
     /**
-     * 비포애프터 콘텐츠 상세 조회
+     * 비포애프터 콘텐츠 상세정보 조회
      * @param beforeAfterId
-     * @return 비포애프터 콘텐츠
+     * @return 비포애프터 상세정보
      */
     @Override
     public BeforeAfterDetailResponse getBeforeAfterContent(Long beforeAfterId) {
@@ -74,11 +75,19 @@ public class BeforeAfterServiceImpl implements BeforeAfterService {
                 .orElseThrow(() -> new CustomException(BEFORE_AFTER_NOT_FOUND));
     }
 
+    /**
+     * 비포애프터 콘텐츠 상세정보 목록 조회 (최신순)
+     * @return 비포애프터 상세정보 목록 (최신순)
+     */
     @Override
     public List<BeforeAfterDetailResponse> getBeforeAfterContentsByLatest() {
         return beforeAfterMapper.findBeforeAfterDetailListByLatest();
     }
 
+    /**
+     * 비포애프터 콘텐츠 상세정보 목록 조회 (제목순)
+     * @return 비포애프터 상세정보 목록 (제목순)
+     */
     @Override
     public List<BeforeAfterDetailResponse> getBeforeAfterContentsByTitle() {
         return beforeAfterMapper.findBeforeAfterDetailListByTitle();
