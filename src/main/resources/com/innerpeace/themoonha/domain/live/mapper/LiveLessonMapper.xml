@@ -10,6 +10,9 @@
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
  * 2024.09.01  김진규       최초 생성
+ * 2024.09.05  김진규       실시간 강좌 응답 정보, 실시간 강좌 상세 응답 정보, 실시간 강좌 정보, 실시간 강좌 만들기 추가
+ * 2024.09.06  김진규       실시간 강좌 상태 업데이트, 멤버가 소유한 실시간 강좌 찾기(최신순), 멤버가 소유한 실시간 강좌 찾기(제목순), 멤버가 소유하지 않은 실시간 강좌 찾기(최신순), 멤버가 소유하지 않은 실시간 강좌 찾기(제목순) 추가
+ * 2024.09.07  김진규       실시간 강좌 상세정보 찾기, 실시간 강좌 정보 찾기, 실시간 스트리밍 중인 강좌 리스트 정보 찾기, 강좌 정보로 fcm token 찾기 추가
  * </pre>
  -->
 <mapper namespace="com.innerpeace.themoonha.domain.live.mapper.LiveLessonMapper">
@@ -57,6 +60,7 @@
         <result property="updatedAt" column="updatedAt" />
     </resultMap>
 
+    <!-- 실시간 강좌 만들기 -->
     <insert id="insertLiveLesson" parameterType="com.innerpeace.themoonha.domain.live.vo.LiveLesson">
         <selectKey keyProperty="liveId" resultType="Long" order="BEFORE">
             SELECT live_lesson_seq.nextval FROM dual
@@ -85,12 +89,14 @@
         )
     </insert>
 
+    <!-- 실시간 강좌 상태 업데이트 -->
     <update id="updateLiveLessonStatus">
         UPDATE live_lesson
         SET status = #{status}
         WHERE live_id = #{liveId}
     </update>
 
+    <!-- 멤버가 소유한 실시간 강좌 찾기(최신순) -->
     <select id="findLiveLessonsByMember" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
@@ -115,6 +121,7 @@
         ORDER BY l.live_id DESC
     </select>
 
+    <!-- 멤버가 소유한 실시간 강좌 찾기(제목순) -->
     <select id="findLiveLessonsByMemberOrderByTitle" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
@@ -139,6 +146,7 @@
         ORDER BY l.title ASC
     </select>
 
+    <!-- 멤버가 소유하지 않은 실시간 강좌 찾기(최신순) -->
     <select id="findLiveLessonsMemberDoesNotHave" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
@@ -163,6 +171,7 @@
         ORDER BY l.live_id DESC
     </select>
 
+    <!-- 멤버가 소유하지 않은 실시간 강좌 찾기(제목순) -->
     <select id="findLiveLessonsMemberDoesNotHaveOrderByTitle" resultMap="LiveLessonResponseMap">
         SELECT
             l.live_id AS liveId,
@@ -187,6 +196,8 @@
         ORDER BY l.title ASC
     </select>
 
+
+    <!-- 실시간 강좌 상세정보 찾기 -->
     <select id="findLiveLessonDetailById" resultMap="LiveLessonDetailResponseMap">
         SELECT
             l.live_id AS liveId,
@@ -213,6 +224,7 @@
         WHERE l.live_id = #{liveId}
     </select>
 
+    <!-- 실시간 강좌 정보 찾기 -->
     <select id="findLiveLessonById" resultMap="LiveLessonMap">
         SELECT
             live_id AS liveId,
@@ -226,12 +238,14 @@
         WHERE live_id = #{liveId}
     </select>
 
+    <!-- 실시간 스트리밍 중인 강좌 리스트 정보 찾기 -->
     <select id="findActiveLiveLessonIdList" resultType="Long">
         SELECT live_id
         FROM live_lesson
         WHERE status = 'ON_AIR'
     </select>
 
+    <!-- 강좌 정보로 fcm token 찾기 -->
     <select id="findFcmTokensByLessonId" resultType="String">
         SELECT a.fcm_token
         FROM sugang s

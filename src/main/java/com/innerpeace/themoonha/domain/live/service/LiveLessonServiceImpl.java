@@ -36,6 +36,10 @@ import static com.innerpeace.themoonha.global.vo.SuccessCode.LIVE_LESSON_END_SUC
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.09.01  김진규        최초 생성
+ * 2024.09.05  김진규       getLiveLessonsByMember, getLiveLessonsByMemberOrderByTitle, getLiveLessonsMemberDoesNotHave 메서드 구현
+ * 2024.09.06  김진규       getLiveLessonsMemberDoesNotHaveOrderByTitle, getLiveLessonDetails, createLiveLesson 메서드 구현
+ * 2024.09.07  김진규       endLiveLesson, getLiveLessonStatus, getViewsCount, getLikesCount 메서드 구현
+ * 2024.09.08  김진규       getShareLink, joinLiveLesson, leaveLiveLesson, likeLiveLesson 메서드 구현
  * </pre>
  * @since 2024.09.01
  */
@@ -43,7 +47,6 @@ import static com.innerpeace.themoonha.global.vo.SuccessCode.LIVE_LESSON_END_SUC
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class LiveLessonServiceImpl implements LiveLessonService {
-    private static final String SUFFIX_MESSAGE = " 강좌가 개설되었습니다.";
     private final LiveLessonMapper liveLessonMapper;
     private final AuthMapper authMapper;
     private final S3Service s3Service;
@@ -51,7 +54,8 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     private final LiveLessonEventConsumer liveLessonEventConsumer;
     private final AlimService alimService;
 
-    private static final String LIVE_CONTENT_PATH = "live/content";
+    private static final String SUFFIX_MESSAGE = " 강좌가 개설되었습니다.";
+    private static final String LIVE_TYPE = "live";
     private static final String LIVE_THUMBNAIL_PATH = "live/thumbnail";
 
     @Override
@@ -95,7 +99,7 @@ public class LiveLessonServiceImpl implements LiveLessonService {
                     liveLessonMapper.findFcmTokensByLessonId(liveLessonRequest.getLessonId()),
                     liveLesson.getTitle(),
                     liveLesson.getTitle() + SUFFIX_MESSAGE,
-                    "live"
+                    LIVE_TYPE
             );
             return LiveLessonResponse.of(liveLesson, member.getName(), member.getProfileImgUrl());
         } catch (IOException e) {

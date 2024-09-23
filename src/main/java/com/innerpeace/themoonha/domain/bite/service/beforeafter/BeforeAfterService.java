@@ -20,7 +20,8 @@ import java.util.List;
  * ----------  --------    ---------------------------
  * 2024.08.27  김진규        최초 생성
  * 2024.08.27  김진규        getBeforeAfterList 메서드 추가
- * 2024.08.28  김진규        makeBeforeAfter, findBeforeAfterByTitle, findBeforeAfterByHashTags 메서드 추가
+ * 2024.08.28  김진규        makeBeforeAfter, findBeforeAfterByTitle, findBeforeAfterByHashTags, getBeforeAfterContent 메서드 추가
+ * 2024.09.05  김진규        getBeforeAfterContentsByLatest, getBeforeAfterContentsByTitle, getBeforeAfterListOrderByTitle
  * </pre>
  * @since 2024.08.27
  */

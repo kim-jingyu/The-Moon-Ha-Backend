@@ -57,7 +57,7 @@ public class ChatServiceImpl implements ChatService {
         redisTemplate.delete(CHAT_PREFIX + liveId);
     }
 
-//    @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 0 0 * * *")
     public void batchSavedChatMessages() {
         liveLessonMapper.findActiveLiveLessonIdList()
                 .forEach(liveId -> {

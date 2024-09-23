@@ -18,7 +18,10 @@ import java.util.Optional;
  * <pre>
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.09.01  김진규        최초 생성
+ * 2024.09.01  김진규       최초 생성
+ * 2024.09.05  김진규       findLiveLessonsByMember, findLiveLessonsByMemberOrderByTitle, findLiveLessonsMemberDoesNotHave 메서드 추가
+ * 2024.09.06  김진규       findLiveLessonsMemberDoesNotHaveOrderByTitle, findLiveLessonDetailById, insertLiveLesson 메서드 추가
+ * 2024.09.07  김진규       findLiveLessonById, updateLiveLessonStatus, findActiveLiveLessonIdList, findFcmTokensByLessonId 메서드 추가
  * </pre>
  * @since 2024.09.01
  */
