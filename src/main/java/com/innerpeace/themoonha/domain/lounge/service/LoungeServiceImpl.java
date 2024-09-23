@@ -163,6 +163,8 @@ public class LoungeServiceImpl implements LoungeService {
             }
         }
 
+        log.info("게시글 작성함");
+
         // 공지글이면 알림 보내기
         if (loungePostRequest.getNoticeYn() || !loungePostRequest.getNoticeYn()) {
             Optional<LoungeInfoDTO> loungeInfo = loungeMapper.selectLoungeInfo(loungePostRequest.getLoungeId(), null, null);
@@ -176,6 +178,7 @@ public class LoungeServiceImpl implements LoungeService {
                 title = title.substring(0, 20) + "...";
             }
             String message = "새로운 글이 등록되었습니다.";
+            log.info("알림 보내러 들어옴");
             alimService.sendAlimByMemberId(memberIds, title, message, "lounge", loungePostRequest.getLoungeId());
         }
 
