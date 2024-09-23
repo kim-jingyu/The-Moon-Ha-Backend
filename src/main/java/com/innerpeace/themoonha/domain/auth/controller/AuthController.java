@@ -39,12 +39,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+    /**
+     * 회원가입
+     *
+     * @param signUpRequest 회원가입 요청
+     * @return
+     */
     @PostMapping(value="/signup")
     public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         authService.signUp(signUpRequest);
         return ResponseEntity.ok(CommonResponse.from(SuccessCode.AUTH_SIGNUP_SUCCESS.getMessage()));
     }
 
+    /**
+     * 로그인
+     *
+     * @param loginRequest 로그인 요청
+     * @param response
+     * @return
+     */
     @PostMapping(value="/login")
     public ResponseEntity<CommonResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response){
         // 1. 회원 여부 확인
@@ -62,6 +75,12 @@ public class AuthController {
                 .ok(CommonResponse.from(SuccessCode.AUTH_LOGIN_SUCCESS.getMessage()));
     }
 
+    /**
+     * 로그아웃
+     *
+     * @param response 로그아웃 요청
+     * @return
+     */
     @PostMapping("/logout")
     public ResponseEntity<CommonResponse> logOut(HttpServletResponse response) {
         Cookie accessTokenDeleteCookie = AuthUtil.createJwtTokenDeleteCookie("accessToken");

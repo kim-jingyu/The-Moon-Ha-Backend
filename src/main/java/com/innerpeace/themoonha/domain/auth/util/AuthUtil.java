@@ -35,6 +35,12 @@ public class AuthUtil {
         return cookie;
     }
 
+    /**
+     * 쿠키 삭제 메서드
+     *
+     * @param key Cookie key
+     * @return
+     */
     public static Cookie createJwtTokenDeleteCookie(String key) {
         Cookie cookie = new Cookie(key, "");
         cookie.setHttpOnly(true);

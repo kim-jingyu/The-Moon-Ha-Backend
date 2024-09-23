@@ -4,8 +4,12 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.innerpeace.themoonha.global.dto.S3UploadCompleteDTO;
+import com.innerpeace.themoonha.global.dto.S3UploadCompleteDTO.S3UploadPartsDetailDTO;
+import com.innerpeace.themoonha.global.dto.S3UploadSignedUrlRequest;
 import com.innerpeace.themoonha.global.exception.CustomException;
 import com.innerpeace.themoonha.global.exception.ErrorCode;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +25,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
+import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadResponse;
+import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
+import software.amazon.awssdk.services.s3.model.CompletedPart;
+import software.amazon.awssdk.services.s3.model.CreateMultipartUploadRequest;
+import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
+import software.amazon.awssdk.services.s3.model.UploadPartRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedUploadPartRequest;
+import software.amazon.awssdk.services.s3.presigner.model.UploadPartPresignRequest;
 
 /**
  * S3 클라이언트 서비스
@@ -40,7 +55,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class S3Service {
-    private final AmazonS3 s3Client;
+    private final AmazonS3 amazonS3;
+    private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
+    static private final String key = UUID.randomUUID().toString();
 
     @Value("${aws.bucket}")
     private String bucket;
@@ -54,9 +72,9 @@ public class S3Service {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
-        s3Client.putObject(bucket, fullPath, multipartFile.getInputStream(), metadata);
-        log.info("url = {} ", cloudFrontUrl + " " + s3Client.getUrl(bucket, fullPath).getPath());
-        return cloudFrontUrl + s3Client.getUrl(bucket, fullPath).getPath();
+        amazonS3.putObject(bucket, fullPath, multipartFile.getInputStream(), metadata);
+
+        return cloudFrontUrl + amazonS3.getUrl(bucket, fullPath).getPath();
     }
 
     public List<String> saveFiles(List<MultipartFile> files, String path) {
@@ -75,12 +93,76 @@ public class S3Service {
     }
 
     public UrlResource downloadFile(String folderName, String originalFilename) {
-        return new UrlResource(s3Client.getUrl(bucket, getFullPath(folderName, originalFilename)));
+        return new UrlResource(amazonS3.getUrl(bucket, getFullPath(folderName, originalFilename)));
     }
 
     public void deleteFile(String folderName, String originalFilename) {
-        s3Client.deleteObject(bucket, getFullPath(folderName, originalFilename));
+        amazonS3.deleteObject(bucket, getFullPath(folderName, originalFilename));
     }
+
+
+
+    public String multipartUploadWithS3Client(String filePath){
+        CreateMultipartUploadRequest createMultipartUploadRequest = CreateMultipartUploadRequest.builder()
+                .bucket(bucket)
+                .key(filePath)
+                .build();
+
+        CreateMultipartUploadResponse createMultipartUploadResponse = s3Client.createMultipartUpload(createMultipartUploadRequest);
+//        log.info("multipartUploadWithS3Client : {} " , createMultipartUploadResponse.uploadId());
+        return createMultipartUploadResponse.uploadId();
+    }
+
+    public String getUploadSignedUrl(S3UploadSignedUrlRequest s3UploadSignedUrlRequest){
+        UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
+                .bucket(bucket)
+                .key(s3UploadSignedUrlRequest.getFullPath())
+                .uploadId(s3UploadSignedUrlRequest.getUploadId())
+                .partNumber(s3UploadSignedUrlRequest.getPartNumber())
+                .build();
+
+        UploadPartPresignRequest uploadPartPresignRequest = UploadPartPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(10))
+                .uploadPartRequest(uploadPartRequest)
+                .build();
+
+        PresignedUploadPartRequest presignedUploadPartRequest = s3Presigner.presignUploadPart(uploadPartPresignRequest);
+//        log.info("getUploadSignedUrl : {} " , presignedUploadPartRequest.url().toString());
+        return presignedUploadPartRequest.url().toString();
+    }
+
+    public void completeUpload(S3UploadCompleteDTO s3UploadCompleteDTO){
+        List<CompletedPart> completedParts = new ArrayList<>();
+
+        for(S3UploadPartsDetailDTO partForm : s3UploadCompleteDTO.getParts()) {
+            CompletedPart part = CompletedPart.builder()
+                    .partNumber(partForm.getPartNumber())
+                    .eTag(partForm.getAwsETag())
+                    .build();
+            completedParts.add(part);
+        }
+
+        CompletedMultipartUpload completedMultipartUpload = CompletedMultipartUpload.builder()
+                .parts(completedParts)
+                .build();
+
+        String fileName = s3UploadCompleteDTO.getFullPath();
+        CompleteMultipartUploadRequest completeMultipartUploadRequest =
+                CompleteMultipartUploadRequest.builder()
+                        .bucket(bucket)
+                        .key(fileName)
+                        .uploadId(s3UploadCompleteDTO.getUploadId())
+                        .multipartUpload(completedMultipartUpload)
+                        .build();
+
+        CompleteMultipartUploadResponse completeMultipartUploadResponse = s3Client.completeMultipartUpload(completeMultipartUploadRequest);
+
+        // s3에 업로드된 파일 이름
+        String objectKey = completeMultipartUploadResponse.key();
+
+//        log.info("completeUpload : {}", objectKey);
+    }
+
 
     public String getPreSignedUrl(String fileName){
         java.util.Date expiration = new java.util.Date();
@@ -90,7 +172,8 @@ public class S3Service {
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(fileName);
 
-        URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+
         log.info("s3Client : {}", url.toString());
         return url.toString();
     }
@@ -134,24 +217,6 @@ public class S3Service {
         String baseName = originalName.substring(0, pos);
         // 파일 확장자
         String ext = multipartFile.getOriginalFilename().substring(pos + 1);
-
-        return today + "_" + uuid.split("-")[0] + "_" + baseName + "." + ext;
-    }
-
-    private static String getFileNameServer(String fileName) {
-        // 날짜
-        String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        // uuid
-        String uuid = UUID.randomUUID().toString();
-
-        String originalName = fileName;
-        int pos = fileName.lastIndexOf(".");
-
-        // 원본 파일 명
-        String baseName = originalName.substring(0, pos);
-
-        // 파일 확장자
-        String ext = fileName.substring(pos + 1);
 
         return today + "_" + uuid.split("-")[0] + "_" + baseName + "." + ext;
     }
