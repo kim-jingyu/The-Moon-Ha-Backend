@@ -57,7 +57,7 @@ public class LiveLessonServiceImpl implements LiveLessonService {
     private final LiveLessonEventConsumer liveLessonEventConsumer;
     private final AlimService alimService;
 
-    private static final String SUFFIX_MESSAGE = " 강좌가 개설되었습니다.";
+    private static final String SUFFIX_MESSAGE = " 라이브 강좌가 시작되었습니다!";
     private static final String LIVE_TYPE = "live";
     private static final String LIVE_THUMBNAIL_PATH = "live/thumbnail";
 
