@@ -138,7 +138,7 @@
             FROM lesson l
             WHERE
                 l.deleted_at IS NULL
-                AND TRUNC(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul') BETWEEN l.start_date AND l.end_date
+                AND TRUNC(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul') BETWEEN TO_DATE(l.start_date, 'YYYY-MM-DD') AND TO_DATE(l.end_date, 'YYYY-MM-DD')
                 AND INSTR(l.day, TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'DY', 'NLS_DATE_LANGUAGE=KOREAN')) > 0
                 AND l.start_time > TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'HH24:MI')
             ORDER BY l.start_date, l.start_time
